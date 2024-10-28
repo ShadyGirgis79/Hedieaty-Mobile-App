@@ -9,15 +9,6 @@ class Friend {
 
   Friend({required this.name, required this.profileURL,required this.phoneNumber , required this.events});
 
-  void addEvent() {
-    events += 1;
-  }
-
-  void removeEvent() {
-    if (events > 0) {
-      events -= 1;
-    }
-  }
 }
 
 class FriendsList extends StatelessWidget {
