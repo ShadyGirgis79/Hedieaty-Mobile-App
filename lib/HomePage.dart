@@ -29,7 +29,16 @@ class FriendsList extends StatelessWidget {
           title: Text(friend.name!),  // Friend's name
           subtitle: Text(friend.events > 0
               ? 'Upcoming Events: ${friend.events}'  // Show number of events
-              : 'No Upcoming Events'),  // Show "No Upcoming Events" if 0
+              : 'No Upcoming Events'), // Show "No Upcoming Events" if 0
+          onTap: () {
+            // Navigate to EventListPage when tapping on the friend
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const EventListPage(),
+              ),
+            );
+          },
         );
       },
     );
@@ -97,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   name = value;
                 },
               ),
+              SizedBox(height: 10),
               TextField(
                 decoration: InputDecoration(labelText: "Phone"),
                 onChanged: (value) {
@@ -182,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Expanded(
-            child: FriendsList(friends: filteredFriends),  // Show filtered friends
+            child: FriendsList(friends: filteredFriends), // Show filtered friends
           ),
         ],
       ),
