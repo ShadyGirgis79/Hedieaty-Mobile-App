@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:hedieaty/GiftListPage.dart';
 
 class Event {
   String name;
@@ -26,7 +27,38 @@ class _EventListPageState extends State<EventListPage> {
 
   String sortBy = 'name';
 
-  void _addEvent() {
+  void sortEvents(String sortBy) {
+    setState(() {
+      this.sortBy = sortBy;
+      events.sort((a, b) {
+        switch (sortBy) {
+          case 'name':
+            return a.name.compareTo(b.name);
+          case 'category':
+            return a.category.compareTo(b.category);
+          case 'status':
+            return statusPriority(a.status).compareTo(statusPriority(b.status));
+          default:
+            return 0;
+        }
+      });
+    });
+  }
+
+  int statusPriority(String status) {
+    switch (status) {
+      case 'Upcoming':
+        return 1;
+      case 'Current':
+        return 2;
+      case 'Past':
+        return 3;
+      default:
+        return 4;
+    }
+  }
+
+  void addEvent() {
     String name = "";
     String category = "";
     String status = 'Upcoming';
@@ -46,12 +78,14 @@ class _EventListPageState extends State<EventListPage> {
                   name = value;
                 },
               ),
+              SizedBox(height: 10),
               TextField(
                 decoration: const InputDecoration(labelText: "Category"),
                 onChanged: (value) {
                   category = value;
                 },
               ),
+              SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: "Status"),
                 value: status,
@@ -86,7 +120,7 @@ class _EventListPageState extends State<EventListPage> {
     );
   }
 
-  void _editEvent(Event event) {
+  void editEvent(Event event) {
     // Temporary variables to hold new values for the event.
     String updatedName = event.name;
     String updatedCategory = event.category;
@@ -108,6 +142,7 @@ class _EventListPageState extends State<EventListPage> {
                   updatedName = value;
                 },
               ),
+              SizedBox(height: 10),
               TextField(
                 decoration: const InputDecoration(labelText: "Category"),
                 controller: TextEditingController(text: updatedCategory),
@@ -115,6 +150,7 @@ class _EventListPageState extends State<EventListPage> {
                   updatedCategory = value;
                 },
               ),
+              SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: "Status"),
                 value: updatedStatus,
@@ -151,41 +187,9 @@ class _EventListPageState extends State<EventListPage> {
     );
   }
 
-
-  void _deleteEvent(Event event) {
+  void deleteEvent(Event event) {
     setState(() {
       events.remove(event);
-    });
-  }
-
-  int _statusPriority(String status) {
-    switch (status) {
-      case 'Upcoming':
-        return 1;
-      case 'Current':
-        return 2;
-      case 'Past':
-        return 3;
-      default:
-        return 4;
-    }
-  }
-
-  void _sortEvents(String sortBy) {
-    setState(() {
-      this.sortBy = sortBy;
-      events.sort((a, b) {
-        switch (sortBy) {
-          case 'name':
-            return a.name.compareTo(b.name);
-          case 'category':
-            return a.category.compareTo(b.category);
-          case 'status':
-            return _statusPriority(a.status).compareTo(_statusPriority(b.status));
-          default:
-            return 0;
-        }
-      });
     });
   }
 
@@ -198,7 +202,7 @@ class _EventListPageState extends State<EventListPage> {
         backgroundColor: Colors.purpleAccent,
         actions: [
           PopupMenuButton<String>(
-            onSelected: _sortEvents,
+            onSelected: sortEvents,
             itemBuilder: (context) => [
               const PopupMenuItem(value: 'name', child: Text('Sort by Name')),
               const PopupMenuItem(value: 'category', child: Text('Sort by Category')),
@@ -219,19 +223,28 @@ class _EventListPageState extends State<EventListPage> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.edit),
-                  onPressed: () => _editEvent(event),
+                  onPressed: () => editEvent(event),
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () => _deleteEvent(event),
+                  onPressed: () => deleteEvent(event),
                 ),
               ],
             ),
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const GiftListPage(),
+                ),
+              );
+            },
           );
+
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addEvent,
+        onPressed: addEvent,
         child: const Icon(Icons.add),
       ),
     );
