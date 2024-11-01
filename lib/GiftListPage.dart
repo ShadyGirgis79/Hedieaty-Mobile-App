@@ -23,6 +23,7 @@ class _GiftListPageState extends State<GiftListPage> {
     Gift(name: "Phone", category: "Electronics", status: "Unpledged", price:24000),
     Gift(name: "Watch", category: "Electronics", status: "Unpledged", price:8500),
     Gift(name: "Harry Potter", category: "Books", status: "Pledged", price:70),
+    Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price:350),
   ];
 
   String sortBy = "name"; // Default sort by name
@@ -77,17 +78,29 @@ class _GiftListPageState extends State<GiftListPage> {
                   },
                 ),
                 SizedBox(height: 10),
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Category'),
-                  onChanged: (value){
-                    category = value;
+                DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(labelText: "Category"),
+                  value: category.isEmpty ? null : category, // Set value to null if category is empty
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      category = newValue!;
+                    });
                   },
+                  items: <String>[
+                    'Electronics', 'Books', 'Toys', 'Souvenir', 'Accessories', 'Other'
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                 ),
                 SizedBox(height: 10),
                 TextField(
                   decoration: const InputDecoration(labelText: 'Price'),
-                  onChanged: (value){
-                    price = value as int;
+                  keyboardType: TextInputType.number, // Ensure keyboard is numeric
+                  onChanged: (value) {
+                    price = int.tryParse(value) ?? 0; // Safely convert to int
                   },
                 ),
               ],
