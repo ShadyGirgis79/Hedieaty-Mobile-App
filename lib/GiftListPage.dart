@@ -225,7 +225,8 @@ class _GiftListPageState extends State<GiftListPage> {
                   ),
                 ],
               )
-                  : null, // No trailing icons if the item is pledged
+                  : const Text("Name"), // No trailing icons if the item is pledged
+              //Here I want to add name of the person that will get gift
               onTap: (){
                 Navigator.push(
                   context,
