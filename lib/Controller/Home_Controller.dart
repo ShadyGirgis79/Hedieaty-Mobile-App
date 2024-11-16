@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty/Model/Friend_Model.dart';
 import 'package:hedieaty/Controller/Friend_Controller.dart';
 import 'package:hedieaty/View/Home_View.dart';
-import 'package:hedieaty/View/Friends_View.dart';
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
