@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:hedieaty/GiftListPage.dart';
+import 'package:hedieaty/OldVersion/GiftListPage.dart';
 
 class Event {
   String name;
@@ -12,7 +12,7 @@ class Event {
 }
 
 class EventListPage extends StatefulWidget {
-  const EventListPage({Key? key}) : super(key: key);
+  const EventListPage({super.key});
 
   @override
   State<EventListPage> createState() => _EventListPageState();
@@ -78,14 +78,14 @@ class _EventListPageState extends State<EventListPage> {
                   name = value;
                 },
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 decoration: const InputDecoration(labelText: "Category"),
                 onChanged: (value) {
                   category = value;
                 },
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: "Status"),
                 value: status,
@@ -142,7 +142,7 @@ class _EventListPageState extends State<EventListPage> {
                   updatedName = value;
                 },
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 decoration: const InputDecoration(labelText: "Category"),
                 controller: TextEditingController(text: updatedCategory),
@@ -150,7 +150,7 @@ class _EventListPageState extends State<EventListPage> {
                   updatedCategory = value;
                 },
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: "Status"),
                 value: updatedStatus,
@@ -215,32 +215,33 @@ class _EventListPageState extends State<EventListPage> {
         itemCount: events.length,
         itemBuilder: (context, index) {
           final event = events[index];
-          return ListTile(
-            title: Text('${event.name} (${event.gifts})'),
-            subtitle: Text('${event.category} • ${event.status}'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () => editEvent(event),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => deleteEvent(event),
-                ),
-              ],
+          return Container(
+            child: ListTile(
+              title: Text('${event.name} (${event.gifts})'),
+              subtitle: Text('${event.category} • ${event.status}'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () => editEvent(event),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => deleteEvent(event),
+                  ),
+                ],
+              ),
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GiftListPage(),
+                  ),
+                );
+              },
             ),
-            onTap: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const GiftListPage(),
-                ),
-              );
-            },
           );
-
         },
       ),
       floatingActionButton: FloatingActionButton(

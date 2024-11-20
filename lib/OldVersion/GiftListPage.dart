@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hedieaty/GiftDetailsPage.dart';
-
-class Gift {
-  String name;
-  String category;
-  String status; // Pledged or Unpledged
-  int price;
-
-Gift({required this.name, required this.category , required this.status ,required this.price});
-}
+import 'package:hedieaty/OldVersion/GiftDetailsPage.dart';
+import 'package:hedieaty/Model/Gift_Model.dart';
 
 class GiftListPage extends StatefulWidget {
   const GiftListPage({super.key});
@@ -30,7 +22,7 @@ class _GiftListPageState extends State<GiftListPage> {
 
   void sortGifts(String option) {
     setState(() {
-      this.sortBy =  option;
+      sortBy =  option;
       gifts.sort((a,b) {
         switch(option){
           case 'name':
@@ -77,7 +69,7 @@ class _GiftListPageState extends State<GiftListPage> {
                     name = value;
                   },
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: "Category"),
                   value: category.isEmpty ? null : category, // Set value to null if category is empty
@@ -95,7 +87,7 @@ class _GiftListPageState extends State<GiftListPage> {
                     );
                   }).toList(),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 TextField(
                   decoration: const InputDecoration(labelText: 'Price'),
                   keyboardType: TextInputType.number, // Ensure keyboard is numeric
@@ -144,7 +136,7 @@ class _GiftListPageState extends State<GiftListPage> {
                     updatedName = value;
                   },
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(labelText: "Category"),
                   value: updatedCategory,
@@ -181,16 +173,38 @@ class _GiftListPageState extends State<GiftListPage> {
   }
 
   void deleteGift(Gift gift) {
-    setState(() {
-      gifts.remove(gift);
-    });
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Are you sure you want to delete?"),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    gifts.remove(gift);
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Delete"),
+              ),
+              SizedBox(width: 10,),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Cancel")
+              ),
+            ],
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Gift List"),
+        title: const Text("Name Gift List"),
         backgroundColor: Colors.purpleAccent,
         foregroundColor: Colors.white,
         actions: [
