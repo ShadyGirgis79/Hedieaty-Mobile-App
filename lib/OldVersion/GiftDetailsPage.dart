@@ -1,16 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:hedieaty/Model/Gift_Model.dart';
 import 'dart:io';
+
 // Uncomment if you're using the image picker
 // import 'package:image_picker/image_picker.dart';
-
-class Gift {
-  String name;
-  String category;
-  String status; // Pledged or Unpledged
-  int price;
-
-  Gift({required this.name, required this.category, required this.status, required this.price});
-}
 
 class GiftDetailsPage extends StatefulWidget {
   const GiftDetailsPage({super.key});
@@ -121,7 +114,7 @@ class _GiftDetailsPageState extends State<GiftDetailsPage> {
                       //   ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
                   // Description field with edit icon
                   Row(
@@ -148,7 +141,7 @@ class _GiftDetailsPageState extends State<GiftDetailsPage> {
                       //   ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
                   // Category dropdown with edit icon
                   Row(
@@ -183,7 +176,7 @@ class _GiftDetailsPageState extends State<GiftDetailsPage> {
                       //   ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
                   // Price field with edit icon
                   Row(
@@ -214,7 +207,7 @@ class _GiftDetailsPageState extends State<GiftDetailsPage> {
                       //   ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
                   // Pledged/Unpledged switch
                   Row(
@@ -235,7 +228,7 @@ class _GiftDetailsPageState extends State<GiftDetailsPage> {
                   ),
 
                   //const Spacer(),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
 
                   // Save Gift button
                   Center(
