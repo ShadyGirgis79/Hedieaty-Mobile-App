@@ -1,49 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty/ProfilePage.dart';
-import 'package:hedieaty/EventListPage.dart';
-class Friend {
-  String? name;
-  String? profileURL;
-  String? phoneNumber;
-  int events = 0;
+import 'package:hedieaty/Model/Friend_Model.dart';
+import 'package:hedieaty/Home/FriendsList.dart';
 
-  Friend({required this.name, required this.profileURL,required this.phoneNumber , required this.events});
+// class Friend {
+//   String? name;
+//   String? profileURL;
+//   String? phoneNumber;
+//   int events = 0;
+//
+//   Friend({required this.name, required this.profileURL,required this.phoneNumber , required this.events});
+//
+// }
 
-}
 
-class FriendsList extends StatelessWidget {
-  final List<Friend> friends;
-
-  FriendsList({required this.friends});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: friends.length,  // Number of friends
-      itemBuilder: (context, index) {
-        final friend = friends[index];  // Get each friend
-        return ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(friend.profileURL!),  // Friend's profile picture
-          ),
-          title: Text(friend.name!),  // Friend's name
-          subtitle: Text(friend.events > 0
-              ? 'Upcoming Events: ${friend.events}'  // Show number of events
-              : 'No Upcoming Events'), // Show "No Upcoming Events" if 0
-          onTap: () {
-            // Navigate to EventListPage when tapping on the friend
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const EventListPage(),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
+//
+// class FriendsList extends StatelessWidget {
+//   final List<Friend> friends;
+//
+//   const FriendsList({super.key, required this.friends});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListView.builder(
+//       itemCount: friends.length,  // Number of friends
+//       itemBuilder: (context, index) {
+//         final friend = friends[index];  // Get each friend
+//         return ListTile(
+//           leading: CircleAvatar(
+//             backgroundImage: NetworkImage(friend.profileURL!),  // Friend's profile picture
+//           ),
+//           title: Text(friend.name!),  // Friend's name
+//           subtitle: Text(friend.events > 0
+//               ? 'Upcoming Events: ${friend.events}'  // Show number of events
+//               : 'No Upcoming Events'), // Show "No Upcoming Events" if 0
+//           onTap: () {
+//             // Navigate to EventListPage when tapping on the friend
+//             Navigator.push(
+//               context,
+//               MaterialPageRoute(
+//                 builder: (context) => const EventListPage(),
+//               ),
+//             );
+//           },
+//         );
+//       },
+//     );
+//   }
+// }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -96,19 +100,19 @@ class _MyHomePageState extends State<MyHomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Add Friend"),
+          title: const Text("Add Friend"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: "Name"),
+                decoration: const InputDecoration(labelText: "Name"),
                 onChanged: (value) {
                   name = value;
                 },
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
-                decoration: InputDecoration(labelText: "Phone"),
+                decoration: const InputDecoration(labelText: "Phone"),
                 onChanged: (value) {
                   phone = value;
                 },
@@ -126,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Text("Add"),
+              child: const Text("Add"),
             ),
           ],
         );
@@ -137,12 +141,10 @@ class _MyHomePageState extends State<MyHomePage> {
   // Function to handle option selected from the 3-dot menu
   void _onMenuSelected(String value) {
     if (value == 'create_event_list') {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const EventListPage()),
+      Navigator.pushNamed(context, '/MyEvents');
 
       //ScaffoldMessenger.of(context).showSnackBar(
         // SnackBar(content: Text('Create Your Own Event/List selected')),
-      );
     }
     else if (value == 'Profile'){
       Navigator.push(context,
@@ -163,11 +165,11 @@ class _MyHomePageState extends State<MyHomePage> {
             onSelected: _onMenuSelected,  // Handle the selection
             itemBuilder: (BuildContext context) {
               return [
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 'create_event_list',
                   child: Text('Create Your Own Event/List'),
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 'Profile',
                   child: Text('Profile'),
                 )
@@ -184,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
               controller: searchController,  // Attach the controller
               decoration: InputDecoration(
                 labelText: "Search Friends",
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
