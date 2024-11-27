@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hedieaty/GiftDetailsPage.dart';
 
 class GiftFriend {
   String name;
@@ -89,12 +88,7 @@ class _MyPledgedGiftsPageState extends State<MyPledgedGiftsPage> {
               )
                   : null, // No delete icon for unpledged gifts
               onTap: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const GiftDetailsPage(),
-                  ),
-                );
+                Navigator.pushNamed(context, '/FriendsGiftDetails');
               },
             ),
           );
@@ -106,6 +100,6 @@ class _MyPledgedGiftsPageState extends State<MyPledgedGiftsPage> {
 
 extension on DateTime {
   String toShortDateString() {
-    return '${this.day}-${this.month}-${this.year}';
+    return '$day-$month-$year';
   }
 }
