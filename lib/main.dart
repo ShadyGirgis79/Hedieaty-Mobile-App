@@ -1,13 +1,10 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:hedieaty/Events/FriendsEventListPage.dart';
-import 'package:hedieaty/Gifts/FriendsGiftListPage.dart';
-import 'package:hedieaty/Home/HomePage.dart';
-import 'package:hedieaty/Events/MyEventsListPage.dart';
-import 'package:hedieaty/Gifts/MyGiftListPage.dart';
-import 'package:hedieaty/MyGiftDetailsPage.dart';
+import 'package:hedieaty/Other/SignInPage.dart';
 
 void main() {
-  runApp(const HedieatyApp());
+  runApp(const MaterialApp(
+    home: HedieatyApp(),
+  ));
 }
 
 class HedieatyApp extends StatelessWidget {
@@ -21,16 +18,26 @@ class HedieatyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        initialRoute: '/Home', // Initial route
-        routes: {
-          '/Home': (context) => const MyHomePage(),
-          '/FriendsEvent': (context) => const FriendsEventList(),
-          '/MyEvents': (context) => const MyEventsList(),
-          '/FriendsGiftList': (context) => const FriendsGiftList(),
-          '/MyGiftList': (context) => const MyGiftList(),
+        home: SignInPage(),
 
-          '/MyGiftDetails': (context) => const MyGiftDetails(),
-        }
+      // Initial route
+        // routes: {
+        //   '/Home': (context) => const MyHomePage(),
+        //   '/FriendsEvent': (context) => const FriendsEventList(),
+        //   '/MyEvents': (context) => const MyEventsList(),
+        //   '/FriendsGiftList': (context) => const FriendsGiftList(),
+        //   '/MyGiftList': (context) => const MyGiftList(),
+        //   '/FriendsGiftDetails': (context) => const FriendsGiftDetails(),
+        //   '/MyGiftDetails': (context) => const MyGiftDetails(),
+        //   '/Profile':(context) => const ProfilePage(),
+        //   '/SignIn':(context) => const SignInPage(),
+        //   '/PledgedGift': (context) => const PLedgedGiftsPage(),
+        //
+        //   '/try':(context) => MyPledgedGiftsPage(),
+        // }
+
     );
   }
 }
+
+
