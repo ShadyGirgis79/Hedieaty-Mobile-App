@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Details/FriendsGiftDetailsPage.dart';
 import 'package:hedieaty/OldVersion/GiftDetailsPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 
@@ -205,7 +206,11 @@ class _FriendsGiftListState extends State<FriendsGiftList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Name Gift List"),
+        title: const Text("Event Gift List",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+          ),),
         backgroundColor: Colors.purpleAccent,
         foregroundColor: Colors.white,
         actions: [
@@ -236,8 +241,16 @@ class _FriendsGiftListState extends State<FriendsGiftList> {
             ),
             margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             child: ListTile(
-              title: Text(gift.name),
-              subtitle: Text("Category: ${gift.category} • Status: ${gift.status}"),
+              title: Text(gift.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),),
+              subtitle: Text("Category: ${gift.category} • Status: ${gift.status}",
+                style: TextStyle(
+                  //fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),),
 
               //This is made to remove icons if Gift is pledged
               // trailing:
@@ -263,7 +276,7 @@ class _FriendsGiftListState extends State<FriendsGiftList> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const GiftDetailsPage(),
+                    builder: (context) => FriendsGiftDetails(),
                   ),
                 );
               },
