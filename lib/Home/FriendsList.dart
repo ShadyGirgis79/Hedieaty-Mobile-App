@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hedieaty/OldVersion/EventListPage.dart';
-import 'package:hedieaty/Model/Friend_Model.dart';
+import 'package:hedieaty/Events/FriendsEventListPage.dart';
+import 'package:hedieaty/Model/User_Model.dart';
 
 class FriendsList extends StatelessWidget {
-  final List<Friend> friends;
+  final List<User> friends;
 
   const FriendsList({super.key, required this.friends});
+
 
   @override
   Widget build(BuildContext context) {
@@ -15,17 +16,40 @@ class FriendsList extends StatelessWidget {
           itemBuilder: (context, index) {
             final friend = friends[index];  // Get each friend
             return Container(
+              // decoration: BoxDecoration(
+              //   border: Border.all(
+              //     color: Colors.black,
+              //     width: 2.0,
+              //   ),
+              //   borderRadius: BorderRadius.circular(8.0),
+              // ),
+              margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundImage: NetworkImage(friend.profileURL!),  // Friend's profile picture
                 ),
-                title: Text(friend.name!),  // Friend's name
-                subtitle: Text(friend.events > 0
-                    ? 'Upcoming Events: ${friend.events}'  // Show number of events
-                    : 'No Upcoming Events'), // Show "No Upcoming Events" if 0
+                title: Text(friend.name, // Friend's name
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),),
+                subtitle: Text(friend.events
+                    .where((event) => event.status != "Past")  // Don't count the past events
+                    .length > 0
+                    ? 'Upcoming Events: ${friend.events.where((event) => event.status != "Past").length}'  // Show number of events
+                    : 'No Upcoming Events',
+                  style: TextStyle(
+                    //fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),), // Show "No Upcoming Events" if 0
                 onTap: () {
                   // Navigate to EventListPage when tapping on the friend
-                  Navigator.pushNamed(context, '/FriendsEvent');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FriendsEventList(),
+                    ),
+                  );
                 },
               ),
             );
