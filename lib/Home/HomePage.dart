@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hedieaty/ProfilePage.dart';
-import 'package:hedieaty/Model/Friend_Model.dart';
+import 'package:hedieaty/Events/MyEventsListPage.dart';
+import 'package:hedieaty/Other/ProfilePage.dart';
+import 'package:hedieaty/Model/Event_Model.dart';
+import 'package:hedieaty/Model/User_Model.dart';
+import 'package:hedieaty/Model/Gift_Model.dart';
 import 'package:hedieaty/Home/FriendsList.dart';
 
 // class Friend {
@@ -57,20 +60,621 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Friend> friends = [
-    Friend(name: "Mina Fadi", profileURL: 'https://via.placeholder.com/150', phoneNumber: "01272517828", events: 2),
-    Friend(name: "Fady Fodz", profileURL: 'https://via.placeholder.com/150', phoneNumber: "01112583719", events: 0),
-    Friend(name: "Mina Wes", profileURL: 'https://via.placeholder.com/150', phoneNumber: "01022345678", events: 1),
-    Friend(name: "Shady Shark", profileURL: 'https://via.placeholder.com/150', phoneNumber: "01233456789", events: 5),
-    Friend(name: "Matwa White", profileURL: 'https://via.placeholder.com/150', phoneNumber: "01198765432", events: 0),
-    Friend(name: "Besbes Besa", profileURL: 'https://via.placeholder.com/150', phoneNumber: "01065432123", events: 0),
-    Friend(name: "John Doe", profileURL: 'https://via.placeholder.com/150', phoneNumber: "01211223344", events: 2),
-    Friend(name: "Jane Smith", profileURL: 'https://via.placeholder.com/150', phoneNumber: "01177665544", events: 0),
-    Friend(name: "Alex Johnson", profileURL: 'https://via.placeholder.com/150', phoneNumber: "01012345670", events: 1),
 
+  List<User> friends = [
+    User(
+      name: "Mina Fadi",
+      password: "minapass123",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "01272517828",
+      events: [
+        Event(
+          name: "Birthday Party",
+          category: "Personal",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Teddy Bear", category: "Toy", status: "Pledged", price: 100),
+            Gift(name: "Phone", category: "Electronics", status: "Unpledged", price: 24000),
+            Gift(name: "Watch", category: "Electronics", status: "Unpledged", price: 8500),
+          ],
+        ),
+        Event(
+          name: "Project Meeting",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Harry Potter", category: "Books", status: "Pledged", price: 70),
+            Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price: 350),
+          ],
+        ),
+        Event(
+          name: "Project Meeting",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Harry Potter", category: "Books", status: "Pledged", price: 70),
+            Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price: 350),
+          ],
+        ),
+        Event(
+          name: "Project Meeting",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Harry Potter", category: "Books", status: "Pledged", price: 70),
+            Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price: 350),
+          ],
+        ),
+        Event(
+          name: "Project Meeting",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Harry Potter", category: "Books", status: "Pledged", price: 70),
+            Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price: 350),
+          ],
+        ),
+        Event(
+          name: "Project Meeting",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Harry Potter", category: "Books", status: "Pledged", price: 70),
+            Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price: 350),
+          ],
+        ),
+        Event(
+          name: "Project Meeting",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Harry Potter", category: "Books", status: "Pledged", price: 70),
+            Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price: 350),
+          ],
+        ),
+
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+      ],
+    ),
+    User(
+      name: "Sarah Johnson",
+      password: "sarahsecure456",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "0987654321",
+      events: [
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Team Building Retreat",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Coffee Mug", category: "Accessories", status: "Pledged", price: 150),
+          ],
+        ),
+      ],
+    ),
+    User(
+      name: "John Smith",
+      password: "johnsmith789",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "1234567890",
+      events: [
+        Event(
+          name: "Charity Auction",
+          category: "Community",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+            Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+          ],
+        ),
+        Event(
+          name: "Startup Pitch",
+          category: "Professional",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+        ),
+      ],
+    ),
+    User(
+      name: "Emily Davis",
+      password: "emily123pass",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "9876543210",
+      events: [
+        Event(
+          name: "Baby Shower",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Baby Stroller", category: "Childcare", status: "Unpledged", price: 15000),
+            Gift(name: "Diaper Bag", category: "Accessories", status: "Pledged", price: 2500),
+          ],
+        ),
+        Event(
+          name: "Book Club",
+          category: "Hobby",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Novel", category: "Books", status: "Pledged", price: 300),
+          ],
+        ),
+      ],
+    ),
+    User(
+        name: "Matwa",
+        password: "Matwa123",
+        profileURL: 'https://via.placeholder.com/150',
+        phoneNumber: "012363727"),
+    User(
+      name: "Besbes besa",
+      password: "Besapass123",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "01272517828",
+      events: [
+        Event(
+          name: "Birthday Party",
+          category: "Personal",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Teddy Bear", category: "Toy", status: "Pledged", price: 100),
+            Gift(name: "Phone", category: "Electronics", status: "Unpledged", price: 24000),
+            Gift(name: "Watch", category: "Electronics", status: "Unpledged", price: 8500),
+          ],
+        ),
+        Event(
+          name: "Project Meeting",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Harry Potter", category: "Books", status: "Pledged", price: 70),
+            Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price: 350),
+          ],
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+      ],
+    ),
+    User(
+      name: "Fady Fodz",
+      password: "Fodz456",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "0987654321",
+      events: [
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Team Building Retreat",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Coffee Mug", category: "Accessories", status: "Pledged", price: 150),
+          ],
+        ),
+      ],
+    ),
+    User(
+      name: "Wezaa Wes",
+      password: "Wez789",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "1234567890",
+      events: [
+        Event(
+          name: "Charity Auction",
+          category: "Community",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+            Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+          ],
+        ),
+        Event(
+          name: "Startup Pitch",
+          category: "Professional",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+        ),
+      ],
+    ),
+    User(
+      name: "Mina Fadi",
+      password: "minapass123",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "01272517828",
+      events: [
+        Event(
+          name: "Birthday Party",
+          category: "Personal",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Teddy Bear", category: "Toy", status: "Pledged", price: 100),
+            Gift(name: "Phone", category: "Electronics", status: "Unpledged", price: 24000),
+            Gift(name: "Watch", category: "Electronics", status: "Unpledged", price: 8500),
+          ],
+        ),
+        Event(
+          name: "Project Meeting",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Harry Potter", category: "Books", status: "Pledged", price: 70),
+            Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price: 350),
+          ],
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+      ],
+    ),
+    User(
+      name: "Sarah Johnson",
+      password: "sarahsecure456",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "0987654321",
+      events: [
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Team Building Retreat",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Coffee Mug", category: "Accessories", status: "Pledged", price: 150),
+          ],
+        ),
+      ],
+    ),
+    User(
+      name: "John Smith",
+      password: "johnsmith789",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "1234567890",
+      events: [
+        Event(
+          name: "Charity Auction",
+          category: "Community",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+            Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+          ],
+        ),
+        Event(
+          name: "Startup Pitch",
+          category: "Professional",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+        ),
+      ],
+    ),
+    User(
+      name: "Emily Davis",
+      password: "emily123pass",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "9876543210",
+      events: [
+        Event(
+          name: "Baby Shower",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Baby Stroller", category: "Childcare", status: "Unpledged", price: 15000),
+            Gift(name: "Diaper Bag", category: "Accessories", status: "Pledged", price: 2500),
+          ],
+        ),
+        Event(
+          name: "Book Club",
+          category: "Hobby",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Novel", category: "Books", status: "Pledged", price: 300),
+          ],
+        ),
+      ],
+    ),
+    User(
+        name: "Tony Bassem",
+        password: "Matwa123",
+        profileURL: 'https://via.placeholder.com/150',
+        phoneNumber: "012363727"),
+    User(
+      name: "Basbosa",
+      password: "Besapass123",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "01272517828",
+      events: [
+        Event(
+          name: "Birthday Party",
+          category: "Personal",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Teddy Bear", category: "Toy", status: "Pledged", price: 100),
+            Gift(name: "Phone", category: "Electronics", status: "Unpledged", price: 24000),
+            Gift(name: "Watch", category: "Electronics", status: "Unpledged", price: 8500),
+          ],
+        ),
+        Event(
+          name: "Project Meeting",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Harry Potter", category: "Books", status: "Pledged", price: 70),
+            Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price: 350),
+          ],
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+        Event(
+          name: "Conference",
+          category: "Professional",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+        ),
+      ],
+    ),
+    User(
+      name: "Mark el 3abd",
+      password: "Fodz456",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "0987654321",
+      events: [
+        Event(
+          name: "Wedding",
+          category: "Family",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+            Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+          ],
+        ),
+        Event(
+          name: "Team Building Retreat",
+          category: "Work",
+          status: "Past",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Coffee Mug", category: "Accessories", status: "Pledged", price: 150),
+          ],
+        ),
+      ],
+    ),
+    User(
+      name: "Wezaa 2",
+      password: "Wez789",
+      profileURL: 'https://via.placeholder.com/150',
+      phoneNumber: "1234567890",
+      events: [
+        Event(
+          name: "Charity Auction",
+          category: "Community",
+          status: "Current",
+          date: DateTime(2023, 12, 25),
+          gifts: [
+            Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+            Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+          ],
+        ),
+        Event(
+          name: "Startup Pitch",
+          category: "Professional",
+          status: "Upcoming",
+          date: DateTime(2023, 12, 25),
+          gifts: [],
+        ),
+      ],
+    ),
   ];
 
-  List<Friend> filteredFriends = [];  // To hold the search results
+  List<User> filteredFriends = [];  // To hold the search results
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -85,7 +689,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String query = searchController.text.toLowerCase();
     setState(() {
       filteredFriends = friends
-          .where((friend) => friend.name!.toLowerCase().contains(query))
+          .where((friend) => friend.name.toLowerCase().contains(query))
           .toList();
     });
   }
@@ -95,7 +699,7 @@ class _MyHomePageState extends State<MyHomePage> {
     String name = "";
     String phone="";
     String profileURL = 'https://via.placeholder.com/150';  // Default profile image URL
-
+    String pass ="";
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -124,13 +728,20 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 if (name.isNotEmpty) {
                   setState(() {
-                    friends.add(Friend(name: name, profileURL: profileURL, phoneNumber: phone, events: 0));
+                    friends.add(User(name: name,password:pass  ,profileURL: profileURL, phoneNumber: phone));
                     filteredFriends = friends;  // Update the filtered list
                   });
                   Navigator.of(context).pop();
                 }
               },
               child: const Text("Add"),
+            ),
+            SizedBox(width: 10,),
+            ElevatedButton(
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+              child: const Text("Back"),
             ),
           ],
         );
@@ -141,14 +752,19 @@ class _MyHomePageState extends State<MyHomePage> {
   // Function to handle option selected from the 3-dot menu
   void _onMenuSelected(String value) {
     if (value == 'create_event_list') {
-      Navigator.pushNamed(context, '/MyEvents');
-
-      //ScaffoldMessenger.of(context).showSnackBar(
-        // SnackBar(content: Text('Create Your Own Event/List selected')),
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyEventsList(),
+        ),
+      );
     }
     else if (value == 'Profile'){
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const ProfilePage()),
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfilePage(),
+        ),
       );
     }
   }
@@ -157,7 +773,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Hedieaty"),
+        title: const Text("Hedieaty",
+          style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 28,
+        ),),
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent,
         actions: [
@@ -178,26 +798,29 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: searchController,  // Attach the controller
-              decoration: InputDecoration(
-                labelText: "Search Friends",
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+      body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: searchController,  // Attach the controller
+                  decoration: InputDecoration(
+                    labelText: "Search Friends",
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Expanded(
+                child: FriendsList(friends: filteredFriends), // Show filtered friends
+              ),
+            ],
           ),
-          Expanded(
-            child: FriendsList(friends: filteredFriends), // Show filtered friends
-          ),
-        ],
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: _addFriendManually,  // Calls the method to add a friend
         child: const Icon(Icons.add),
