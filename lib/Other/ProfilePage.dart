@@ -1,8 +1,8 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:hedieaty/EventListPage.dart';
-import 'package:hedieaty/MyPledgedGiftsPage.dart';
+import 'package:hedieaty/Events/MyEventsListPage.dart';
+import 'package:hedieaty/Other/SignInPage.dart';
+import 'package:hedieaty/Gifts/PledgedGifts.dart';
 //import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -19,6 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String username = "Shady Shark";
   String profileURL = "Assets/MyPhoto.png";
   String phoneNumber = '01272517828';
+
 
   // Future<void> pickImage() async {
   //   final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -48,6 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 controller: TextEditingController(text: username),
               ),
+              const SizedBox(height: 20),
               TextField(
                 decoration: const InputDecoration(labelText: "Phone"),
                 onChanged: (value) {
@@ -55,18 +57,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 controller: TextEditingController(text: phoneNumber),
               ),
+
               const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed:(){
-                  //pickImage
-                },
-                icon: const Icon(Icons.camera_alt),
-                label: const Text("Change Profile Image"),
-              ),
+
             ],
           ),
           actions: [
-            TextButton(
+            ElevatedButton(
               onPressed: () {
                 setState(() {
                   username = newUsername;
@@ -75,6 +72,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 Navigator.of(context).pop();
               },
               child: const Text("Save"),
+            ),
+            SizedBox(width: 50,),
+            ElevatedButton(
+                onPressed: (){
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Cancel")
             ),
           ],
         );
@@ -88,7 +92,11 @@ class _ProfilePageState extends State<ProfilePage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Profile"),
+        title: const Text("My Profile",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+          ),),
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent,
       ),
@@ -103,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 20),
               // Profile Image and Name
               Container(
-                width: 150,
+                width: 200,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
@@ -112,15 +120,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   )
                 ),
                 child: CircleAvatar(
-                  radius: 80,
+                  radius: 100,
                   //backgroundColor: Colors.purpleAccent,
                  // backgroundImage: imageFile != null ? FileImage(imageFile! as File) as ImageProvider
-                  //    : AssetImage(profileURL), // Replace with your image path
+                  //    : AssetImage(profileURL),
+                  backgroundImage: AssetImage(profileURL), // Replace with your image path
                 ),
               ),
               const SizedBox(height: 10),
               Text(username,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.purple,
                   fontSize: 24,
                 ),
@@ -132,7 +141,21 @@ class _ProfilePageState extends State<ProfilePage> {
                   fontSize: 15,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+
+              ElevatedButton.icon(
+                onPressed:(){
+                  //pickImage
+                },
+                icon: const Icon(Icons.camera_alt),
+                label: const Text("Change Profile Image"),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.purpleAccent,
+                ),
+              ),
+              const SizedBox(height: 10),
+
               // Buttons to update profile and notification settings
               ElevatedButton.icon(
                 onPressed: () {
@@ -162,12 +185,55 @@ class _ProfilePageState extends State<ProfilePage> {
               //List of user's created events
               ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const EventListPage()),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyEventsList(),
+                    ),
                   );
                 },
                 icon: const Icon(Icons.event_available_rounded),
                 label: const Text('My Created Events'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.purpleAccent,
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Are you sure you want to Sign Out?"),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () {
+                                // setState(() {
+                                //
+                                // });
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => SignInPage()),
+                                      (Route<dynamic> route) => false, // Remove all previous routes
+                                );
+                              },
+                              child: const Text("Yes"),
+                            ),
+                            SizedBox(width: 10,),
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Cancel")
+                            ),
+                          ],
+                        );
+                      });
+                },
+                child: const Text('Sign Out'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.purpleAccent,
@@ -198,7 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const MyPledgedGiftsPage(),
+                      builder: (context) => PLedgedGiftsPage(),
                     ),
                   );
                 },
@@ -212,7 +278,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   // Mock event list builder
-  Widget _buildEventList() {
+  Widget buildEventList() {
     // You can replace this list with your dynamic event data
     List<Map<String, String>> events = [
       {"event": "Birthday Party", "gifts": "5 Gifts"},
