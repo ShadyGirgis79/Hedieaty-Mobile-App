@@ -30,11 +30,7 @@ class HedieatyApp extends StatelessWidget {
         //   '/FriendsGiftDetails': (context) => const FriendsGiftDetails(),
         //   '/MyGiftDetails': (context) => const MyGiftDetails(),
         //   '/Profile':(context) => const ProfilePage(),
-        //   '/SignIn':(context) => const SignInPage(),
-        //   '/PledgedGift': (context) => const PLedgedGiftsPage(),
-        //
-        //   '/try':(context) => MyPledgedGiftsPage(),
-        // }
+
 
     );
   }
