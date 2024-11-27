@@ -302,7 +302,7 @@ class _FriendsEventListState extends State<FriendsEventList> {
         title: const Text('Name Events List',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 28,
+            fontSize: 20,
           ),), //Change Name to the name of the friend
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent,
@@ -336,11 +336,11 @@ class _FriendsEventListState extends State<FriendsEventList> {
                   title: Text('${event.name}' ,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 18,
                     ),),
                   subtitle: Text('${event.category} • ${event.status}',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     //fontWeight: FontWeight.bold,
                   ),),
                   trailing: Row(

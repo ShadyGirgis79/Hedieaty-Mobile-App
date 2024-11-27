@@ -400,7 +400,7 @@ class _MyEventsListState extends State<MyEventsList> {
         title: const Text('My Events List',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 28,
+            fontSize: 20,
           ),),
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent,
@@ -434,12 +434,12 @@ class _MyEventsListState extends State<MyEventsList> {
                   title: Text('${event.name}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 18,
                     ),),
                   subtitle: Text('${event.category} • ${event.status}',
                     style: TextStyle(
                       //fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 14,
                     ),),
                   trailing: event.status == "Past"?
                   Row(

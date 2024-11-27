@@ -776,7 +776,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text("Hedieaty",
           style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 28,
+          fontSize: 20,
         ),),
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent,

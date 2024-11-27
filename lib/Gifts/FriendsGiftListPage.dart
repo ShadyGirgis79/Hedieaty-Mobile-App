@@ -209,7 +209,7 @@ class _FriendsGiftListState extends State<FriendsGiftList> {
         title: const Text("Event Gift List",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 28,
+            fontSize: 20,
           ),),
         backgroundColor: Colors.purpleAccent,
         foregroundColor: Colors.white,
@@ -244,12 +244,12 @@ class _FriendsGiftListState extends State<FriendsGiftList> {
               title: Text(gift.name,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 18,
                 ),),
               subtitle: Text("Category: ${gift.category} • Status: ${gift.status}",
                 style: TextStyle(
                   //fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),),
 
               //This is made to remove icons if Gift is pledged

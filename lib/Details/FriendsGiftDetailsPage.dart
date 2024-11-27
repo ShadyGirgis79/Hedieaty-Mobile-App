@@ -47,7 +47,7 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
         title: const Text('Gift Details',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 28,
+            fontSize: 20,
           ),),
         backgroundColor: Colors.purpleAccent,
         foregroundColor: Colors.white,

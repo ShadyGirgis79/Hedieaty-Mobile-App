@@ -31,7 +31,7 @@ class FriendsList extends StatelessWidget {
                 title: Text(friend.name, // Friend's name
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 18,
                 ),),
                 subtitle: Text(friend.events
                     .where((event) => event.status != "Past")  // Don't count the past events
@@ -40,7 +40,7 @@ class FriendsList extends StatelessWidget {
                     : 'No Upcoming Events',
                   style: TextStyle(
                     //fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 14,
                   ),), // Show "No Upcoming Events" if 0
                 onTap: () {
                   // Navigate to EventListPage when tapping on the friend

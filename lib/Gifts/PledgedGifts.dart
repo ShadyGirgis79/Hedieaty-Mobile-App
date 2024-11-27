@@ -67,7 +67,7 @@ class _PLedgedGiftsPageState extends State<PLedgedGiftsPage> {
         title: const Text('My Pledged Gifts',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 28,
+            fontSize: 20,
           ),),
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent,
@@ -91,7 +91,7 @@ class _PLedgedGiftsPageState extends State<PLedgedGiftsPage> {
               title: Text(gift.name,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 18,
                 ),),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +99,7 @@ class _PLedgedGiftsPageState extends State<PLedgedGiftsPage> {
                   Text('Category: ${gift.category}',
                     style: TextStyle(
                       //fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 14,
                     ),),
                 ],
               ),

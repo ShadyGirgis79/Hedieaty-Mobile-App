@@ -95,7 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: const Text("My Profile",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 28,
+            fontSize: 20,
           ),),
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent,

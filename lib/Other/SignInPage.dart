@@ -52,7 +52,7 @@ class _SignInPageState extends State<SignInPage> {
           "Sign In",
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 28,
+            fontSize: 20,
           ),
         ),
         foregroundColor: Colors.white,
