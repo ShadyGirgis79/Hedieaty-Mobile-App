@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Gifts/FriendsGiftListPage.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
+import 'package:hedieaty/Model/Gift_Model.dart';
 
 class FriendsEventList extends StatefulWidget {
   const FriendsEventList({super.key});
@@ -12,9 +14,116 @@ class FriendsEventList extends StatefulWidget {
 class _FriendsEventListState extends State<FriendsEventList> {
 
   List<Event> events = [
-    Event(name: "Birthday Party", category: "Personal", status: "Upcoming" , gifts: 3),
-    Event(name: "Project Meeting", category: "Work", status: "Past",gifts: 5),
-    Event(name: "Conference", category: "Professional", status: "Current",gifts: 2),
+    Event(
+      name: "Charity Auction",
+      category: "Community",
+      status: "Past",
+      date: DateTime(2023, 12, 25),
+      gifts: [
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+        Gift(name: "Handmade Bag", category: "Craft", status: "Pledged", price: 500),
+        Gift(name: "Painting", category: "Art", status: "Unpledged", price: 1200),
+      ],
+    ),
+    Event(
+      name: "Birthday Party",
+      category: "Personal",
+      status: "Upcoming",
+      date: DateTime(2023, 12, 25),
+      gifts: [
+        Gift(name: "Teddy Bear", category: "Toy", status: "Pledged", price: 100),
+        Gift(name: "Phone", category: "Electronics", status: "Unpledged", price: 24000),
+        Gift(name: "Watch", category: "Electronics", status: "Unpledged", price: 8500),
+        Gift(name: "Teddy Bear", category: "Toy", status: "Pledged", price: 100),
+        Gift(name: "Phone", category: "Electronics", status: "Unpledged", price: 24000),
+        Gift(name: "Watch", category: "Electronics", status: "Unpledged", price: 8500),
+        Gift(name: "Teddy Bear", category: "Toy", status: "Pledged", price: 100),
+        Gift(name: "Phone", category: "Electronics", status: "Unpledged", price: 24000),
+        Gift(name: "Watch", category: "Electronics", status: "Unpledged", price: 8500),
+        Gift(name: "Teddy Bear", category: "Toy", status: "Pledged", price: 100),
+        Gift(name: "Phone", category: "Electronics", status: "Unpledged", price: 24000),
+        Gift(name: "Watch", category: "Electronics", status: "Unpledged", price: 8500),
+      ],
+    ),
+    Event(
+      name: "Project Meeting",
+      category: "Work",
+      status: "Past",
+      date: DateTime(2023, 12, 25),
+      gifts: [
+        Gift(name: "Harry Potter", category: "Books", status: "Pledged", price: 70),
+        Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price: 350),
+      ],
+    ),
+    Event(
+      name: "Conference",
+      category: "Professional",
+      status: "Current",
+      date: DateTime(2023, 12, 25),
+    ),
+    Event(
+      name: "Wedding",
+      category: "Family",
+      status: "Upcoming",
+      date: DateTime(2023, 12, 25),
+      gifts: [
+        Gift(name: "Necklace", category: "Jewelry", status: "Pledged", price: 5000),
+        Gift(name: "Dinner Set", category: "Home", status: "Unpledged", price: 3000),
+      ],
+    ),
+    Event(
+      name: "Team Building Retreat",
+      category: "Work",
+      status: "Past",
+      date: DateTime(2023, 12, 25),
+      gifts: [
+        Gift(name: "Coffee Mug", category: "Accessories", status: "Pledged", price: 150),
+      ],
+    ),
+    Event(
+      name: "Baby Shower",
+      category: "Family",
+      status: "Upcoming",
+      date: DateTime(2023, 12, 25),
+      gifts: [
+        Gift(name: "Baby Stroller", category: "Childcare", status: "Unpledged", price: 15000),
+        Gift(name: "Diaper Bag", category: "Accessories", status: "Pledged", price: 2500),
+      ],
+    ),
+    Event(
+      name: "Book Club",
+      category: "Hobby",
+      status: "Past",
+      date: DateTime(2023, 12, 25),
+      gifts: [
+        Gift(name: "Novel", category: "Books", status: "Pledged", price: 300),
+      ],
+    ),
+
   ];
 
   String sortBy = 'name';
@@ -190,7 +299,11 @@ class _FriendsEventListState extends State<FriendsEventList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Name Events List'), //Change Name to the name of the friend
+        title: const Text('Name Events List',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+          ),), //Change Name to the name of the friend
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent,
         actions: [
@@ -211,7 +324,7 @@ class _FriendsEventListState extends State<FriendsEventList> {
               final event = events[index];
               return Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: event.status == "Past" ? Color(0xFF9393FF) : Color(0xABABFFFF),
                   border: Border.all(
                     color: Colors.black,
                     width: 2.0,
@@ -220,21 +333,29 @@ class _FriendsEventListState extends State<FriendsEventList> {
                 ),
                 margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                 child: ListTile(
-                  title: Text('${event.name}'),
-                  subtitle: Text('${event.category} • ${event.status}'),
+                  title: Text('${event.name}' ,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),),
+                  subtitle: Text('${event.category} • ${event.status}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    //fontWeight: FontWeight.bold,
+                  ),),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        height: 35,
-                        width: 35,
+                        height: 40,
+                        width: 40,
                         decoration: BoxDecoration(
                           color: Colors.purpleAccent,
                           shape: BoxShape.circle,
 
                         ),
                         child: Center(
-                          child: Text('${event.gifts}',
+                          child: Text('${event.gifts.length}',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -247,7 +368,12 @@ class _FriendsEventListState extends State<FriendsEventList> {
                     ],
                   ),
                   onTap: (){
-                    Navigator.pushNamed(context, "/FriendsGiftList");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FriendsGiftList(),
+                      ),
+                    );
                   },
                 ),
               );
