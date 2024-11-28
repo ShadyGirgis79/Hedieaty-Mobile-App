@@ -122,7 +122,14 @@ class _SignInPageState extends State<SignInPage> {
                   children: [
                     ElevatedButton(
                       onPressed: SignIn,
-                      child: const Text("Sign In"),
+                      child: const Text("Sign In",
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent,
+                      ),
                     ),
                     const SizedBox(width: 50),
                     ElevatedButton(
@@ -134,7 +141,14 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                         );
                       },
-                      child: const Text("Log In"),
+                      child: const Text("Log In",
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent,
+                      ),
                     ),
                   ],
                 ),

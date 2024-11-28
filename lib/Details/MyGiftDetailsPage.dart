@@ -490,7 +490,14 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                           );
                         }
                       },
-                      child: const Text('Save Gift'),
+                      child: const Text('Save Gift',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent,
+                      ),
                     ),
                   ),
 

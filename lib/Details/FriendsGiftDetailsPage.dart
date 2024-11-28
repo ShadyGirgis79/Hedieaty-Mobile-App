@@ -403,10 +403,16 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                         },
                       ),
                       Text(_isPledged ? 'Pledged' : 'Unpledged',
-                        style: TextStyle(
-                          //fontWeight: FontWeight.bold,
+                        style: _isPledged?
+                        TextStyle(
+                          color: Colors.red,
                           fontSize: 20,
-                        ),),
+                        ):
+                          TextStyle(
+                            color: Colors.green,
+                            fontSize: 20,
+                          )
+                      ),
                       SizedBox(width: 20,),
                     ],
                   ),
@@ -433,7 +439,14 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                           );
                         }
                       },
-                      child: const Text('Save Gift'),
+                      child: const Text('Save Gift',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent,
+                      ),
                     ),
                   ),
 
