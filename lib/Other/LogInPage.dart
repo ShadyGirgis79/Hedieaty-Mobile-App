@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Other/SignInPage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -13,6 +15,22 @@ class _LogInPageState extends State<LogInPage> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  XFile? imageFile;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> pickImage() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          imageFile = pickedFile;
+        });
+      }
+    } catch (e) {
+      // Handle errors, such as permission denial
+      debugPrint('Error picking image: $e');
+    }
+  }
 
   void logIn() {
     final name = nameController.text.trim();
@@ -70,15 +88,17 @@ class _LogInPageState extends State<LogInPage> {
                     width: 5.0,
                   ),
                 ),
-                child: const CircleAvatar(
+                child: CircleAvatar(
                   radius: 100,
-                  backgroundImage: AssetImage("Assets/MyPhoto.png"), // Replace with your image path
+                  backgroundImage: imageFile != null
+                      ? FileImage(File(imageFile!.path))
+                      : AssetImage("Assets/MyPhoto.png") as ImageProvider, // Replace with your image path
                 ),
               ),
               const SizedBox(height: 10),
               ElevatedButton.icon(
                 onPressed: () {
-                  // Implement image picker logic if required
+                  pickImage();
                 },
                 icon: const Icon(Icons.camera_alt),
                 label: const Text("Change Profile Image"),
@@ -122,7 +142,8 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 obscureText: true,
               ),
-              const SizedBox(height: 40),
+
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: logIn,
                 style: ElevatedButton.styleFrom(
@@ -139,6 +160,8 @@ class _LogInPageState extends State<LogInPage> {
                   ),
                 ),
               ),
+
+              const SizedBox(height: 40),
             ],
           ),
         ),

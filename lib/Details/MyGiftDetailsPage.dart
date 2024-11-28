@@ -4,9 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:hedieaty/Gifts/MyGiftListPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'dart:io';
-
-// Uncomment if you're using the image picker
-//import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MyGiftDetails extends StatefulWidget {
   const MyGiftDetails({super.key});
@@ -44,15 +42,15 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
     _isPledged = gift.status == "Unpledged";
   }
 
-  // Future<void> _pickImage() async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _image = File(pickedFile.path);
-  //     });
-  //   }
-  // }
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
 
 
   // Future<void> _pickImage() async {
@@ -110,12 +108,19 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                               ? Image.file(_image!, height: 200, width: 200, fit: BoxFit.cover)
                               : const Icon(Icons.image, size: 200, color: Colors.grey),
                         ),
+
                         const SizedBox(height: 8),
-                        ElevatedButton(
-                          onPressed: _isPledged ? null : () {
-                            //_pickImage();
-                          },
-                          child: const Text('Upload Image'),
+
+                        ElevatedButton.icon(
+                          onPressed: (){
+                            _pickImage();
+                          }, // Call pickImage function
+                          icon: const Icon(Icons.camera_alt),
+                          label: const Text("Upload Image///Image/label"),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.purpleAccent,
+                          ),
                         ),
                       ],
                     ),
@@ -408,6 +413,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
 
                   const SizedBox(height: 10),
 
+                  //Container for the person who pledged the gift
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(

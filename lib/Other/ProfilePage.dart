@@ -1,9 +1,9 @@
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Events/MyEventsListPage.dart';
 import 'package:hedieaty/Other/SignInPage.dart';
 import 'package:hedieaty/Gifts/PledgedGifts.dart';
-//import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,22 +13,25 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
-  // XFile? imageFile;
-  // final ImagePicker _picker = ImagePicker();
+  XFile? imageFile;
+  final ImagePicker _picker = ImagePicker();
   String username = "Shady Shark";
   String profileURL = "Assets/MyPhoto.png";
   String phoneNumber = '01272517828';
 
-
-  // Future<void> pickImage() async {
-  //   final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       imageFile = XFile(pickedFile.path);
-  //     });
-  //   }
-  //}
+  Future<void> pickImage() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          imageFile = pickedFile;
+        });
+      }
+    } catch (e) {
+      // Handle errors, such as permission denial
+      debugPrint('Error picking image: $e');
+    }
+  }
 
   void editPersonalInfo() {
     String newUsername = username;
@@ -57,9 +60,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 controller: TextEditingController(text: phoneNumber),
               ),
-
-              const SizedBox(height: 20),
-
             ],
           ),
           actions: [
@@ -73,12 +73,12 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: const Text("Save"),
             ),
-            SizedBox(width: 50,),
+            const SizedBox(width: 10),
             ElevatedButton(
-                onPressed: (){
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Cancel")
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
             ),
           ],
         );
@@ -86,17 +86,18 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("My Profile",
+        title: const Text(
+          "My Profile",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-          ),),
+          ),
+        ),
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent,
       ),
@@ -115,27 +116,29 @@ class _ProfilePageState extends State<ProfilePage> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.purple.withOpacity(.5),
+                    color: Colors.purple.withOpacity(0.5),
                     width: 5.0,
-                  )
+                  ),
                 ),
                 child: CircleAvatar(
                   radius: 100,
-                  //backgroundColor: Colors.purpleAccent,
-                 // backgroundImage: imageFile != null ? FileImage(imageFile! as File) as ImageProvider
-                  //    : AssetImage(profileURL),
-                  backgroundImage: AssetImage(profileURL), // Replace with your image path
+                  backgroundColor: Colors.purpleAccent,
+                  backgroundImage: imageFile != null
+                      ? FileImage(File(imageFile!.path))
+                      : AssetImage(profileURL) as ImageProvider,
                 ),
               ),
               const SizedBox(height: 10),
-              Text(username,
+              Text(
+                username,
                 style: const TextStyle(
                   color: Colors.purple,
                   fontSize: 24,
                 ),
                 textAlign: TextAlign.center,
               ),
-              Text(phoneNumber,
+              Text(
+                phoneNumber,
                 style: TextStyle(
                   color: Colors.black.withOpacity(0.3),
                   fontSize: 15,
@@ -144,9 +147,7 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 10),
 
               ElevatedButton.icon(
-                onPressed:(){
-                  //pickImage
-                },
+                onPressed: pickImage, // Call pickImage function
                 icon: const Icon(Icons.camera_alt),
                 label: const Text("Change Profile Image"),
                 style: ElevatedButton.styleFrom(
@@ -158,9 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
               // Buttons to update profile and notification settings
               ElevatedButton.icon(
-                onPressed: () {
-                  editPersonalInfo();
-                },
+                onPressed: editPersonalInfo,
                 icon: const Icon(Icons.person),
                 label: const Text("Update Personal Information"),
                 style: ElevatedButton.styleFrom(
@@ -182,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 10),
 
-              //List of user's created events
+              // List of user's created events
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -204,34 +203,32 @@ class _ProfilePageState extends State<ProfilePage> {
               ElevatedButton(
                 onPressed: () {
                   showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text("Are you sure you want to Sign Out?"),
-                          actions: [
-                            ElevatedButton(
-                              onPressed: () {
-                                // setState(() {
-                                //
-                                // });
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => SignInPage()),
-                                      (Route<dynamic> route) => false, // Remove all previous routes
-                                );
-                              },
-                              child: const Text("Yes"),
-                            ),
-                            SizedBox(width: 10,),
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text("Cancel")
-                            ),
-                          ],
-                        );
-                      });
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text("Are you sure you want to Sign Out?"),
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(builder: (context) => SignInPage()),
+                                    (Route<dynamic> route) => false, // Remove all previous routes
+                              );
+                            },
+                            child: const Text("Yes"),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("Cancel"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 child: const Text('Sign Out'),
                 style: ElevatedButton.styleFrom(
@@ -240,21 +237,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(height: 10),
-
-              // const Text(
-              //   'My Created Events',
-              //   style: TextStyle(
-              //     fontSize: 18,
-              //     fontWeight: FontWeight.bold,
-              //     color: Colors.purple,
-              //   ),
-              // ),
-
-
-              // Mock list of events and gifts
-              //_buildEventList(),
-
-              const SizedBox(height: 20),
 
               ListTile(
                 leading: const Icon(Icons.card_giftcard),
@@ -272,38 +254,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
         ),
-
       ),
-    );
-  }
-
-  // Mock event list builder
-  Widget buildEventList() {
-    // You can replace this list with your dynamic event data
-    List<Map<String, String>> events = [
-      {"event": "Birthday Party", "gifts": "5 Gifts"},
-      {"event": "Wedding", "gifts": "3 Gifts"},
-      {"event": "Christmas", "gifts": "10 Gifts"},
-    ];
-
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: events.length,
-      itemBuilder: (context, index) {
-        return Card(
-          child: ListTile(
-            title: Text(events[index]['event']!),
-            subtitle: Text("Associated Gifts: ${events[index]['gifts']}"),
-            trailing: IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                // Edit event action
-              },
-            ),
-          ),
-        );
-      },
     );
   }
 }
