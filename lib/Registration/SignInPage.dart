@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Database/Database.dart';
 import 'package:hedieaty/Home/HomePage.dart';
 import 'package:hedieaty/Registration/SignUpPage.dart';
 
@@ -13,20 +14,40 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void SignIn() {
+  void SignIn() async{
     final name = nameController.text.trim();
     final password = passwordController.text.trim();
 
     if (name.isEmpty || password.isEmpty) {
       showMessage("Please fill out all fields");
+      return;
     }
-     else {
+
+    final db = HedieatyDatabase();
+    // Query to check if the user exists with the provided name and password
+    String sql = '''
+      SELECT * FROM Users
+      WHERE Name = "$name" AND Password = "$password"
+    ''';
+
+    List<Map<String, dynamic>> result = await db.readData(sql);
+
+    //To check for database tables
+    List<Map> check = await db.readData("SELECT * FROM 'Users' ");
+    print("$check");
+
+    if (result.isNotEmpty) {
+      // User found
       showMessage("Logged in successfully!");
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => MyHomePage()),
             (Route<dynamic> route) => false, // Remove all previous routes
       );
+    }
+    else {
+      // User not found or password incorrect
+      showMessage("Invalid username or password");
     }
   }
 
@@ -122,7 +143,7 @@ class _SignInPageState extends State<SignInPage> {
                   children: [
                     ElevatedButton(
                       onPressed: SignIn,
-                      child: const Text("Sign Up",
+                      child: const Text("Sign In",
                         style: TextStyle(
                           fontSize: 18,
                         ),),
@@ -141,7 +162,7 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                         );
                       },
-                      child: const Text("Log In",
+                      child: const Text("Sign Up",
                         style: TextStyle(
                           fontSize: 18,
                         ),),
