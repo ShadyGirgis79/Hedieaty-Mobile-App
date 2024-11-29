@@ -76,6 +76,10 @@ class HedieatyDatabase{
             ALTER TABLE 'Users' ADD COLUMN 'IsActive' INTEGER DEFAULT 0
           ''');
         print("Column 'IsActive' added to Users table.");
+
+        await db.execute('''
+            ALTER TABLE 'Gifts' ADD COLUMN 'Description' TEXT NOT NULL
+          ''');
       }
     },
         );
