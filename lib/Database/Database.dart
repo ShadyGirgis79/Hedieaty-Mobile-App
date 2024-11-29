@@ -16,7 +16,8 @@ class HedieatyDatabase{
     }
   }
 
-  int Version = 1;
+  //int Version = 1;
+  int Version = 2;  // Change the version to 2 (or higher)
 
   initialize() async {
     String mypath = await getDatabasesPath();
@@ -34,6 +35,9 @@ class HedieatyDatabase{
             'PhoneNumber' TEXT NOT NULL
             );
           ''');
+
+          //Adding a new column
+          await db.execute('''ALTER TABLE 'Users' ADD COLUMN 'IsActive' INTEGER DEFAULT 0 ''');
 
           //Create Events Table
           await db.execute('''
@@ -63,7 +67,18 @@ class HedieatyDatabase{
           ''');
 
           print("Database has been created .......");
-        });
+        },
+        onUpgrade: (db, oldVersion, newVersion) async {
+      if (oldVersion < 2) {
+        // If upgrading from version 1 to version 2
+        // Add the 'IsActive' column to the 'Users' table
+        await db.execute('''
+            ALTER TABLE 'Users' ADD COLUMN 'IsActive' INTEGER DEFAULT 0
+          ''');
+        print("Column 'IsActive' added to Users table.");
+      }
+    },
+        );
     return mydb;
   }
 
