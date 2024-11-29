@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Database/Database.dart';
 import 'package:hedieaty/Registration/SignInPage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
 
 class SignUpPage extends StatefulWidget {
@@ -33,23 +35,50 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-  void logIn() {
+  void SignUp() async{
     final name = nameController.text.trim();
     final phone = phoneController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
+    final profilePath = imageFile != null ? imageFile!.path : "";
 
     if (name.isEmpty || phone.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
       showMessage("Please fill out all fields");
-    } else if (password != confirmPassword) {
+      return;
+    }
+
+    if (password != confirmPassword) {
       showMessage("Passwords do not match");
-    } else {
-      showMessage("Logged in successfully!");
+      return;
+    }
+
+    if (isValidPhone == false) {
+      showMessage("Please enter a valid Egyptian phone number");
+      return;
+    }
+
+    final db = HedieatyDatabase();
+    String sql = '''
+      INSERT INTO Users ('Name' , 'Password' , 'ProfileURL' , 'PhoneNumber')
+      VALUES ("$name" , "$password" , "$profilePath" , "$phone")
+    ''';
+    int response = await db.insertData(sql);
+
+    //To check for database tables
+    List<Map> check = await db.readData("SELECT * FROM 'Users' ");
+    print("$check");
+
+
+    if(response > 0){
+      showMessage("User registered successfully!");
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => SignInPage()),
             (Route<dynamic> route) => false, // Remove all previous routes
       );
+    }
+    else {
+      showMessage("Failed to register user");
     }
   }
 
@@ -57,6 +86,15 @@ class _SignUpPageState extends State<SignUpPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
+  }
+
+  bool isValidPhone = true;
+
+  void validatePhoneNumber(String value) {
+    final RegExp egyptianPhoneRegex = RegExp(r'^(01[0-2,5]{1}[0-9]{8})$');
+    setState(() {
+      isValidPhone = egyptianPhoneRegex.hasMatch(value);
+    });
   }
 
   @override
@@ -79,6 +117,7 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+
               const SizedBox(height: 20),
               Container(
                 width: 200,
@@ -96,6 +135,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       : AssetImage("Assets/MyPhoto.png") as ImageProvider, // Replace with your image path
                 ),
               ),
+
               const SizedBox(height: 10),
               ElevatedButton.icon(
                 onPressed: () {
@@ -108,6 +148,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   backgroundColor: Colors.purpleAccent,
                 ),
               ),
+
               const SizedBox(height: 20),
               TextField(
                 controller: nameController,
@@ -116,15 +157,26 @@ class _SignUpPageState extends State<SignUpPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
+
               const SizedBox(height: 15),
+
+              //Check for egyptian phone number validation
               TextField(
                 controller: phoneController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Phone",
                   border: OutlineInputBorder(),
+                  errorText: isValidPhone ? null : "Invalid Egyptian phone number",
                 ),
                 keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly, // Allows only digits
+                ],
+                onChanged: (value) {
+                  validatePhoneNumber(value); // Validate on every change
+                },
               ),
+
               const SizedBox(height: 15),
               TextField(
                 controller: passwordController,
@@ -134,6 +186,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 obscureText: true,
               ),
+
               const SizedBox(height: 15),
               TextField(
                 controller: confirmPasswordController,
@@ -145,9 +198,8 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
 
               const SizedBox(height: 30),
-
               ElevatedButton(
-                onPressed: logIn,
+                onPressed: SignUp,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   backgroundColor: Colors.purpleAccent,
