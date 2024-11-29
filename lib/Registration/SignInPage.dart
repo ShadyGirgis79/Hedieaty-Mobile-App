@@ -26,7 +26,7 @@ class _SignInPageState extends State<SignInPage> {
     final db = HedieatyDatabase();
     // Query to check if the user exists with the provided name and password
     String sql = '''
-      SELECT * FROM Users
+      SELECT * FROM 'Users'
       WHERE Name = "$name" AND Password = "$password"
     ''';
 
@@ -37,6 +37,15 @@ class _SignInPageState extends State<SignInPage> {
     print("$check");
 
     if (result.isNotEmpty) {
+      // User found, mark them as active
+      int userId = result[0]['ID'];
+
+      // Set IsActive to 1 for the logged-in user
+      await db.updateData("UPDATE 'Users' SET 'IsActive' = 1 WHERE ID = $userId");
+
+      // Set IsActive to 0 for all other users
+      await db.updateData("UPDATE 'Users' SET 'IsActive' = 0 WHERE ID != $userId");
+
       // User found
       showMessage("Logged in successfully!");
       Navigator.pushAndRemoveUntil(
