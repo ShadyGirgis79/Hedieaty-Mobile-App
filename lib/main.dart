@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import 'package:hedieaty/Other/SignInPage.dart';
+import 'package:hedieaty/Registration/SignInPage.dart';
 
 void main() {
   runApp(const MaterialApp(

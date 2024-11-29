@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Home/HomePage.dart';
-import 'package:hedieaty/Other/LogInPage.dart';
+import 'package:hedieaty/Registration/SignUpPage.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -122,7 +122,7 @@ class _SignInPageState extends State<SignInPage> {
                   children: [
                     ElevatedButton(
                       onPressed: SignIn,
-                      child: const Text("Sign In",
+                      child: const Text("Sign Up",
                         style: TextStyle(
                           fontSize: 18,
                         ),),
@@ -137,7 +137,7 @@ class _SignInPageState extends State<SignInPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => LogInPage(),
+                            builder: (context) => SignUpPage(),
                           ),
                         );
                       },

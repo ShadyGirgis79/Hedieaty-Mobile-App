@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Events/MyEventsListPage.dart';
-import 'package:hedieaty/Other/ProfilePage.dart';
+import 'package:hedieaty/Profile/ProfilePage.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
 import 'package:hedieaty/Model/User_Model.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';

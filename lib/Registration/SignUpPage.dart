@@ -1,16 +1,17 @@
+
 import 'package:flutter/material.dart';
-import 'package:hedieaty/Other/SignInPage.dart';
+import 'package:hedieaty/Registration/SignInPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-class LogInPage extends StatefulWidget {
-  const LogInPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LogInPage> createState() => _LogInPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LogInPageState extends State<LogInPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -143,7 +144,8 @@ class _LogInPageState extends State<LogInPage> {
                 obscureText: true,
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
+
               ElevatedButton(
                 onPressed: logIn,
                 style: ElevatedButton.styleFrom(

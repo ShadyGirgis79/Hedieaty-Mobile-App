@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Events/MyEventsListPage.dart';
-import 'package:hedieaty/Other/SignInPage.dart';
+import 'package:hedieaty/Registration/SignInPage.dart';
 import 'package:hedieaty/Gifts/PledgedGifts.dart';
 import 'package:image_picker/image_picker.dart';
 
