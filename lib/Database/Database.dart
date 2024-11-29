@@ -28,7 +28,7 @@ class HedieatyDatabase{
           await db.execute('''
           CREATE TABLE IF NOT EXISTS 'Users' (
             'ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            'NAME' TEXT NOT NULL,
+            'Name' TEXT NOT NULL,
             'Password' TEXT NOT NULL,
             'ProfileURL' TEXT NOT NULL,
             'PhoneNumber' TEXT NOT NULL
@@ -39,7 +39,7 @@ class HedieatyDatabase{
           await db.execute('''
           CREATE TABLE IF NOT EXISTS 'Events' (
             'ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            'NAME' TEXT NOT NULL,
+            'Name' TEXT NOT NULL,
             'Category' TEXT NOT NULL,
             'Date' TEXT NOT NULL,
             'Status' TEXT NOT NULL,
@@ -52,7 +52,7 @@ class HedieatyDatabase{
           await db.execute('''
           CREATE TABLE IF NOT EXISTS 'Gifts' (
             'ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            'NAME' TEXT NOT NULL,
+            'Name' TEXT NOT NULL,
             'Category' TEXT NOT NULL,
             'Status' TEXT NOT NULL,
             'Price' INTEGER NOT NULL,
@@ -76,6 +76,8 @@ class HedieatyDatabase{
   insertData(String SQL) async {
     Database? mydata = await MyDataBase;
     int response = await mydata!.rawInsert(SQL);
+
+    print("The data is inserted successfully.............");
     return response;
   }
 
