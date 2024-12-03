@@ -15,13 +15,17 @@ class HedieatyDatabase{
       return _MyDatabase;
     }
   }
-
-  //int Version = 1;
-  int Version = 2;  // Change the version to 2 (or higher)
+  int Version = 1;
+  //int Version = 2;  // Change the version to 2
 
   initialize() async {
     String mypath = await getDatabasesPath();
     String path = join(mypath, "myDataBase.db");
+
+    checking();
+    //For deleting Database
+    //deleteDB();
+
     Database mydb = await openDatabase(path, version: Version,
         onCreate: (db, Version) async {
 
@@ -29,15 +33,18 @@ class HedieatyDatabase{
           await db.execute('''
           CREATE TABLE IF NOT EXISTS 'Users' (
             'ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            'Name' TEXT NOT NULL,
+            'Name' TEXT UNIQUE NOT NULL,
+            'Email' TEXT UNIQUE NOT NULL,
+            'Preferences' TEXT,
             'Password' TEXT NOT NULL,
-            'ProfileURL' TEXT NOT NULL,
-            'PhoneNumber' TEXT NOT NULL
+            'ProfileURL' TEXT ,
+            'PhoneNumber' TEXT NOT NULL,
+            'Notifications' BOOLEAN DEFAULT 0
             );
           ''');
+          //'UpcomingEvents' INTEGER DEFAULT 0,
 
-          //Adding a new column
-          await db.execute('''ALTER TABLE 'Users' ADD COLUMN 'IsActive' INTEGER DEFAULT 0 ''');
+
 
           //Create Events Table
           await db.execute('''
@@ -46,6 +53,8 @@ class HedieatyDatabase{
             'Name' TEXT NOT NULL,
             'Category' TEXT NOT NULL,
             'Date' TEXT NOT NULL,
+            'Location' TEXT,
+            'Description' TEXT,
             'Status' TEXT NOT NULL,
             'UserID' INTEGER NOT NULL,
             FOREIGN KEY (UserID) REFERENCES Users (ID) ON DELETE CASCADE
@@ -59,30 +68,47 @@ class HedieatyDatabase{
             'Name' TEXT NOT NULL,
             'Category' TEXT NOT NULL,
             'Status' TEXT NOT NULL,
-            'Price' INTEGER NOT NULL,
+            'Price' REAL,
+            'Description' TEXT NOT NULL,
             'Image' TEXT NOT NULL,
             'EventID' INTEGER NOT NULL,
             FOREIGN KEY (EventID) REFERENCES Events (ID) ON DELETE CASCADE
           );
           ''');
 
+          await db.execute('''
+          CREATE TABLE IF NOT EXISTS 'Friends' (
+            'UserID' INTEGER NOT NULL,
+            'FriendID' INTEGER NOT NULL,
+            PRIMARY KEY(userID, friendID),
+            FOREIGN KEY(userID) REFERENCES Users(ID),
+            FOREIGN KEY(friendID) REFERENCES Users(ID)
+          );
+          ''');
+
+
           print("Database has been created .......");
         },
-        onUpgrade: (db, oldVersion, newVersion) async {
-      if (oldVersion < 2) {
-        // If upgrading from version 1 to version 2
-        // Add the 'IsActive' column to the 'Users' table
-        await db.execute('''
-            ALTER TABLE 'Users' ADD COLUMN 'IsActive' INTEGER DEFAULT 0
-          ''');
-        print("Column 'IsActive' added to Users table.");
 
-        await db.execute('''
-            ALTER TABLE 'Gifts' ADD COLUMN 'Description' TEXT NOT NULL
-          ''');
-      }
-    },
+    //     onUpgrade: (db, oldVersion, newVersion) async {
+    //   if (oldVersion < 2) {
+    //     // If upgrading from version 1 to version 2
+    //     // Add the 'IsActive' column to the 'Users' table
+    //     await db.execute('''
+    //         ALTER TABLE 'Users' ADD COLUMN 'IsActive' INTEGER DEFAULT 0
+    //       ''');
+    //     print("Column 'IsActive' added to Users table.");
+    //
+    //     await db.execute('''
+    //         ALTER TABLE 'Gifts' ADD COLUMN 'Description' TEXT NOT NULL
+    //       ''');
+    //   }
+    // },
+
         );
+
+    checking();
+
     return mydb;
   }
 
@@ -118,11 +144,31 @@ class HedieatyDatabase{
     bool ifitexist = await databaseExists(Path);
     if (ifitexist == true) {
       print('it exist');
-    } else {
+    }
+    else {
       print("it doesn't exist");
     }
     await deleteDatabase(Path);
     print("MyData has been deleted");
   }
+
+  checking() async{
+    String database = await getDatabasesPath();
+    String Path = join(database, 'myDataBase.db');
+    if (await databaseExists(Path)) {
+      print('it exist  ======================');
+    }
+    else {
+      print("it doesn't exist  ========================");
+    }
+  }
+
+  deleteDB() async{
+    String database = await getDatabasesPath();
+    String Path = join(database, 'myDataBase.db');
+    await deleteDatabase(Path);
+    print("MyData has been deleted..........");
+  }
+
 
 }
