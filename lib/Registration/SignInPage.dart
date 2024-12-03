@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Database/Database.dart';
-import 'package:hedieaty/Home/HomePage.dart';
-import 'package:hedieaty/Registration/SignUpPage.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -11,52 +9,49 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void SignIn() async{
-    final name = nameController.text.trim();
+  //
+  void SignIn() async {
+    final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
-    if (name.isEmpty || password.isEmpty) {
+    if (email.isEmpty || password.isEmpty) {
       showMessage("Please fill out all fields");
       return;
     }
 
+    if (!_isValidEmail(email)) {
+      showMessage("Enter a valid email address");
+      return;
+    }
+
     final db = HedieatyDatabase();
-    // Query to check if the user exists with the provided name and password
-    String sql = '''
-      SELECT * FROM 'Users'
-      WHERE Name = "$name" AND Password = "$password"
+
+    try {
+      // Query to check if the user exists
+      String sql = '''
+      SELECT * FROM Users
+      WHERE Email = $email AND Password = $password
     ''';
 
-    List<Map<String, dynamic>> result = await db.readData(sql);
+      // Use parameterized query to prevent SQL injection
+      List<Map<String, dynamic>> result = await db.readData(sql);
 
-    //To check for database tables
-    List<Map> check = await db.readData("SELECT * FROM 'Users' ");
-    print("$check");
-
-    if (result.isNotEmpty) {
-      // User found, mark them as active
-      int userId = result[0]['ID'];
-
-      // Set IsActive to 1 for the logged-in user
-      await db.updateData("UPDATE 'Users' SET 'IsActive' = 1 WHERE ID = $userId");
-
-      // Set IsActive to 0 for all other users
-      await db.updateData("UPDATE 'Users' SET 'IsActive' = 0 WHERE ID != $userId");
-
-      // User found
-      showMessage("Logged in successfully!");
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => MyHomePage()),
-            (Route<dynamic> route) => false, // Remove all previous routes
-      );
+      if (result.isNotEmpty) {
+        // User found, navigate to the home screen
+        showMessage("Logged in successfully!");
+        Navigator.of(context).pushReplacementNamed('/Home'); // Navigate to Home
+      }
+      else {
+        // No user found
+        showMessage("Invalid email or password");
+      }
     }
-    else {
-      // User not found or password incorrect
-      showMessage("Invalid username or password");
+    catch (e) {
+      showMessage("Error: Unable to log in");
+      print("Database Error: $e");
     }
   }
 
@@ -66,28 +61,25 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  @override
-  void dispose() {
-    // Dispose controllers to free resources
-    nameController.dispose();
-    passwordController.dispose();
-    super.dispose();
+  //To validate email format
+  bool _isValidEmail(String email) {
+    final emailRegex = RegExp(
+        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    );
+    return email.isNotEmpty && emailRegex.hasMatch(email);
   }
+
+  // Dispose controllers to free resources
+  // @override
+  // void dispose() {
+  //   emailController.dispose();
+  //   passwordController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Sign In",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.purpleAccent,
-      ),
       body: SafeArea(
         child: SingleChildScrollView( // Makes the layout scrollable
           padding: const EdgeInsets.symmetric(horizontal: 20), // Add some padding
@@ -96,13 +88,14 @@ class _SignInPageState extends State<SignInPage> {
             children: [
               const SizedBox(height: 30),
 
+
               // App Title
               const Center(
                 child: Text(
                   "Hedieaty",
                   style: TextStyle(
                     fontSize: 60,
-                    fontStyle: FontStyle.italic,
+                    //fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.bold,
                     color: Colors.purpleAccent,
                   ),
@@ -117,18 +110,29 @@ class _SignInPageState extends State<SignInPage> {
                   child: Image.asset("Assets/Gift.jpg"),
                   height: 300,
                   width: 300,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(150),
+                  ),
                 ),
               ),
 
               const SizedBox(height: 20),
 
-              // Name TextField
               TextField(
-                controller: nameController, // Use controller
-                decoration: const InputDecoration(
-                  labelText: 'Name',
-                  border: OutlineInputBorder(), // Optional: adds border
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.email),
+                  // Show error only when text is not empty and invalid
+                  errorText: emailController.text.isNotEmpty && !_isValidEmail(emailController.text)
+                      ? 'Enter a valid email'
+                      : null,
                 ),
+                onChanged: (value) {
+                  setState(() {}); // Update UI on every change
+                },
               ),
 
               const SizedBox(height: 20),
@@ -139,6 +143,7 @@ class _SignInPageState extends State<SignInPage> {
                 decoration: const InputDecoration(
                   labelText: "Password",
                   border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.lock)
                 ),
                 obscureText: true, // Obscures the text for password input
               ),
@@ -151,7 +156,6 @@ class _SignInPageState extends State<SignInPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: SignIn,
                       child: const Text("Sign In",
                         style: TextStyle(
                           fontSize: 18,
@@ -160,31 +164,55 @@ class _SignInPageState extends State<SignInPage> {
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.purpleAccent,
                       ),
-                    ),
-                    const SizedBox(width: 50),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignUpPage(),
-                          ),
-                        );
+                      onPressed: (){
+                        SignIn();
                       },
-                      child: const Text("Sign Up",
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.purpleAccent,
-                      ),
+
                     ),
+
+                    // const SizedBox(width: 50),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => SignUpPage(),
+                    //       ),
+                    //     );
+                    //   },
+                    //   child: const Text("Sign Up",
+                    //     style: TextStyle(
+                    //       fontSize: 18,
+                    //     ),),
+                    //   style: ElevatedButton.styleFrom(
+                    //     foregroundColor: Colors.white,
+                    //     backgroundColor: Colors.purpleAccent,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
 
               const SizedBox(height: 30),
+
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pushNamed("/SignUp") ;
+                },
+                child: const Center(
+                  child: Text.rich(TextSpan(children: [
+                    TextSpan(
+                      text: "Don't Have An Account ? ",
+                    ),
+                    TextSpan(
+                        text: "Register",
+                        style: TextStyle(
+                            color: Colors.purpleAccent,
+                            fontWeight: FontWeight.bold)),
+                    ])
+                  ),
+                ),
+              )
             ],
           ),
         ),
