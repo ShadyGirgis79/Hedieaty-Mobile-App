@@ -73,7 +73,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
 
     if(response > 0){
-      showMessage("User registered successfully!");
+      showMessage("'$name' registered successfully!");
       Navigator.of(context).pushReplacementNamed("/SignIn");
     }
     else {
