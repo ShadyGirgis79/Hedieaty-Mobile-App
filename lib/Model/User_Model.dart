@@ -9,13 +9,17 @@ class User {
   String password;
   String profileURL;
   String phoneNumber;
+  String email;
+  String preference;
   List<Event> events;
 
   User({
     required this.name,
+    required this.email,
     required this.password,
     required this.profileURL,
     required this.phoneNumber ,
+    this.preference='',
     this.events = const []});
 
 }
