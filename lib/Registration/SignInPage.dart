@@ -22,7 +22,7 @@ class _SignInPageState extends State<SignInPage> {
       return;
     }
 
-    if (!_isValidEmail(email)) {
+    if (!isValidEmail(email)) {
       showMessage("Enter a valid email address");
       return;
     }
@@ -32,8 +32,8 @@ class _SignInPageState extends State<SignInPage> {
     try {
       // Query to check if the user exists
       String sql = '''
-      SELECT * FROM Users
-      WHERE Email = $email AND Password = $password
+      SELECT * FROM 'Users'
+      WHERE Email = "$email" AND Password = "$password"
     ''';
 
       // Use parameterized query to prevent SQL injection
@@ -62,7 +62,7 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   //To validate email format
-  bool _isValidEmail(String email) {
+  bool isValidEmail(String email) {
     final emailRegex = RegExp(
         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     );
@@ -95,7 +95,6 @@ class _SignInPageState extends State<SignInPage> {
                   "Hedieaty",
                   style: TextStyle(
                     fontSize: 60,
-                    //fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.bold,
                     color: Colors.purpleAccent[700],
                   ),
@@ -126,7 +125,7 @@ class _SignInPageState extends State<SignInPage> {
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.email),
                   // Show error only when text is not empty and invalid
-                  errorText: emailController.text.isNotEmpty && !_isValidEmail(emailController.text)
+                  errorText: emailController.text.isNotEmpty && !isValidEmail(emailController.text)
                       ? 'Enter a valid email'
                       : null,
                 ),

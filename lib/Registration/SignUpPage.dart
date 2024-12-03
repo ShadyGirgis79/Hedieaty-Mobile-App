@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Database/Database.dart';
-import 'package:hedieaty/Registration/SignInPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
@@ -15,7 +14,9 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  final TextEditingController preferenceController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   XFile? imageFile;
@@ -37,7 +38,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void SignUp() async{
     final name = nameController.text.trim();
+    final email = emailController.text.trim();
     final phone = phoneController.text.trim();
+    final preference = preferenceController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
     final profilePath = imageFile != null ? imageFile!.path : "";
@@ -59,8 +62,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
     final db = HedieatyDatabase();
     String sql = '''
-      INSERT INTO Users ('Name' , 'Password' , 'ProfileURL' , 'PhoneNumber')
-      VALUES ("$name" , "$password" , "$profilePath" , "$phone")
+      INSERT INTO Users ('Name' , 'Password' , 'ProfileURL' , 'PhoneNumber' , 'Email' , 'Preferences')
+      VALUES ("$name" , "$password" , "$profilePath" , "$phone" , "$email" , "$preference")
     ''';
     int response = await db.insertData(sql);
 
@@ -71,11 +74,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     if(response > 0){
       showMessage("User registered successfully!");
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => SignInPage()),
-            (Route<dynamic> route) => false, // Remove all previous routes
-      );
+      Navigator.of(context).pushReplacementNamed("/SignIn");
     }
     else {
       showMessage("Failed to register user");
@@ -97,20 +96,18 @@ class _SignUpPageState extends State<SignUpPage> {
     });
   }
 
+  //To validate email format
+  bool isValidEmail(String email) {
+    final emailRegex = RegExp(
+        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    );
+    return email.isNotEmpty && emailRegex.hasMatch(email);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Log In",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.purpleAccent,
-      ),
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -137,6 +134,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
 
               const SizedBox(height: 10),
+
               ElevatedButton.icon(
                 onPressed: () {
                   pickImage();
@@ -145,7 +143,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 label: const Text("Change Profile Image"),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.purpleAccent,
+                  backgroundColor: Colors.purpleAccent[700],
                 ),
               ),
 
@@ -155,6 +153,34 @@ class _SignUpPageState extends State<SignUpPage> {
                 decoration: const InputDecoration(
                   labelText: "Name",
                   border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.person)
+                ),
+              ),
+
+              const SizedBox(height: 20),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.email),
+                  // Show error only when text is not empty and invalid
+                  errorText: emailController.text.isNotEmpty && !isValidEmail(emailController.text)
+                      ? 'Enter a valid email'
+                      : null,
+                ),
+                onChanged: (value) {
+                  setState(() {}); // Update UI on every change
+                },
+              ),
+
+              const SizedBox(height: 20),
+              TextField(
+                controller: preferenceController,
+                decoration: const InputDecoration(
+                    labelText: "Preference",
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.card_giftcard)
                 ),
               ),
 
@@ -167,6 +193,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   labelText: "Phone",
                   border: OutlineInputBorder(),
                   errorText: isValidPhone ? null : "Invalid Egyptian phone number",
+                    prefixIcon: Icon(Icons.phone),
                 ),
                 keyboardType: TextInputType.phone,
                 inputFormatters: [
@@ -183,6 +210,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 decoration: const InputDecoration(
                   labelText: "Password",
                   border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.lock)
                 ),
                 obscureText: true,
               ),
@@ -193,6 +221,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 decoration: const InputDecoration(
                   labelText: "Confirm Password",
                   border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.lock)
                 ),
                 obscureText: true,
               ),
@@ -202,15 +231,15 @@ class _SignUpPageState extends State<SignUpPage> {
                 onPressed: SignUp,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  backgroundColor: Colors.purpleAccent,
+                  backgroundColor: Colors.purpleAccent[700],
                   foregroundColor: Colors.white,
                 ),
-                child: const Text(
-                  "Log In",
+                child: Text(
+                  "Sign Up",
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.white,
-                    backgroundColor: Colors.purpleAccent,
+                    backgroundColor: Colors.purpleAccent[700],
                   ),
                 ),
               ),
