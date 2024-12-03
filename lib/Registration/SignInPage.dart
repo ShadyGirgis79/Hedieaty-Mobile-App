@@ -90,14 +90,14 @@ class _SignInPageState extends State<SignInPage> {
 
 
               // App Title
-              const Center(
+              Center(
                 child: Text(
                   "Hedieaty",
                   style: TextStyle(
                     fontSize: 60,
                     //fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.bold,
-                    color: Colors.purpleAccent,
+                    color: Colors.purpleAccent[700],
                   ),
                 ),
               ),
@@ -112,7 +112,7 @@ class _SignInPageState extends State<SignInPage> {
                   width: 300,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(150),
+                    borderRadius: BorderRadius.circular(200),
                   ),
                 ),
               ),
@@ -162,7 +162,7 @@ class _SignInPageState extends State<SignInPage> {
                         ),),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Colors.purpleAccent,
+                        backgroundColor: Colors.purpleAccent[700],
                       ),
                       onPressed: (){
                         SignIn();
@@ -199,15 +199,15 @@ class _SignInPageState extends State<SignInPage> {
                 onTap: () {
                   Navigator.of(context).pushNamed("/SignUp") ;
                 },
-                child: const Center(
+                child: Center(
                   child: Text.rich(TextSpan(children: [
-                    TextSpan(
+                    const TextSpan(
                       text: "Don't Have An Account ? ",
                     ),
                     TextSpan(
-                        text: "Register",
+                        text: "Sign up",
                         style: TextStyle(
-                            color: Colors.purpleAccent,
+                            color: Colors.purpleAccent[700],
                             fontWeight: FontWeight.bold)),
                     ])
                   ),
