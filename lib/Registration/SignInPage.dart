@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Database/Database.dart';
 
+import '../Controller/ShowMessage.dart';
+import '../Controller/SignInController.dart';
+import '../Controller/Validation.dart';
+
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
@@ -12,62 +16,24 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  //
+  final SignInController signInController = SignInController();
+
   void SignIn() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
-    if (email.isEmpty || password.isEmpty) {
-      showMessage("Please fill out all fields");
-      return;
+    String? errorMessage = await signInController.signIn(email, password);
+    if (errorMessage == null) {
+      // Navigate to Home
+      showMessage(context,"Logged in successfully!");
+      Navigator.of(context).pushReplacementNamed('/Home');
     }
-
-    if (!isValidEmail(email)) {
-      showMessage("Enter a valid email address");
-      return;
-    }
-
-    final db = HedieatyDatabase();
-
-    try {
-      // Query to check if the user exists
-      String sql = '''
-      SELECT * FROM 'Users'
-      WHERE Email = "$email" AND Password = "$password"
-    ''';
-
-      // Use parameterized query to prevent SQL injection
-      List<Map<String, dynamic>> result = await db.readData(sql);
-
-      if (result.isNotEmpty) {
-        // User found, navigate to the home screen
-        showMessage("Logged in successfully!");
-        Navigator.of(context).pushReplacementNamed('/Home'); // Navigate to Home
-      }
-      else {
-        // No user found
-        showMessage("Invalid email or password");
-      }
-    }
-    catch (e) {
-      showMessage("Error: Unable to log in");
-      print("Database Error: $e");
+    else {
+      // Show error message
+      showMessage(context,errorMessage);
     }
   }
 
-  void showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
-
-  //To validate email format
-  bool isValidEmail(String email) {
-    final emailRegex = RegExp(
-        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    );
-    return email.isNotEmpty && emailRegex.hasMatch(email);
-  }
 
   // Dispose controllers to free resources
   // @override

@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty/Database/Database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
+import '../Controller/ShowMessage.dart';
+import '../Controller/SignUpController.dart';
+import '../Controller/Validation.dart';
 import 'dart:io';
 
 class SignUpPage extends StatefulWidget {
@@ -20,11 +23,11 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   XFile? imageFile;
-  final ImagePicker _picker = ImagePicker();
+  final ImagePicker picker = ImagePicker();
 
   Future<void> pickImage() async {
     try {
-      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         setState(() {
           imageFile = pickedFile;
@@ -36,7 +39,9 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-  void SignUp() async{
+  final SignUpController signUpController = SignUpController();
+
+  void SignUp() async {
     final name = nameController.text.trim();
     final email = emailController.text.trim();
     final phone = phoneController.text.trim();
@@ -45,64 +50,24 @@ class _SignUpPageState extends State<SignUpPage> {
     final confirmPassword = confirmPasswordController.text.trim();
     final profilePath = imageFile != null ? imageFile!.path : "";
 
-    if (name.isEmpty || phone.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      showMessage("Please fill out all fields");
-      return;
-    }
+    String? errorMessage = await signUpController.signUp(
+      name: name,
+      email: email,
+      phone: phone,
+      preference: preference,
+      password: password,
+      confirmPassword: confirmPassword,
+      profilePath: profilePath,
+    );
 
-    if (password != confirmPassword) {
-      showMessage("Passwords do not match");
-      return;
-    }
-
-    if (isValidPhone == false) {
-      showMessage("Please enter a valid Egyptian phone number");
-      return;
-    }
-
-    final db = HedieatyDatabase();
-    String sql = '''
-      INSERT INTO Users ('Name' , 'Password' , 'ProfileURL' , 'PhoneNumber' , 'Email' , 'Preferences')
-      VALUES ("$name" , "$password" , "$profilePath" , "$phone" , "$email" , "$preference")
-    ''';
-    int response = await db.insertData(sql);
-
-    //To check for database tables
-    List<Map> check = await db.readData("SELECT * FROM 'Users' ");
-    print("$check");
-
-
-    if(response > 0){
-      showMessage("'$name' registered successfully!");
+    if (errorMessage == null) {
+      showMessage(context,"'$name' registered successfully!");
       Navigator.of(context).pushReplacementNamed("/SignIn");
+    } else {
+      showMessage(context,errorMessage);
     }
-    else {
-      showMessage("Failed to register user");
-    }
   }
 
-  void showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
-
-  bool isValidPhone = true;
-
-  void validatePhoneNumber(String value) {
-    final RegExp egyptianPhoneRegex = RegExp(r'^(01[0-2,5]{1}[0-9]{8})$');
-    setState(() {
-      isValidPhone = egyptianPhoneRegex.hasMatch(value);
-    });
-  }
-
-  //To validate email format
-  bool isValidEmail(String email) {
-    final emailRegex = RegExp(
-        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
-    );
-    return email.isNotEmpty && emailRegex.hasMatch(email);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -192,15 +157,18 @@ class _SignUpPageState extends State<SignUpPage> {
                 decoration: InputDecoration(
                   labelText: "Phone",
                   border: OutlineInputBorder(),
-                  errorText: isValidPhone ? null : "Invalid Egyptian phone number",
-                    prefixIcon: Icon(Icons.phone),
+                  prefixIcon: Icon(Icons.phone),
+                  // Show error only when text is not empty and invalid
+                  errorText: phoneController.text.isNotEmpty && !validatePhoneNumber(phoneController.text)
+                      ? "Invalid Egyptian phone number"
+                      : null,
                 ),
                 keyboardType: TextInputType.phone,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly, // Allows only digits
                 ],
                 onChanged: (value) {
-                  validatePhoneNumber(value); // Validate on every change
+                  setState(() {}); // Validate on every change
                 },
               ),
 
