@@ -89,22 +89,6 @@ class HedieatyDatabase{
 
           print("Database has been created .......");
         },
-
-    //     onUpgrade: (db, oldVersion, newVersion) async {
-    //   if (oldVersion < 2) {
-    //     // If upgrading from version 1 to version 2
-    //     // Add the 'IsActive' column to the 'Users' table
-    //     await db.execute('''
-    //         ALTER TABLE 'Users' ADD COLUMN 'IsActive' INTEGER DEFAULT 0
-    //       ''');
-    //     print("Column 'IsActive' added to Users table.");
-    //
-    //     await db.execute('''
-    //         ALTER TABLE 'Gifts' ADD COLUMN 'Description' TEXT NOT NULL
-    //       ''');
-    //   }
-    // },
-
         );
 
     checking();
@@ -122,7 +106,7 @@ class HedieatyDatabase{
     Database? mydata = await MyDataBase;
     int response = await mydata!.rawInsert(SQL);
 
-    print("The data is inserted successfully.............");
+    print("=========================== The data is inserted successfully.............");
     return response;
   }
 
@@ -170,5 +154,10 @@ class HedieatyDatabase{
     print("MyData has been deleted..........");
   }
 
+  // Method to query users
+  Future<List<Map<String, dynamic>>> queryUsers() async {
+    Database? mydata = await MyDataBase; // Get the Database instance via the getter
+    return await mydata!.query('Users'); // Query the 'Users' table
+  }
 
 }
