@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Home/HomePage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,9 +6,9 @@ import 'package:flutter/services.dart';
 import '../Controller/ShowMessage.dart';
 import '../Controller/SignUpController.dart';
 import '../Controller/Validation.dart';
+import '../Database/Authentication.dart';
 import 'dart:io';
 
-import '../Database/Authentication.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -72,33 +71,23 @@ class _SignUpPageState extends State<SignUpPage> {
       User? firebaseUser = await AuthService().signUp(email, password);
 
       if (firebaseUser != null) {
-        String userId = firebaseUser.uid;
-
-        DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(userId);
-        await userRef.set({
-          'name': name,
-          'email': email,
-          'phone': phone,
-          'preference': preference,
-          'profilePath': profilePath,
-        });
 
         await signUpController.listenForUserInsertion();
 
         showMessage(context, "'$name' registered successfully!");
 
         // Delayed navigation to ensure context is stable
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => MyHomePage()),
-          );
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => MyHomePage()),
+              (Route<dynamic> route) => false,
+        );
       }
-    } catch (e) {
+    }
+    catch (e) {
       debugPrint("Sign-up error: ${e.toString()}");
       showMessage(context, "Error during registration: ${e.toString()}");
     }
   }
-
-
 
 
   @override
@@ -209,27 +198,41 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(height: 15),
 
               //Text field for Password
-              TextField(
+              TextFormField(
                 controller: passwordController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Password",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock),
+                  errorText: passwordController.text.isNotEmpty &&
+                        passwordController.text.length < 6
+                      ? 'Password must be at least 6 characters'
+                      : null
                 ),
                 obscureText: true,
+                onChanged: (value) {
+                  setState(() {});
+                },
               ),
 
               const SizedBox(height: 15),
 
               //Text field for Confirm Password
-              TextField(
+              TextFormField(
                 controller: confirmPasswordController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Confirm Password",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock),
+                    errorText: confirmPasswordController.text.isNotEmpty &&
+                        confirmPasswordController.text.length < 6
+                        ? 'Password must be at least 6 characters'
+                        : null
                 ),
                 obscureText: true,
+                onChanged: (value) {
+                  setState(() {});
+                },
               ),
 
               const SizedBox(height: 30),
