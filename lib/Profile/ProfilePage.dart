@@ -1,9 +1,12 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Events/MyEventsListPage.dart';
 import 'package:hedieaty/Registration/SignInPage.dart';
 import 'package:hedieaty/Gifts/PledgedGifts.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../Database/Authentication.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -19,6 +22,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String profileURL = "Assets/MyPhoto.png";
   String phoneNumber = '01272517828';
 
+  final AuthService authService = AuthService();
+
   Future<void> pickImage() async {
     try {
       final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -27,11 +32,13 @@ class _ProfilePageState extends State<ProfilePage> {
           imageFile = pickedFile;
         });
       }
-    } catch (e) {
+    }
+    catch (e) {
       // Handle errors, such as permission denial
       debugPrint('Error picking image: $e');
     }
   }
+
 
   void editPersonalInfo() {
     String newUsername = username;
@@ -99,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         foregroundColor: Colors.white,
-        backgroundColor: Colors.purpleAccent,
+        backgroundColor: Colors.purpleAccent[700],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -210,10 +217,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         actions: [
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (context) => SignInPage()),
-                                    (Route<dynamic> route) => false, // Remove all previous routes
+                              authService.signOut();
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/SignIn',
+                                    (Route<dynamic> route) => false, // Clears the navigation stack
                               );
                             },
                             child: const Text("Yes"),
