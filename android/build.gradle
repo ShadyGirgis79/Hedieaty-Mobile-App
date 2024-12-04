@@ -5,6 +5,18 @@ allprojects {
     }
 }
 
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        //add these 2 class path for Firebase
+        classpath "com.android.tools.build:gradle:8.1.1" // Example Gradle plugin version
+        classpath "com.google.gms:google-services:4.3.15" // Google Services plugin version
+    }
+}
+
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
