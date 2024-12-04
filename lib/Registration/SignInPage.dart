@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Database/Database.dart';
 
 import '../Controller/ShowMessage.dart';
 import '../Controller/SignInController.dart';
 import '../Controller/Validation.dart';
+import '../Database/Authentication.dart';
+import '../Home/HomePage.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -22,26 +25,18 @@ class _SignInPageState extends State<SignInPage> {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
-    String? errorMessage = await signInController.signIn(email, password);
-    if (errorMessage == null) {
-      // Navigate to Home
-      showMessage(context,"Logged in successfully!");
-      Navigator.of(context).pushReplacementNamed('/Home');
+    // Call authentication service
+    final user = await AuthService().signIn(email, password);
+    if (user != null) {
+      showMessage(context, "Logged in successfully!");
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => MyHomePage()),
+      );
     }
     else {
-      // Show error message
-      showMessage(context,errorMessage);
+      showMessage(context, "Failed to log in. Please check your credentials.");
     }
   }
-
-
-  // Dispose controllers to free resources
-  // @override
-  // void dispose() {
-  //   emailController.dispose();
-  //   passwordController.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -134,26 +129,6 @@ class _SignInPageState extends State<SignInPage> {
                       },
 
                     ),
-
-                    // const SizedBox(width: 50),
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => SignUpPage(),
-                    //       ),
-                    //     );
-                    //   },
-                    //   child: const Text("Sign Up",
-                    //     style: TextStyle(
-                    //       fontSize: 18,
-                    //     ),),
-                    //   style: ElevatedButton.styleFrom(
-                    //     foregroundColor: Colors.white,
-                    //     backgroundColor: Colors.purpleAccent,
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
