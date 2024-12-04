@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Details/FriendsGiftDetailsPage.dart';
-import 'package:hedieaty/OldVersion/GiftDetailsPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 
 class FriendsGiftList extends StatefulWidget {
