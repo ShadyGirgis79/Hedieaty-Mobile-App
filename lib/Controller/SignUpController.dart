@@ -1,4 +1,6 @@
 
+import 'package:firebase_database/firebase_database.dart';
+import 'package:hedieaty/Database/Database.dart';
 import 'package:hedieaty/Model/User_Model.dart';
 import 'Validation.dart';
 
@@ -39,6 +41,31 @@ class SignUpController {
       preferences: preference,
     );
 
+    userModel.getAllUsers();
+
     return response > 0 ? null : "Failed to register user";
+  }
+
+  Future<void> listenForUserInsertion() async {
+    final db = HedieatyDatabase();
+    var users = await db.queryUsers();
+    for (var user in users) {
+      String userId = user['Id'];
+      String name = user['Name'];
+      String email = user['Email'];
+      String phone = user['Phone'];
+      String preference = user['Preferences'];
+      String profilePath = user['ProfileURL'];
+
+      // Sync this user data with Firebase
+      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(userId);
+      await userRef.set({
+        'Name': name,
+        'Email': email,
+        'Phone': phone,
+        'Preferences': preference,
+        'ProfileURL': profilePath,
+      });
+    }
   }
 }

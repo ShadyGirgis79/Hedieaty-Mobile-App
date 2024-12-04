@@ -1,12 +1,15 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:hedieaty/Database/Database.dart';
+import 'package:hedieaty/Home/HomePage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 import '../Controller/ShowMessage.dart';
 import '../Controller/SignUpController.dart';
 import '../Controller/Validation.dart';
 import 'dart:io';
+
+import '../Database/Authentication.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -25,6 +28,8 @@ class _SignUpPageState extends State<SignUpPage> {
   XFile? imageFile;
   final ImagePicker picker = ImagePicker();
 
+  final SignUpController signUpController = SignUpController();
+
   Future<void> pickImage() async {
     try {
       final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -34,12 +39,10 @@ class _SignUpPageState extends State<SignUpPage> {
         });
       }
     } catch (e) {
-      // Handle errors, such as permission denial
       debugPrint('Error picking image: $e');
     }
   }
 
-  final SignUpController signUpController = SignUpController();
 
   void SignUp() async {
     final name = nameController.text.trim();
@@ -60,13 +63,42 @@ class _SignUpPageState extends State<SignUpPage> {
       profilePath: profilePath,
     );
 
-    if (errorMessage == null) {
-      showMessage(context,"'$name' registered successfully!");
-      Navigator.of(context).pushReplacementNamed("/SignIn");
-    } else {
-      showMessage(context,errorMessage);
+    if (errorMessage != null) {
+      showMessage(context, errorMessage);
+      return;
+    }
+
+    try {
+      User? firebaseUser = await AuthService().signUp(email, password);
+
+      if (firebaseUser != null) {
+        String userId = firebaseUser.uid;
+
+        DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(userId);
+        await userRef.set({
+          'name': name,
+          'email': email,
+          'phone': phone,
+          'preference': preference,
+          'profilePath': profilePath,
+        });
+
+        await signUpController.listenForUserInsertion();
+
+        showMessage(context, "'$name' registered successfully!");
+
+        // Delayed navigation to ensure context is stable
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+          );
+      }
+    } catch (e) {
+      debugPrint("Sign-up error: ${e.toString()}");
+      showMessage(context, "Error during registration: ${e.toString()}");
     }
   }
+
+
 
 
   @override
@@ -79,7 +111,6 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               const SizedBox(height: 20),
               Container(
                 width: 200,
@@ -94,12 +125,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   radius: 100,
                   backgroundImage: imageFile != null
                       ? FileImage(File(imageFile!.path))
-                      : AssetImage("Assets/MyPhoto.png") as ImageProvider, // Replace with your image path
+                      : AssetImage("Assets/MyPhoto.png") as ImageProvider,
                 ),
               ),
-
               const SizedBox(height: 10),
-
               ElevatedButton.icon(
                 onPressed: () {
                   pickImage();
@@ -111,85 +140,94 @@ class _SignUpPageState extends State<SignUpPage> {
                   backgroundColor: Colors.purpleAccent[700],
                 ),
               ),
-
               const SizedBox(height: 20),
+
+              //Text field for Name
               TextField(
                 controller: nameController,
                 decoration: const InputDecoration(
                   labelText: "Name",
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person)
+                  prefixIcon: Icon(Icons.person),
                 ),
               ),
 
               const SizedBox(height: 20),
+
+              //Text field for Email
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.email),
-                  // Show error only when text is not empty and invalid
-                  errorText: emailController.text.isNotEmpty && !isValidEmail(emailController.text)
+                  errorText: emailController.text.isNotEmpty &&
+                      !isValidEmail(emailController.text)
                       ? 'Enter a valid email'
                       : null,
                 ),
                 onChanged: (value) {
-                  setState(() {}); // Update UI on every change
+                  setState(() {});
                 },
               ),
 
               const SizedBox(height: 20),
+
+              //Text field for Preference
               TextField(
                 controller: preferenceController,
                 decoration: const InputDecoration(
-                    labelText: "Preference",
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.card_giftcard)
+                  labelText: "Preference",
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.card_giftcard),
                 ),
               ),
 
               const SizedBox(height: 15),
 
-              //Check for egyptian phone number validation
+              //Text field for Phone
               TextField(
                 controller: phoneController,
                 decoration: InputDecoration(
                   labelText: "Phone",
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.phone),
-                  // Show error only when text is not empty and invalid
-                  errorText: phoneController.text.isNotEmpty && !validatePhoneNumber(phoneController.text)
+                  errorText: phoneController.text.isNotEmpty &&
+                      !validatePhoneNumber(phoneController.text)
                       ? "Invalid Egyptian phone number"
                       : null,
                 ),
                 keyboardType: TextInputType.phone,
                 inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly, // Allows only digits
+                  FilteringTextInputFormatter.digitsOnly,
                 ],
                 onChanged: (value) {
-                  setState(() {}); // Validate on every change
+                  setState(() {});
                 },
               ),
 
               const SizedBox(height: 15),
+
+              //Text field for Password
               TextField(
                 controller: passwordController,
                 decoration: const InputDecoration(
                   labelText: "Password",
                   border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.lock)
+                  prefixIcon: Icon(Icons.lock),
                 ),
                 obscureText: true,
               ),
 
               const SizedBox(height: 15),
+
+              //Text field for Confirm Password
               TextField(
                 controller: confirmPasswordController,
                 decoration: const InputDecoration(
                   labelText: "Confirm Password",
                   border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.lock)
+                  prefixIcon: Icon(Icons.lock),
                 ),
                 obscureText: true,
               ),
@@ -198,7 +236,8 @@ class _SignUpPageState extends State<SignUpPage> {
               ElevatedButton(
                 onPressed: SignUp,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50, vertical: 15),
                   backgroundColor: Colors.purpleAccent[700],
                   foregroundColor: Colors.white,
                 ),
@@ -211,7 +250,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 40),
             ],
           ),
