@@ -1,6 +1,6 @@
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:hedieaty/Database/Database.dart';
+import 'package:hedieaty/Model/Database/Database.dart';
 import 'package:hedieaty/Model/User_Model.dart';
 import 'Validation.dart';
 

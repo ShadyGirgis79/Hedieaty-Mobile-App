@@ -1,6 +1,6 @@
 
 import 'package:hedieaty/Model/Event_Model.dart';
-import '../Database/Database.dart';
+import 'package:hedieaty/Model/Database/Database.dart';
 
 class User {
   String name;

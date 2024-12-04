@@ -1,12 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:hedieaty/Database/Database.dart';
 
+import 'package:flutter/material.dart';
 import '../Controller/ShowMessage.dart';
 import '../Controller/SignInController.dart';
 import '../Controller/Validation.dart';
-import '../Database/Authentication.dart';
 import '../Home/HomePage.dart';
+import '../Model/Database/Authentication.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});

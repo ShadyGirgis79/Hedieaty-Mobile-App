@@ -1,12 +1,9 @@
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Events/MyEventsListPage.dart';
-import 'package:hedieaty/Registration/SignInPage.dart';
 import 'package:hedieaty/Gifts/PledgedGifts.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../Database/Authentication.dart';
+import '../Model/Database/Authentication.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

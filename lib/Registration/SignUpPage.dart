@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Home/HomePage.dart';
@@ -6,8 +7,10 @@ import 'package:flutter/services.dart';
 import '../Controller/ShowMessage.dart';
 import '../Controller/SignUpController.dart';
 import '../Controller/Validation.dart';
-import '../Database/Authentication.dart';
-import 'dart:io';
+import '../Model/Database/Authentication.dart';
+
+
+
 
 
 class SignUpPage extends StatefulWidget {
