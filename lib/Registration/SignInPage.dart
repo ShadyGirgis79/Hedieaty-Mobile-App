@@ -86,7 +86,8 @@ class _SignInPageState extends State<SignInPage> {
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.email),
                   // Show error only when text is not empty and invalid
-                  errorText: emailController.text.isNotEmpty && !isValidEmail(emailController.text)
+                  errorText: emailController.text.isNotEmpty
+                      && !isValidEmail(emailController.text)
                       ? 'Enter a valid email'
                       : null,
                 ),
@@ -100,12 +101,19 @@ class _SignInPageState extends State<SignInPage> {
               // Password TextField
               TextField(
                 controller: passwordController, // Use controller
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Password",
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock)
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock),
+                  errorText: passwordController.text.isNotEmpty &&
+                      passwordController.text.length < 6
+                      ? 'Password must be at least 6 characters'
+                      : null
                 ),
                 obscureText: true, // Obscures the text for password input
+                onChanged: (value) {
+                  setState(() {});
+                },
               ),
 
               const SizedBox(height: 30),
