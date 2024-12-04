@@ -39,7 +39,6 @@ class User {
   }
 
   Future<List<Map>> getAllUsers() async {
-    final db = HedieatyDatabase();
     return await db.readData("SELECT * FROM Users");
   }
 
@@ -51,5 +50,7 @@ class User {
     ''';
     return await db.readData(sql);
   }
+
+
 
 }
