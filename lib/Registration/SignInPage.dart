@@ -5,6 +5,8 @@ import '../Controller/SignInController.dart';
 import '../Controller/Validation.dart';
 import '../Home/HomePage.dart';
 import '../Model/Database/Authentication.dart';
+import '../Model/User_Model.dart';
+
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -26,10 +28,16 @@ class _SignInPageState extends State<SignInPage> {
     // Call authentication service
     final user = await AuthService().signIn(email, password);
     if (user != null) {
-      showMessage(context, "Logged in successfully!");
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MyHomePage()),
-      );
+      final currentUser = await User.fetchUserByEmailAndPassword(email, password);
+      if(currentUser != null){
+        showMessage(context, "Logged in successfully!");
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => MyHomePage()),
+        );
+      }
+     else{
+        showMessage(context, "User is not found");
+      }
     }
     else {
       showMessage(context, "Failed to log in. Please check your credentials.");
