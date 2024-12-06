@@ -51,6 +51,36 @@ class User {
     return await db.readData(sql);
   }
 
+  static Future<User?> fetchUserByEmailAndPassword(String email , String password) async {
+    final db = HedieatyDatabase();
+    final response = await db.readData(
+      "SELECT * FROM Users WHERE Email = '$email' AND Password = '$password' ",
+    );
 
+    if (response.isNotEmpty) {
+      final data = response.first;
+      return User(
+        name: data['Name'],
+        email: data['Email'],
+        password: data['Password'],
+        profileURL: data['ProfileURL'] ?? '',
+        phoneNumber: data['PhoneNumber'],
+        preference: data['Preferences'] ?? '',
+      );
+    }
+    return null;
+  }
 
+  // Update user data in the database
+  Future<void> updateUser() async {
+    await db.updateData('''
+      UPDATE Users
+      SET Name = '$name',
+          ProfileURL = '$profileURL',
+          PhoneNumber = '$phoneNumber',
+          Preferences = '$preference'
+      WHERE Email = '$email' AND Password = '$password';
+    ''');
+  }
 }
+
