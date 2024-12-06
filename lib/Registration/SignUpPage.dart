@@ -10,9 +10,6 @@ import '../Controller/Validation.dart';
 import '../Model/Database/Authentication.dart';
 
 
-
-
-
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
@@ -117,7 +114,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   radius: 100,
                   backgroundImage: imageFile != null
                       ? FileImage(File(imageFile!.path))
-                      : AssetImage("Assets/MyPhoto.png") as ImageProvider,
+                      : null ,
+                  //AssetImage("Assets/MyPhoto.png") as ImageProvider,
                 ),
               ),
               const SizedBox(height: 10),
