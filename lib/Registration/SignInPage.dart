@@ -85,7 +85,7 @@ class _SignInPageState extends State<SignInPage> {
                   prefixIcon: const Icon(Icons.email),
                   // Show error only when text is not empty and invalid
                   errorText: emailController.text.isNotEmpty
-                      && !isValidEmail(emailController.text)
+                      && !validateEmail(emailController.text)
                       ? 'Enter a valid email'
                       : null,
                 ),

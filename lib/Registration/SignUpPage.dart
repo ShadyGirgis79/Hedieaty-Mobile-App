@@ -152,7 +152,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.email),
                   errorText: emailController.text.isNotEmpty &&
-                      !isValidEmail(emailController.text)
+                      !validateEmail(emailController.text)
                       ? 'Enter a valid email'
                       : null,
                 ),

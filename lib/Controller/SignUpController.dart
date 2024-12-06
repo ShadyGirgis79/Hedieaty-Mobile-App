@@ -27,7 +27,7 @@ class SignUpController {
       return "Please enter a valid Egyptian phone number";
     }
 
-    if (!isValidEmail(email)) {
+    if (!validateEmail(email)) {
       return "Please enter a valid email";
     }
 

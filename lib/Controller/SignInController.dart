@@ -10,7 +10,7 @@ class SignInController{
       return "Please fill out all fields";
     }
 
-    if (!isValidEmail(email)) {
+    if (!validateEmail(email)) {
       return "Enter a valid email address";
     }
 
