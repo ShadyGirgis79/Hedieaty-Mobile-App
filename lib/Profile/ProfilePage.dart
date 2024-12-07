@@ -1,45 +1,169 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Controller/ShowMessage.dart';
 import 'package:hedieaty/Events/MyEventsListPage.dart';
 import 'package:hedieaty/Gifts/PledgedGifts.dart';
 import 'package:image_picker/image_picker.dart';
+import '../Controller/Validation.dart';
 import '../Model/Database/Authentication.dart';
+import '../Model/User_Model.dart' as LocalUser; // Your custom User model
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+
+  ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
   XFile? imageFile;
   final ImagePicker _picker = ImagePicker();
-  String username = "Shady Shark";
-  String profileURL = "Assets/MyPhoto.png";
-  String phoneNumber = '01272517828';
+
+  String username = '';
+  String phoneNumber = '';
+  String preference = '';
+  String profileURL = '';
+  String email = '';
 
   final AuthService authService = AuthService();
 
-  Future<void> pickImage() async {
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
     try {
-      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
+      final DatabaseReference userRef = FirebaseDatabase.instance.ref("users/$currentUserID");
+      final DataSnapshot snapshot = await userRef.get();
+
+      if (snapshot.exists) {
+        final data = snapshot.value as Map<dynamic, dynamic>;
+
+        debugPrint("User data fetched: $data"); // Log fetched data for debugging
+
         setState(() {
-          imageFile = pickedFile;
+          // Ensure keys match exactly with your Firebase database
+          username = data['name'] ?? '';  // Default to empty string if key is not found
+          email = data['email'] ?? '';
+          phoneNumber = data['phone'] ?? '';
+          preference = data['preference'] ?? '';
+          profileURL = data['profileURL'] ?? '';  // Handle if no profile URL is available
         });
+
+        // Sync with SQLite
+        await syncUserDataWithSQLite(data);
+      } else {
+        debugPrint("No user data found for $currentUserID");
       }
+    } catch (e) {
+      debugPrint("Error fetching user data: $e"); // Log any errors for debugging
     }
-    catch (e) {
-      // Handle errors, such as permission denial
-      debugPrint('Error picking image: $e');
+  }
+
+  Future<void> syncUserDataWithSQLite(Map<dynamic, dynamic> firebaseData) async {
+    final String email = firebaseData['email'];
+    final String password = firebaseData['password']; // Get password from Firebase
+
+    debugPrint("Syncing user data with SQLite...");
+
+    final localUser = await LocalUser.User.fetchUserByEmailAndPassword(email, password);
+    if (localUser == null) {
+      final user = LocalUser.User(
+        id: FirebaseAuth.instance.currentUser!.uid.hashCode, // Store the Firebase user ID
+        name: firebaseData['name'],
+        email: email,
+        password: password, // Store password securely
+        phoneNumber: firebaseData['phone'],
+        preference: firebaseData['preference'],
+        profileURL: firebaseData['profileURL'],
+      );
+      await user.insertUser(
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        phoneNumber: user.phoneNumber,
+        preferences: user.preference,
+      );
     }
   }
 
 
+  Future<void> saveChanges(String newUsername, String newPhoneNumber,
+      String newPreference) async {
+    try {
+      final DatabaseReference userRef =
+      FirebaseDatabase.instance.ref("users/$currentUserID");
+
+      await userRef.update({
+        'name': newUsername,
+        'phoneNumber': newPhoneNumber,
+        'preference': newPreference,
+      });
+
+      setState(() {
+        username = newUsername;
+        phoneNumber = newPhoneNumber;
+        preference = newPreference;
+      });
+    } catch (e) {
+      debugPrint("Error saving changes: $e");
+    }
+  }
+
+  Future<void> pickImage() async {
+    try {
+      final XFile? pickedFile =
+      await _picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() {
+          imageFile = pickedFile;
+        });
+
+        await uploadProfileImage(pickedFile);
+      }
+    } catch (e) {
+      debugPrint("Error picking image: $e");
+    }
+  }
+
+  Future<void> uploadProfileImage(XFile imageFile) async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child("profilePictures/$uid.jpg");
+
+      final uploadTask = ref.putFile(File(imageFile.path));
+      final snapshot = await uploadTask;
+      final downloadURL = await snapshot.ref.getDownloadURL();
+
+      final DatabaseReference userRef =
+      FirebaseDatabase.instance.ref("users/$uid");
+      await userRef.update({'profileURL': downloadURL});
+
+      setState(() {
+        profileURL = downloadURL;
+      });
+    } catch (e) {
+      debugPrint("Error uploading profile image: $e");
+    }
+  }
+
   void editPersonalInfo() {
-    String newUsername = username;
-    String newPhoneNumber = phoneNumber;
+    final usernameController = TextEditingController(text: username);
+    final phoneController = TextEditingController(text: phoneNumber);
+    final preferenceController = TextEditingController(text: preference);
+
+    // Error message variable
+    String phoneError = '';
 
     showDialog(
       context: context,
@@ -51,33 +175,49 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               TextField(
                 decoration: const InputDecoration(labelText: "Username"),
-                onChanged: (value) {
-                  newUsername = value;
-                },
-                controller: TextEditingController(text: username),
+                controller: usernameController,
+              ),
+              const SizedBox(height: 20),
+              // Phone field with error message
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Phone",
+                  errorText: phoneError.isEmpty ? null : phoneError,
+                ),
+                controller: phoneController,
               ),
               const SizedBox(height: 20),
               TextField(
-                decoration: const InputDecoration(labelText: "Phone"),
-                onChanged: (value) {
-                  newPhoneNumber = value;
-                },
-                controller: TextEditingController(text: phoneNumber),
+                decoration: const InputDecoration(labelText: "Preference"),
+                controller: preferenceController,
               ),
             ],
           ),
           actions: [
             ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  username = newUsername;
-                  phoneNumber = newPhoneNumber;
-                });
-                Navigator.of(context).pop();
+              onPressed: () async {
+                // Validate phone number
+                if (validatePhoneNumber(phoneController.text)) {
+                  // Clear any previous error
+                  phoneError = '';
+
+                  // Save changes locally and in Firebase
+                  await saveChanges(
+                    usernameController.text,
+                    phoneController.text,
+                    preferenceController.text,
+                  );
+
+                  // Close dialog
+                  Navigator.of(context).pop();
+                }
+                else {
+                  // Set error message if phone number is invalid
+                  showMessage(context, 'Please enter a valid phone number');
+                }
               },
               child: const Text("Save"),
             ),
-            const SizedBox(width: 10),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
@@ -126,20 +266,29 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 child: CircleAvatar(
                   radius: 100,
-                  backgroundColor: Colors.purpleAccent,
+                  backgroundColor: Colors.purpleAccent[700],
                   backgroundImage: imageFile != null
                       ? FileImage(File(imageFile!.path))
-                      : AssetImage(profileURL) as ImageProvider,
+                      : null,
+                  //AssetImage(profileURL) as ImageProvider,
                 ),
               ),
+
               const SizedBox(height: 10),
               Text(
                 username,
-                style: const TextStyle(
-                  color: Colors.purple,
+                style: TextStyle(
+                  color: Colors.purpleAccent[700],
                   fontSize: 24,
                 ),
                 textAlign: TextAlign.center,
+              ),
+              Text(
+                email,
+                style: TextStyle(
+                  color: Colors.black.withOpacity(0.3),
+                  fontSize: 15,
+                ),
               ),
               Text(
                 phoneNumber,
@@ -156,7 +305,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 label: const Text("Change Profile Image"),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.purpleAccent,
+                  backgroundColor: Colors.purpleAccent[700],
                 ),
               ),
               const SizedBox(height: 10),
@@ -168,7 +317,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 label: const Text("Update Personal Information"),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.purpleAccent,
+                  backgroundColor: Colors.purpleAccent[700],
                 ),
               ),
               const SizedBox(height: 10),
@@ -180,7 +329,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 label: const Text("Notification Settings"),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.purpleAccent,
+                  backgroundColor: Colors.purpleAccent[700],
                 ),
               ),
               const SizedBox(height: 10),
@@ -199,7 +348,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 label: const Text('My Created Events'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.purpleAccent,
+                  backgroundColor: Colors.purpleAccent[700],
                 ),
               ),
               const SizedBox(height: 10),
@@ -237,7 +386,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: const Text('Sign Out'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.purpleAccent,
+                  backgroundColor: Colors.purpleAccent[700],
                 ),
               ),
               const SizedBox(height: 10),
