@@ -29,6 +29,7 @@ class _SignInPageState extends State<SignInPage> {
     final user = await AuthService().signIn(email, password);
     if (user != null) {
       final currentUser = await User.fetchUserByEmailAndPassword(email, password);
+
       if(currentUser != null){
         showMessage(context, "Logged in successfully!");
         Navigator.of(context).pushReplacement(

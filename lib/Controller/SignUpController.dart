@@ -51,12 +51,12 @@ class SignUpController {
   }
 
 
-  Future<void> listenForUserInsertion() async {
+  Future<void> listenForUserInsertion(String id) async {
     // Fetch all users from the local SQLite database
     List<Map> users = await userModel.getAllUsers();
 
     for (var user in users) {
-      String userId = user['ID'].toString();
+      String userId = id;
       String name = user['Name'];
       String email = user['Email'];
       String phone = user['PhoneNumber'];

@@ -72,7 +72,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
       if (firebaseUser != null) {
 
-        await signUpController.listenForUserInsertion();
+        await signUpController.listenForUserInsertion(firebaseUser.uid);
 
         showMessage(context, "'$name' registered successfully!");
 

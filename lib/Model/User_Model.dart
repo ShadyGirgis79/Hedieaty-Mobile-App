@@ -2,7 +2,8 @@
 import 'package:hedieaty/Model/Event_Model.dart';
 import 'package:hedieaty/Model/Database/Database.dart';
 
-class User {
+class User{
+  int? id;
   String name;
   String password;
   String profileURL;
@@ -12,6 +13,7 @@ class User {
   List<Event> events;
 
   User({
+    this.id,
     required this.name,
     required this.email,
     required this.password,
@@ -19,6 +21,7 @@ class User {
     required this.phoneNumber ,
     this.preference='',
     this.events = const []});
+
 
   final db = HedieatyDatabase();
 
@@ -30,7 +33,6 @@ class User {
     required String email,
     String preferences='',
   }) async {
-
     String sql = '''
       INSERT INTO Users ('Name', 'Password', 'ProfileURL', 'PhoneNumber', 'Email', 'Preferences')
       VALUES ("$name", "$password", "$profileURL", "$phoneNumber", "$email", "$preferences")
@@ -60,6 +62,7 @@ class User {
     if (response.isNotEmpty) {
       final data = response.first;
       return User(
+        id: data['ID'], // Include ID from the database
         name: data['Name'],
         email: data['Email'],
         password: data['Password'],
@@ -82,5 +85,26 @@ class User {
       WHERE Email = '$email' AND Password = '$password';
     ''');
   }
+
+  Future<Map<String, dynamic>?> getUserByPhoneNumber(String phoneNumber) async {
+    String sql = '''
+      SELECT * FROM Users WHERE PhoneNumber = "$phoneNumber"
+    ''';
+    List<Map<String, dynamic>> result = await db.readData(sql);
+    return result.isNotEmpty ? result.first : null;
+  }
+
+// Add a friend relationship
+  Future<void> addFriend(int userId, int friendId) async {
+    String sql = '''
+      INSERT INTO Friends (UserID, FriendID)
+      VALUES ($userId, $friendId)
+    ''';
+    await db.insertData(sql);
+  }
+
 }
+
+
+
 
