@@ -38,12 +38,11 @@ class HedieatyDatabase{
             'Preferences' TEXT,
             'Password' TEXT NOT NULL,
             'ProfileURL' TEXT ,
-            'PhoneNumber' TEXT NOT NULL,
+            'PhoneNumber' TEXT UNIQUE NOT NULL,
             'Notifications' BOOLEAN DEFAULT 0
             );
           ''');
           //'UpcomingEvents' INTEGER DEFAULT 0,
-
 
 
           //Create Events Table
@@ -61,6 +60,7 @@ class HedieatyDatabase{
           );
           ''');
 
+
           //Create Gifts Table
           await db.execute('''
           CREATE TABLE IF NOT EXISTS 'Gifts' (
@@ -72,9 +72,13 @@ class HedieatyDatabase{
             'Description' TEXT NOT NULL,
             'Image' TEXT NOT NULL,
             'EventID' INTEGER NOT NULL,
+            'PledgedID' INTEGER NOT NULL,
+            FOREIGN KEY (PledgedID) REFERENCES Users (ID) ON DELETE CASCADE,
             FOREIGN KEY (EventID) REFERENCES Events (ID) ON DELETE CASCADE
           );
           ''');
+
+          //FOREIGN KEY (PledgedID) REFERENCE Users (ID) ON DELETE CASCADE,
 
           await db.execute('''
           CREATE TABLE IF NOT EXISTS 'Friends' (
