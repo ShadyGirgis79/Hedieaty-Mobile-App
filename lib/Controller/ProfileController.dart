@@ -11,7 +11,8 @@ class ProfileController {
     try {
       final int hashedID = currentUserID.hashCode;
       return await LocalUser.User.fetchUserByID(hashedID);
-    } catch (e) {
+    }
+    catch (e) {
       print("Error fetching user from local DB: $e");
       return null;
     }
