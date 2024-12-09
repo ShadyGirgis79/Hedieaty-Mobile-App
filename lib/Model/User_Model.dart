@@ -74,6 +74,27 @@ class User{
     return null;
   }
 
+  static Future<User?> fetchUserByID(int id) async {
+    final db = HedieatyDatabase();
+    final response = await db.readData(
+      "SELECT * FROM Users WHERE ID = '$id' ",
+    );
+
+    if (response.isNotEmpty) {
+      final data = response.first;
+      return User(
+        id: data['ID'], // Include ID from the database
+        name: data['Name'],
+        email: data['Email'],
+        password: data['Password'],
+        profileURL: data['ProfileURL'] ?? '',
+        phoneNumber: data['PhoneNumber'],
+        preference: data['Preferences'] ?? '',
+      );
+    }
+    return null;
+  }
+
   // Update user data in the database
   Future<void> updateUser(String name,String profileURL , String phone, String pref,
       String email , String pass) async {

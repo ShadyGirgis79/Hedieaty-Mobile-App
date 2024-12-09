@@ -7,6 +7,7 @@ import 'package:hedieaty/Controller/ShowMessage.dart';
 import 'package:hedieaty/Events/MyEventsListPage.dart';
 import 'package:hedieaty/Gifts/PledgedGifts.dart';
 import 'package:image_picker/image_picker.dart';
+import '../Controller/ProfileController.dart';
 import '../Controller/Validation.dart';
 import '../Model/Database/Authentication.dart';
 import '../Model/User_Model.dart' as LocalUser; // Your custom User model
@@ -40,80 +41,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> fetchUserData() async {
     try {
-      final DatabaseReference userRef = FirebaseDatabase.instance.ref("users/$currentUserID");
-      final DataSnapshot snapshot = await userRef.get();
-
-      if (snapshot.exists) {
-        final data = snapshot.value as Map<dynamic, dynamic>;
-
-        debugPrint("User data fetched: $data"); // Log fetched data for debugging
-
+      final ProfileController profileController = ProfileController();
+      final LocalUser.User? localUser = await profileController.fetchUserFromLocalDB();
+      if (localUser != null) {
         setState(() {
-          // Ensure keys match exactly with your Firebase database
-          username = data['name'] ?? '';  // Default to empty string if key is not found
-          email = data['email'] ?? '';
-          phoneNumber = data['phone'] ?? '';
-          preference = data['preference'] ?? '';
-          profileURL = data['profileURL'] ?? '';  // Handle if no profile URL is available
+          username = localUser.name;
+          email = localUser.email;
+          phoneNumber = localUser.phoneNumber;
+          preference = localUser.preference;
+          profileURL = localUser.profileURL;
         });
-
-        // Sync with SQLite
-        await syncUserDataWithSQLite(data);
-      } else {
-        debugPrint("No user data found for $currentUserID");
       }
     } catch (e) {
-      debugPrint("Error fetching user data: $e"); // Log any errors for debugging
-    }
-  }
-
-  Future<void> syncUserDataWithSQLite(Map<dynamic, dynamic> firebaseData) async {
-    final String email = firebaseData['email'];
-    final String password = firebaseData['password']; // Get password from Firebase
-
-    debugPrint("Syncing user data with SQLite...");
-
-    final localUser = await LocalUser.User.fetchUserByEmailAndPassword(email, password);
-    if (localUser == null) {
-      final user = LocalUser.User(
-        id: FirebaseAuth.instance.currentUser!.uid.hashCode, // Store the Firebase user ID
-        name: firebaseData['name'],
-        email: email,
-        password: password, // Store password securely
-        phoneNumber: firebaseData['phone'],
-        preference: firebaseData['preference'],
-        profileURL: firebaseData['profileURL'],
-      );
-      await user.insertUser(
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        phoneNumber: user.phoneNumber,
-        preferences: user.preference,
-      );
-    }
-  }
-
-
-  Future<void> saveChanges(String newUsername, String newPhoneNumber,
-      String newPreference) async {
-    try {
-      final DatabaseReference userRef =
-      FirebaseDatabase.instance.ref("users/$currentUserID");
-
-      await userRef.update({
-        'name': newUsername,
-        'phoneNumber': newPhoneNumber,
-        'preference': newPreference,
-      });
-
-      setState(() {
-        username = newUsername;
-        phoneNumber = newPhoneNumber;
-        preference = newPreference;
-      });
-    } catch (e) {
-      debugPrint("Error saving changes: $e");
+      print("Error fetching user data: $e");
     }
   }
 
@@ -198,16 +138,16 @@ class _ProfilePageState extends State<ProfilePage> {
               onPressed: () async {
                 // Validate phone number
                 if (validatePhoneNumber(phoneController.text)) {
-                  // Clear any previous error
-                  phoneError = '';
-
-                  // Save changes locally and in Firebase
-                  await saveChanges(
-                    usernameController.text,
-                    phoneController.text,
-                    preferenceController.text,
+                  await ProfileController().updateUserData(
+                    newName: usernameController.text,
+                    newPhoneNumber: phoneController.text,
+                    newPreference: preferenceController.text,
                   );
-
+                  setState(() {
+                    username = usernameController.text;
+                    phoneNumber = phoneController.text;
+                    preference = preferenceController.text;
+                  });
                   // Close dialog
                   Navigator.of(context).pop();
                 }
@@ -236,7 +176,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "My Profile",
+          "Profile",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -389,7 +329,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   backgroundColor: Colors.purpleAccent[700],
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 60),
 
               ListTile(
                 leading: const Icon(Icons.card_giftcard),
