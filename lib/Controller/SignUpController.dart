@@ -37,6 +37,7 @@ class SignUpController {
 
 
     int response = await userModel.insertUser(
+
       name: name,
       password: password,
       profileURL: profilePath,
@@ -75,6 +76,26 @@ class SignUpController {
         'preference': preference,
         'profileURL': profileURL,
       });
+    }
+  }
+
+  Future<void> updateID(String email, String password, int newId) async {
+    // Fetch the user by email and password
+    User? user = await User.fetchUserByEmailAndPassword(email, password);
+
+    if (user != null) {
+      // Update the user's ID in the local database
+      int updateUser = await user.updateUserID(email, password, newId);
+
+      if (updateUser > 0) {
+        print("User ID updated successfully.");
+      }
+      else {
+        print("Failed to update user ID.");
+      }
+    }
+    else {
+      print("User not found. Cannot update ID.");
     }
   }
 }

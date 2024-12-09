@@ -75,14 +75,15 @@ class User{
   }
 
   // Update user data in the database
-  Future<void> updateUser() async {
+  Future<void> updateUser(String name,String profileURL , String phone, String pref,
+      String email , String pass) async {
     await db.updateData('''
       UPDATE Users
       SET Name = '$name',
           ProfileURL = '$profileURL',
-          PhoneNumber = '$phoneNumber',
-          Preferences = '$preference'
-      WHERE Email = '$email' AND Password = '$password';
+          PhoneNumber = '$phone',
+          Preferences = '$pref'
+      WHERE Email = '$email' AND Password = '$pass';
     ''');
   }
 
@@ -103,6 +104,14 @@ class User{
     await db.insertData(sql);
   }
 
+
+  Future<int> updateUserID(String email, String password, int newId) async {
+    String sql = '''
+    UPDATE Users SET ID = "$newId"
+    WHERE Email = "$email" AND Password = "$password"
+    ''';
+    return await db.updateData(sql);
+  }
 }
 
 

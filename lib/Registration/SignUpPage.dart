@@ -73,8 +73,9 @@ class _SignUpPageState extends State<SignUpPage> {
       if (firebaseUser != null) {
 
         await signUpController.listenForUserInsertion(firebaseUser.uid);
+        await signUpController.updateID(email, password, firebaseUser.uid.hashCode);
 
-        showMessage(context, "'$name' registered successfully!");
+        showMessage(context, "$name registered successfully!");
 
         // Delayed navigation to ensure context is stable
         Navigator.of(context).pushAndRemoveUntil(
