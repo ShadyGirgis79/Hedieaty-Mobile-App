@@ -30,7 +30,10 @@ class _SignInPageState extends State<SignInPage> {
     if (user != null) {
       final currentUser = await User.fetchUserByEmailAndPassword(email, password);
 
+
+
       if(currentUser != null){
+        await signInController.updateID(email, password, user.uid.hashCode);
         showMessage(context, "Logged in successfully!");
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => MyHomePage()),
