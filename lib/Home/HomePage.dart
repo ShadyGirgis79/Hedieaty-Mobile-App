@@ -27,30 +27,20 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    searchController.addListener(_filterFriends);
-    loadFriends(); // Load friends when the page is initialized
+    searchController.addListener(filterFriends);
+    loadFriends(currentUserID); // Load friends when the page is initialized
   }
 
-  void loadFriends() async {
-    final userId = currentUserID;
-    if (userId == null) return;
+  void loadFriends(currentUserID) async {
+    final fetchedFriends = await homeController.friendsList(currentUserID);
 
-    final userModel = LocalUser.User(
-      id: userId,
-      name: '',
-      email: '',
-      password: '',
-      phoneNumber: '',
-    );
-    final fetchedFriends = await userModel.getFriends(userId);
     setState(() {
-      friends = fetchedFriends;
+      friends = fetchedFriends!;
       filteredFriends = fetchedFriends; // Initialize with all friends
     });
   }
 
-
-  void _filterFriends() {
+  void filterFriends() {
     String query = searchController.text.toLowerCase();
     setState(() {
       filteredFriends = friends
@@ -83,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ).then((value) {
                       if (value == true) {
-                        loadFriends(); // Reload the friends list after a successful addition
+                        loadFriends(currentUserID); // Reload the friends list after a successful addition
                       }
                     });
                   },
@@ -106,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _onMenuSelected(String value) {
+  void onMenuSelected(String value) {
     if (value == 'create_event_list') {
       Navigator.push(
         context,
@@ -139,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.purpleAccent[700],
         actions: [
           PopupMenuButton<String>(
-            onSelected: _onMenuSelected,
+            onSelected: onMenuSelected,
             itemBuilder: (BuildContext context) {
               return [
                 const PopupMenuItem(

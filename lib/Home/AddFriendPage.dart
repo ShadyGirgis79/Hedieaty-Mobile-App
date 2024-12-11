@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hedieaty/Controller/AddFriendController.dart';
+import 'package:hedieaty/Controller/ShowMessage.dart';
 import '../Controller/Validation.dart';
 import '../Model/User_Model.dart';
 
@@ -78,9 +79,8 @@ class _AddFriendState extends State<AddFriendPage> {
                     phoneController.text,
                     );
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(result)),
-                );
+
+                showMessage(context, result);
 
                 // Navigate back to the previous screen on success
                 if (result == "Friend added successfully!") {
