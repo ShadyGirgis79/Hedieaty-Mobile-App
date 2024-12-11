@@ -105,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
+
   void _onMenuSelected(String value) {
     if (value == 'create_event_list') {
       Navigator.push(
