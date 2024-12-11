@@ -6,6 +6,8 @@ class Event {
   String category;
   DateTime date;
   String status; // "Upcoming", "Current", or "Past"
+  String location;
+  String description;
   List<Gift> gifts;
 
   Event({
@@ -13,6 +15,8 @@ class Event {
     required this.category,
     required this.date,
     required this.status,
+    this.location = "",
+    this.description = "",
     this.gifts = const [],
   });
 }
