@@ -95,6 +95,27 @@ class User{
     return null;
   }
 
+  static Future<User?> fetchUserByNameAndPhone(String name , String phone) async {
+    final db = HedieatyDatabase();
+    final response = await db.readData(
+      "SELECT * FROM Users WHERE Name = '$name' AND PhoneNumber = '$phone' ",
+    );
+
+    if (response.isNotEmpty) {
+      final data = response.first;
+      return User(
+        id: data['ID'], // Include ID from the database
+        name: data['Name'],
+        email: data['Email'],
+        password: data['Password'],
+        profileURL: data['ProfileURL'] ?? '',
+        phoneNumber: data['PhoneNumber'],
+        preference: data['Preferences'] ?? '',
+      );
+    }
+    return null;
+  }
+
   // Update user data in the database
   Future<void> updateUser(String name,String profileURL , String phone, String pref,
       String email , String pass) async {
@@ -120,11 +141,10 @@ class User{
   Future<void> addFriend(int userId, int friendId) async {
     String sql = '''
       INSERT INTO Friends (UserID, FriendID)
-      VALUES ($userId, $friendId)
+      VALUES ("$userId", "$friendId")
     ''';
     await db.insertData(sql);
   }
-
 
   Future<int> updateUserID(String email, String password, int newId) async {
     String sql = '''
@@ -133,6 +153,41 @@ class User{
     ''';
     return await db.updateData(sql);
   }
+
+  Future<bool> checkIfFriends(int userId, int friendId) async {
+    String sql = '''
+    SELECT * FROM Friends WHERE UserID = $userId AND FriendID = $friendId
+  ''';
+    List<Map<String, dynamic>> result = await db.readData(sql);
+    return result.isNotEmpty;
+  }
+
+  Future<List<User>> getFriends(int userId) async {
+    String sql = '''
+    SELECT U.* FROM Users U
+    INNER JOIN Friends F ON U.ID = F.FriendID
+    WHERE F.UserID = $userId
+  ''';
+    List<Map<String, dynamic>> result = await db.readData(sql);
+
+    return result.map((data) {
+      return User(
+        id: data['ID'],
+        name: data['Name'],
+        email: data['Email'],
+        password: data['Password'],
+        profileURL: data['ProfileURL'] ?? '',
+        phoneNumber: data['PhoneNumber'],
+        preference: data['Preferences'] ?? '',
+      );
+    }).toList();
+  }
+
+  Future<void> delete(String name) async{
+    String sql = "DELETE FROM Users WHERE Name = '$name'";
+    await db.deleteData(sql);
+  }
+
 }
 
 

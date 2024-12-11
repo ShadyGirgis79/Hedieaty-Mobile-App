@@ -219,7 +219,7 @@ class _MyEventsListState extends State<MyEventsList> {
                   onPressed: () {
                     if (name.isNotEmpty && category.isNotEmpty) {
                       setState(() {
-                        if(date.month == DateTime.now().month){
+                        if(date.day == DateTime.now().day){
                           status = "Current";
                         }
                         else if (date.isAfter(DateTime.now()))

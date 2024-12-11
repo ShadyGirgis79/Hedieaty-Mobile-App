@@ -7,54 +7,50 @@ class FriendsList extends StatelessWidget {
 
   const FriendsList({super.key, required this.friends});
 
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: ListView.builder(
-          itemCount: friends.length,  // Number of friends
-          itemBuilder: (context, index) {
-            final friend = friends[index];  // Get each friend
-            return Container(
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.black,
-              //     width: 2.0,
-              //   ),
-              //   borderRadius: BorderRadius.circular(8.0),
-              // ),
-              margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(friend.profileURL!),  // Friend's profile picture
+    return friends.isEmpty
+        ? Center(
+      child: Text(
+        'No friends yet. Add some!',
+        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+      ),
+    )
+        : ListView.builder(
+      itemCount: friends.length,
+      itemBuilder: (context, index) {
+        final friend = friends[index];
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(friend.profileURL.isEmpty
+                  ? 'https://via.placeholder.com/150'
+                  : friend.profileURL),
+            ),
+            title: Text(
+              friend.name,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            subtitle: Text(
+              friend.events
+                  .where((event) => event.status != "Past")
+                  .isNotEmpty
+                  ? 'Upcoming Events: ${friend.events.where((event) => event.status != "Past").length}'
+                  : 'No Upcoming Events',
+              style: const TextStyle(fontSize: 14),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FriendsEventList(),
                 ),
-                title: Text(friend.name, // Friend's name
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),),
-                subtitle: Text(friend.events
-                    .where((event) => event.status != "Past")  // Don't count the past events
-                    .length > 0
-                    ? 'Upcoming Events: ${friend.events.where((event) => event.status != "Past").length}'  // Show number of events
-                    : 'No Upcoming Events',
-                  style: TextStyle(
-                    //fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),), // Show "No Upcoming Events" if 0
-                onTap: () {
-                  // Navigate to EventListPage when tapping on the friend
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FriendsEventList(),
-                    ),
-                  );
-                },
-              ),
-            );
-          },
-        )
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

@@ -151,13 +151,6 @@ class HedieatyDatabase{
     }
   }
 
-  deleteDB() async{
-    String database = await getDatabasesPath();
-    String Path = join(database, 'myDataBase.db');
-    await deleteDatabase(Path);
-    print("MyData has been deleted..........");
-  }
-
   // Method to query users
   Future<List<Map<String, dynamic>>> queryUsers() async {
     Database? mydata = await MyDataBase; // Get the Database instance via the getter

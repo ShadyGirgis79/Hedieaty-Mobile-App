@@ -1,7 +1,7 @@
 ﻿import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Home/AddFriend.dart';
+import 'Home/AddFriendPage.dart';
 import 'Registration/SignInPage.dart';
 import 'Registration/SignUpPage.dart';
 import 'Details/FriendsGiftDetailsPage.dart';
@@ -63,8 +63,8 @@ class _HedieatyAppState extends State<HedieatyApp> {
           '/MyGiftList': (context) => const MyGiftList(),
           '/FriendsGiftDetails': (context) => const FriendsGiftDetails(),
           '/MyGiftDetails': (context) => const MyGiftDetails(),
-          '/Profile': (context) => const ProfilePage(),
-          '/AddFriend': (context) => const AddFriend(),
+          '/Profile': (context) => ProfilePage(),
+          //'/AddFriend': (context) => const AddFriendPage(),
           '/SignIn': (context) => const SignInPage(),
           '/SignUp': (context) => const SignUpPage(),
         }

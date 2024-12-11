@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Controller/HomeController.dart';
 import 'package:hedieaty/Events/MyEventsListPage.dart';
-import 'package:hedieaty/Home/AddFriend.dart';
+import 'package:hedieaty/Home/AddFriendPage.dart';
 import 'package:hedieaty/Profile/ProfilePage.dart';
-import 'package:hedieaty/Model/User_Model.dart';
+import 'package:hedieaty/Model/User_Model.dart' as LocalUser;
 import 'package:hedieaty/Home/FriendsList.dart';
 
 
@@ -14,20 +16,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  List<User> friends=[];
-
-  List<User> filteredFriends = [];  // To hold the search results
+  List<LocalUser.User> friends = [];
+  List<LocalUser.User> filteredFriends = []; // To hold the search results
   TextEditingController searchController = TextEditingController();
+  final currentUser = FirebaseAuth.instance.currentUser;
+  final currentUserID = FirebaseAuth.instance.currentUser?.uid.hashCode;
+  final HomeController homeController = HomeController();
+
 
   @override
   void initState() {
     super.initState();
-    filteredFriends = friends;  // Initially show all friends
-    searchController.addListener(_filterFriends);  // Add listener to the search input
+    searchController.addListener(_filterFriends);
+    loadFriends(); // Load friends when the page is initialized
   }
 
-  // Function to filter friends based on search input
+  void loadFriends() async {
+    final userId = currentUserID;
+    if (userId == null) return;
+
+    final userModel = LocalUser.User(
+      id: userId,
+      name: '',
+      email: '',
+      password: '',
+      phoneNumber: '',
+    );
+    final fetchedFriends = await userModel.getFriends(userId);
+    setState(() {
+      friends = fetchedFriends;
+      filteredFriends = fetchedFriends; // Initialize with all friends
+    });
+  }
+
+
   void _filterFriends() {
     String query = searchController.text.toLowerCase();
     setState(() {
@@ -47,13 +69,23 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
+                  onPressed: () async {
+
+                    final LocalUser.User? currentUser = await homeController.fetchUserFromLocalDB();
+
+                    Navigator.push(
+                      context,
                       MaterialPageRoute(
-                        builder: (context) => AddFriend(), // Replace with your target page widget
+                        builder: (context) => AddFriendPage(
+                          friends: friends,
+                          currentUser: currentUser!,
+                        ),
                       ),
-                    );
-                    Navigator.of(context).pop();
+                    ).then((value) {
+                      if (value == true) {
+                        loadFriends(); // Reload the friends list after a successful addition
+                      }
+                    });
                   },
                   child: const Text("Manually"),
                 ),
@@ -62,7 +94,6 @@ class _MyHomePageState extends State<MyHomePage> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-
                     Navigator.of(context).pop();
                   },
                   child: const Text("Contacts"),
@@ -74,8 +105,6 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
-
-  // Function to handle option selected from the 3-dot menu
   void _onMenuSelected(String value) {
     if (value == 'create_event_list') {
       Navigator.push(
@@ -84,8 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context) => MyEventsList(),
         ),
       );
-    }
-    else if (value == 'Profile'){
+    } else if (value == 'Profile') {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -99,16 +127,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home Page",
+        title: const Text(
+          "Home Page",
           style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-        ),),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent[700],
         actions: [
           PopupMenuButton<String>(
-            onSelected: _onMenuSelected,  // Handle the selection
+            onSelected: _onMenuSelected,
             itemBuilder: (BuildContext context) {
               return [
                 const PopupMenuItem(
@@ -125,37 +155,31 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: searchController,  // Attach the controller
-                  decoration: InputDecoration(
-                    labelText: "Search Friends",
-                    prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  labelText: "Search Friends",
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
               ),
-              Expanded(
-                child: FriendsList(friends: filteredFriends), // Show filtered friends
-              ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: FriendsList(friends: filteredFriends),
+            ),
+          ],
+        ),
       ),
-
       floatingActionButton: FloatingActionButton(
-        onPressed: ()=> {
-          addOptions(),
-        },  // Calls the method to add a friend
+        onPressed: addOptions,
         child: const Icon(Icons.add),
       ),
     );
   }
 }
-
-
-

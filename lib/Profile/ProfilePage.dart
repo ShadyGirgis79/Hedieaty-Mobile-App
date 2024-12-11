@@ -223,6 +223,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 textAlign: TextAlign.center,
               ),
+
               Text(
                 email,
                 style: TextStyle(
@@ -230,6 +231,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   fontSize: 15,
                 ),
               ),
+
               Text(
                 phoneNumber,
                 style: TextStyle(
@@ -250,7 +252,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 10),
 
-              // Buttons to update profile and notification settings
+              // Buttons to update profile a
               ElevatedButton.icon(
                 onPressed: editPersonalInfo,
                 icon: const Icon(Icons.person),
@@ -261,6 +263,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(height: 10),
+
+              //Notification settings
               ElevatedButton.icon(
                 onPressed: () {
                   // Action to update notification settings
@@ -303,6 +307,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         actions: [
                           ElevatedButton(
                             onPressed: () {
+
+
                               authService.signOut();
                               Navigator.of(context).pushNamedAndRemoveUntil(
                                 '/SignIn',
