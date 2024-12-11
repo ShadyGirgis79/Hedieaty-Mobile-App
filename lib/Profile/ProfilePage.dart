@@ -295,7 +295,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   backgroundColor: Colors.purpleAccent[700],
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 40),
 
               ElevatedButton(
                 onPressed: () {
@@ -307,8 +307,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         actions: [
                           ElevatedButton(
                             onPressed: () {
-
-
                               authService.signOut();
                               Navigator.of(context).pushNamedAndRemoveUntil(
                                 '/SignIn',
@@ -332,7 +330,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: const Text('Sign Out'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.purpleAccent[700],
+                  backgroundColor: Colors.red[700],
                 ),
               ),
               const SizedBox(height: 60),
