@@ -79,6 +79,11 @@ class _AddFriendState extends State<AddFriendPage> {
                     phoneController.text,
                     );
 
+                // String resultFirebase = await addFriendController.addFriendFirebase(
+                //   nameController.text,
+                //   phoneController.text,
+                // );
+
 
                 showMessage(context, result);
 

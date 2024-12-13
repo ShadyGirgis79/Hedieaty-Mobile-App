@@ -1,13 +1,11 @@
 ﻿import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Home/AddFriendPage.dart';
+import 'package:hedieaty/GiftDetails/MyGiftDetailsPage.dart';
 import 'Registration/SignInPage.dart';
 import 'Registration/SignUpPage.dart';
-import 'Details/FriendsGiftDetailsPage.dart';
-import 'Details/MyGiftDetailsPage.dart';
-import 'Events/FriendsEventListPage.dart';
-import 'Events/MyEventsListPage.dart';
+import 'GiftDetails/FriendsGiftDetailsPage.dart';
+import 'FriendEvents/FriendsEventListPage.dart';
 import 'Gifts/FriendsGiftListPage.dart';
 import 'Gifts/MyGiftListPage.dart';
 import 'Home/HomePage.dart';
@@ -58,13 +56,11 @@ class _HedieatyAppState extends State<HedieatyApp> {
         routes: {
           '/Home': (context) => const MyHomePage(),
           '/FriendsEvent': (context) => const FriendsEventList(),
-          '/MyEvents': (context) => const MyEventsList(),
           '/FriendsGiftList': (context) => const FriendsGiftList(),
           '/MyGiftList': (context) => const MyGiftList(),
           '/FriendsGiftDetails': (context) => const FriendsGiftDetails(),
           '/MyGiftDetails': (context) => const MyGiftDetails(),
           '/Profile': (context) => ProfilePage(),
-          //'/AddFriend': (context) => const AddFriendPage(),
           '/SignIn': (context) => const SignInPage(),
           '/SignUp': (context) => const SignUpPage(),
         }

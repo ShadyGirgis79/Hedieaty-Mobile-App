@@ -35,48 +35,72 @@ class AddFriendController {
     }
   }
 
+  // Add a friend to the user's friends list in Firebase Realtime Database
   Future<String> addFriendFirebase(String name, String phone) async {
     try {
-      // Fetch user by name and phone
+      // Reference to the users table
       DatabaseReference usersRef = databaseRef.child("users");
 
-      // Query to find user with the matching phone
+      // Query to find the friend by phone
       DataSnapshot snapshot = await usersRef.orderByChild("phone").equalTo(phone).get();
 
       if (!snapshot.exists) {
         return "User with this phone number does not exist!";
       }
 
-      // Find the friend's user ID based on the snapshot
+      // Find the friend's user ID by name and phone
       String? friendID;
-      snapshot.children.forEach((childSnapshot) {
+      for (var childSnapshot in snapshot.children) {
         if (childSnapshot.child("name").value == name) {
-          friendID = childSnapshot.key; // friend's userID
+          friendID = childSnapshot.key; // Friend's user ID
+          break;
         }
-      });
+      }
 
       if (friendID == null) {
         return "No user found with this name and phone!";
       }
 
-      // Get references to both users' friends lists
-      DatabaseReference userFriendsRef = databaseRef.child("users/$currentUserID/friends");
+      // Reference to the current user's and friend's friends lists
+      DatabaseReference currentUserFriendsRef = databaseRef.child("users/$currentUserID/friends");
       DatabaseReference friendFriendsRef = databaseRef.child("users/$friendID/friends");
 
       // Check if already friends
-      DataSnapshot userSnapshot = await userFriendsRef.child(friendID!).get();
+      DataSnapshot userSnapshot = await currentUserFriendsRef.child(friendID).get();
       if (userSnapshot.exists) {
         return "You are already friends with this user!";
       }
 
-      // Add the friendship (both directions)
-      await userFriendsRef.child(friendID!).set(true);
-      await friendFriendsRef.child(currentUserID).set(true);
+      // Add friendship in both directions
+      await currentUserFriendsRef.child(friendID).set(true); // Add friend to current user's list
+      await friendFriendsRef.child(currentUserID).set(true); // Add current user to friend's list
 
       return "Friend added successfully!";
-    } catch (e) {
+    }
+    catch (e) {
       return "Error: ${e.toString()}";
     }
   }
 
+  // Fetches the list of friends for the current user
+  Future<List<String>> getFriends() async {
+    try {
+      DatabaseReference currentUserFriendsRef = databaseRef.child("users/$currentUserID/friends");
+      DataSnapshot snapshot = await currentUserFriendsRef.get();
+
+      if (!snapshot.exists) {
+        return [];
+      }
+
+      List<String> friends = [];
+      for (var childSnapshot in snapshot.children) {
+        friends.add(childSnapshot.key!); // Add the friend's ID to the list
+      }
+      return friends;
+    }
+    catch (e) {
+      throw Exception("Error fetching friends: ${e.toString()}");
+    }
+  }
 }
+

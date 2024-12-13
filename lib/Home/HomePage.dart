@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/HomeController.dart';
-import 'package:hedieaty/Events/MyEventsListPage.dart';
 import 'package:hedieaty/Home/AddFriendPage.dart';
 import 'package:hedieaty/Profile/ProfilePage.dart';
 import 'package:hedieaty/Model/User_Model.dart' as LocalUser;
 import 'package:hedieaty/Home/FriendsList.dart';
+import '../MyEvents/MyEventsPage.dart';
 
 
 class MyHomePage extends StatefulWidget {
@@ -22,6 +22,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   final currentUserID = FirebaseAuth.instance.currentUser?.uid.hashCode;
   final HomeController homeController = HomeController();
+
+
 
 
   @override
@@ -101,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MyEventsList(),
+          builder: (context) => MyEventPage(),
         ),
       );
     } else if (value == 'Profile') {
