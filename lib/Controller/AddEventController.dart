@@ -18,8 +18,8 @@ class AddEventController{
     required String date,
     required String status,
   }) async {
-    if (name.isEmpty || date.isEmpty) {
-      return "Please fill out all fields";
+    if (name.isEmpty || date.isEmpty || category.isEmpty ) {
+      return "Please fill out at least the name and category and date";
     }
 
     try {

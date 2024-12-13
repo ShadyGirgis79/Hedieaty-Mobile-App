@@ -21,6 +21,11 @@ class _AddEventPageState extends State<AddEventPage> {
   final AddEventController addEventController = AddEventController();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -146,7 +151,7 @@ class _AddEventPageState extends State<AddEventPage> {
                         );
 
                         if (result == null) {
-                          Navigator.pop(context); // Close the add event page
+                          Navigator.pop(context , true); // Close the add event page
                         } else {
                           showMessage(context, result);
                         }
