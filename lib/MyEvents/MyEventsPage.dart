@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/EventController.dart';
@@ -16,23 +15,25 @@ class MyEventPage extends StatefulWidget {
 class _MyEventPageState extends State<MyEventPage> {
   final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
   final EventController eventController = EventController();
-  List<Event> events=[];
+  TextEditingController searchController = TextEditingController();
+  List<Event> events = [];
   List<Event> filteredEvents = []; // List to hold the filtered events
   String sortBy = 'name';
-  String searchQuery = ""; // To store the current search query
 
   @override
   void initState() {
     super.initState();
+    searchController.addListener(() {
+      searchEvents(searchController.text);
+    });
     loadFriends(); // Load events when the page is initialized
   }
 
-  void loadFriends() async {
+  Future<void> loadFriends() async {
     final fetchedEvents = await eventController.eventsList();
-
     setState(() {
-      events = fetchedEvents!;
-      filteredEvents = fetchedEvents; // Initially, all events are displayed
+      events = fetchedEvents ?? [];
+      filteredEvents = fetchedEvents ?? []; // Initially, all events are displayed
     });
   }
 
@@ -69,10 +70,9 @@ class _MyEventPageState extends State<MyEventPage> {
 
   void searchEvents(String query) {
     setState(() {
-      searchQuery = query.toLowerCase();
       filteredEvents = events.where((event) {
-        return event.name.toLowerCase().contains(searchQuery) ||
-            event.category.toLowerCase().contains(searchQuery);
+        return event.name.toLowerCase().contains(query.toLowerCase()) ||
+            event.category.toLowerCase().contains(query.toLowerCase());
       }).toList();
     });
   }
@@ -100,7 +100,6 @@ class _MyEventPageState extends State<MyEventPage> {
             ],
           ),
         ],
-
       ),
       body: SafeArea(
         child: Column(
@@ -108,7 +107,7 @@ class _MyEventPageState extends State<MyEventPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                onChanged: searchEvents,
+                controller: searchController,
                 decoration: InputDecoration(
                   hintText: 'Search events by name or category',
                   prefixIcon: const Icon(Icons.search),
@@ -120,24 +119,28 @@ class _MyEventPageState extends State<MyEventPage> {
                 ),
               ),
             ),
-            Expanded( // Wrap the ListView.builder in Expanded
+            Expanded(
               child: EventsList(events: filteredEvents),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          // Navigate to AddEventPage and wait for a result
+          final bool? isEventAdded = await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddEventPage(),
+              builder: (context) => const AddEventPage(),
             ),
           );
+          // If a new event was added, refresh the list
+          if (isEventAdded == true) {
+            loadFriends(); // Reload the events list
+          }
         },
         child: const Icon(Icons.add),
       ),
     );
   }
 }
-
