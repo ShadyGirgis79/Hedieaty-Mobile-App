@@ -62,8 +62,37 @@ class EventsList extends StatelessWidget {
             trailing: IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () async {
-                final String result = await eventController.Delete(event.name);
-                showMessage(context, result);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("Are you sure you want to delete event?"),
+                      content: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                final String result = await eventController.Delete(event.name);
+                                showMessage(context, result);
+                                Navigator.pop(context , true);
+                              },
+                              child: const Text("Yes"),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Cancel"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
               },
             ),
             onTap: () {

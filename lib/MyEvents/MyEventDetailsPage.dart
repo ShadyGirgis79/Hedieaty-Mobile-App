@@ -326,30 +326,6 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                         ),
                       ),
                       leading: const Icon(Icons.calendar_today),
-                      trailing: event.status == "Upcoming"
-                          ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () async {
-                              // Show DatePicker
-                              DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                //initialDate: event.date,
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime(2100),
-                              );
-                              if (pickedDate != null && pickedDate != event.date) {
-                                setState(() {
-                                  //event.date = pickedDate;
-                                });
-                              }
-                            },
-                          )
-                        ],
-                      )
-                          : null, // Null when the event is not editable
                     ),
                   ),
 
