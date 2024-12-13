@@ -4,8 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/ShowMessage.dart';
-import 'package:hedieaty/Events/MyEventsListPage.dart';
 import 'package:hedieaty/Gifts/PledgedGifts.dart';
+import 'package:hedieaty/MyEvents/MyEventsPage.dart';
 import 'package:image_picker/image_picker.dart';
 import '../Controller/ProfileController.dart';
 import '../Controller/Validation.dart';
@@ -284,7 +284,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MyEventsList(),
+                      builder: (context) => MyEventPage(),
                     ),
                   );
                 },

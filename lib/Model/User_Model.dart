@@ -183,7 +183,7 @@ class User{
     }).toList();
   }
 
-  Future<void> delete(String name) async{
+  Future<void> deleteUser(String name) async{
     String sql = "DELETE FROM Users WHERE Name = '$name'";
     await db.deleteData(sql);
   }

@@ -56,6 +56,7 @@ class SignUpController {
     // Fetch all users from the local SQLite database
     List<Map> users = await userModel.getAllUsers();
 
+
     for (var user in users) {
       String userId = id;
       String name = user['Name'];
@@ -69,6 +70,7 @@ class SignUpController {
       // Sync this user data with Firebase
       DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(userId);
       await userRef.set({
+        'userID': userId.hashCode,
         'name': name,
         'email': email,
         'phone': phone,
