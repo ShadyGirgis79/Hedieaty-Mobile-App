@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Controller/HomeController.dart';
 import 'package:hedieaty/Events/MyEvents/MyEventsPage.dart';
 import 'package:hedieaty/Home/AddFriendPage.dart';
@@ -20,6 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<LocalUser.User> friends = [];
   List<LocalUser.User> filteredFriends = []; // To hold the search results
   TextEditingController searchController = TextEditingController();
+  final EventController eventController = EventController();
   final currentUser = FirebaseAuth.instance.currentUser;
   final currentUserID = FirebaseAuth.instance.currentUser?.uid.hashCode;
   final HomeController homeController = HomeController();
@@ -41,6 +43,18 @@ class _MyHomePageState extends State<MyHomePage> {
       friends = fetchedFriends!;
       filteredFriends = fetchedFriends; // Initialize with all friends
     });
+
+    fetchFriendsEvents(filteredFriends);
+  }
+
+  void fetchFriendsEvents(List<LocalUser.User> friends) async {
+    for (var friend in friends) {
+      final events = await eventController.getFriendEvents(friend.id!);
+
+      setState(() {
+        friend.events = events;
+      });
+    }
   }
 
   void filterFriends() {

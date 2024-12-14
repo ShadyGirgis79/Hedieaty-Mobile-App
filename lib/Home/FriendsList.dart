@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Events/FriendEvents/FriendsEventPage.dart';
 import 'package:hedieaty/Model/User_Model.dart';
@@ -44,7 +45,7 @@ class FriendsList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => FriendsEventPage(friendId: friend.id as int, friendName: friend.name),
+                  builder: (context) => FriendsEventPage(friendId: friend.id! , friendName: friend.name),
                 ),
               );
             },

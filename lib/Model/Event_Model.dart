@@ -77,25 +77,4 @@ class Event {
       WHERE ID = '$id';
     ''');
   }
-
-  Future<List<Event>> getEventsForFriend(String friendId) async {
-    String sql = '''
-    SELECT * FROM Events WHERE UserID = $friendId
-    ''';
-    List<Map<String, dynamic>> result = await db.readData(sql);
-
-    return result.map((data) {
-      return Event(
-        id: data['ID'],
-        name: data['Name'],
-        status: data['Status'],
-        category: data['Category'],
-        date: data['Date'],
-        location: data['Location'],
-        description: data['Description'],
-      );
-    }).toList();
-  }
-
-
 }
