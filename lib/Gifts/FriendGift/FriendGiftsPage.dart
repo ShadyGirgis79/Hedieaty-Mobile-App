@@ -215,7 +215,7 @@ class _FriendGiftsPageState extends State<FriendGiftsPage> {
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),),
-        backgroundColor: Colors.purpleAccent,
+        backgroundColor: Colors.purpleAccent[700],
         foregroundColor: Colors.white,
         actions: [
           PopupMenuButton<String>(

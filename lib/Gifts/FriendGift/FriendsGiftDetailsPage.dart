@@ -49,7 +49,7 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),),
-        backgroundColor: Colors.purpleAccent,
+        backgroundColor: Colors.purpleAccent[700],
         foregroundColor: Colors.white,
       ),
       body: SafeArea(

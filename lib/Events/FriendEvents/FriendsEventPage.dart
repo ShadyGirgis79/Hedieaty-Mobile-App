@@ -86,7 +86,8 @@ class _FriendsEventPageState extends State<FriendsEventPage> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-          ),), //Change Name to the name of the friend
+          ),
+        ), //Change Name to the name of the friend
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent[700],
         actions: [
