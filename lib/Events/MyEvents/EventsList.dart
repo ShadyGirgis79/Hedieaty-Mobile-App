@@ -1,10 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/EventController.dart';
+import 'package:hedieaty/Controller/ShowMessage.dart';
+import 'package:hedieaty/Events/MyEvents/MyEventDetailsPage.dart';
+import 'package:hedieaty/Gifts/MyGifts/MyGiftListPage.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
-import 'package:hedieaty/MyEvents/MyEventDetailsPage.dart';
-import '../Controller/ShowMessage.dart';
-import '../Gifts/MyGiftListPage.dart';
 
 class EventsList extends StatelessWidget {
   final List<Event> events;

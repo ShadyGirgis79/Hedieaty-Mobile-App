@@ -1,46 +1,47 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/EventController.dart';
-import 'package:hedieaty/MyEvents/AddEventPage.dart';
-import 'package:hedieaty/MyEvents/EventsList.dart';
+import 'package:hedieaty/Events/FriendEvents/FriendsEventList.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
 
-class MyEventPage extends StatefulWidget {
-  const MyEventPage({super.key});
+class FriendsEventPage extends StatefulWidget {
+  final int friendId;
+  final String friendName;
+
+  const FriendsEventPage({super.key, required this.friendId, required this.friendName});
 
   @override
-  State<MyEventPage> createState() => _MyEventPageState();
+  State<FriendsEventPage> createState() => _FriendsEventPageState();
 }
 
-class _MyEventPageState extends State<MyEventPage> {
-  final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
+class _FriendsEventPageState extends State<FriendsEventPage> {
+
   final EventController eventController = EventController();
   TextEditingController searchController = TextEditingController();
   List<Event> events = [];
   List<Event> filteredEvents = [];
   String sortBy = 'name';
+  late String Name;
 
   @override
   void initState() {
     super.initState();
-    searchController.addListener(() {
-      searchEvents(searchController.text);
-    });
-    loadFriends(); // Load events when the page is initialized
+    Name = widget.friendName;
+    loadFriendEvents();
   }
 
-  Future<void> loadFriends() async {
-    final fetchedEvents = await eventController.eventsList();
+  void loadFriendEvents() async {
+    final fetchedEvents = await eventController.getFriendEvents(widget.friendId);
     setState(() {
-      events = fetchedEvents ?? [];
-      filteredEvents = fetchedEvents ?? []; // Initially, all events are displayed
+      events = fetchedEvents;
+      filteredEvents = fetchedEvents;
     });
   }
 
   void sortEvents(String sortBy) {
     setState(() {
       this.sortBy = sortBy;
-      filteredEvents.sort((a, b) {
+      events.sort((a, b) {
         switch (sortBy) {
           case 'name':
             return a.name.compareTo(b.name);
@@ -76,17 +77,16 @@ class _MyEventPageState extends State<MyEventPage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'My Events List',
+        title: Text('${Name}\'s Events',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-          ),
-        ),
+          ),), //Change Name to the name of the friend
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent[700],
         actions: [
@@ -119,27 +119,12 @@ class _MyEventPageState extends State<MyEventPage> {
               ),
             ),
             Expanded(
-              child: EventsList(events: filteredEvents),
+              child: FriendsEventList(events: filteredEvents),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Navigate to AddEventPage and wait for a result
-          final bool? isEventAdded = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AddEventPage(),
-            ),
-          );
-          // If a new event was added, refresh the list
-          if (isEventAdded == true) {
-            loadFriends(); // Reload the events list
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
+
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hedieaty/FriendEvents/FriendsEventPage.dart';
+import 'package:hedieaty/Events/FriendEvents/FriendsEventPage.dart';
 import 'package:hedieaty/Model/User_Model.dart';
 
 class FriendsList extends StatelessWidget {

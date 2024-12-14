@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hedieaty/Gifts/MyGiftListPage.dart';
+import 'package:hedieaty/Controller/ShowMessage.dart';
+import 'package:hedieaty/Gifts/MyGifts/MyGiftListPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -51,24 +52,6 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
       });
     }
   }
-
-
-  // Future<void> _pickImage() async {
-  //   try {
-  //     final ImagePicker picker = ImagePicker();
-  //     final XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
-  //
-  //     if (pickedImage != null) {
-  //       setState(() {
-  //         _image = File(pickedImage.path);
-  //       });
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Failed to pick image: $e')),
-  //     );
-  //   }
-  // }
 
 
   @override
@@ -366,7 +349,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                           ? IconButton(
                         icon: const Icon(Icons.edit),
                         onPressed: () {
-                          int updatedPrice = gift.price;
+                          double updatedPrice = gift.price;
 
                           showDialog(
                             context: context,
@@ -386,7 +369,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                                     ),
                                     onChanged: (value) {
                                       // Temporarily store the parsed value
-                                      updatedPrice = int.tryParse(value) ?? gift.price;
+                                      updatedPrice = double.tryParse(value) ?? gift.price;
                                     },
                                   ),
                                 ),
@@ -491,9 +474,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                           );// Go back to GiftListPage
                         } else {
                           // If form data is missing, show an error message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Please fill in all required fields')),
-                          );
+                          showMessage(context, 'Please fill in all required fields');
                         }
                       },
                       child: const Text('Save Gift',

@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:hedieaty/Gifts/FriendsGiftListPage.dart';
+import 'package:hedieaty/Gifts/FriendGift/FriendsGiftListPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'dart:io';
 

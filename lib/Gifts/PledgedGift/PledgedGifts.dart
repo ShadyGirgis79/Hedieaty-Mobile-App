@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:hedieaty/Details/PledgedGiftDetailsPage.dart';
+import 'package:hedieaty/Gifts/PledgedGift/PledgedGiftDetailsPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 
 class PLedgedGiftsPage extends StatefulWidget {

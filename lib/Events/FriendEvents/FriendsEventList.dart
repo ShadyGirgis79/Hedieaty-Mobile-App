@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:hedieaty/FriendEvents/FriendsEventDetailsPage.dart';
-import 'package:hedieaty/Gifts/FriendsGiftListPage.dart';
-import '../Model/Event_Model.dart';
+import 'package:hedieaty/Events/FriendEvents/FriendsEventDetailsPage.dart';
+import 'package:hedieaty/Gifts/FriendGift/FriendsGiftListPage.dart';
+import 'package:hedieaty/Model/Event_Model.dart';
 
 class FriendsEventList extends StatelessWidget {
   final List<Event> events;
@@ -41,7 +41,6 @@ class FriendsEventList extends StatelessWidget {
             subtitle: Text('${event.category} • ${event.status}',
               style: TextStyle(
                 fontSize: 14,
-                //fontWeight: FontWeight.bold,
               ),),
             leading: IconButton(
               onPressed: () async {

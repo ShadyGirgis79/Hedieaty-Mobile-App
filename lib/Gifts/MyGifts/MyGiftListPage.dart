@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hedieaty/Details/MyGiftDetailsPage.dart';
+import 'package:hedieaty/Gifts/MyGifts/MyGiftDetailsPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 
 class MyGiftList extends StatefulWidget {
@@ -53,7 +53,7 @@ class _MyGiftListState extends State<MyGiftList> {
     String name = "";
     String category ="";
     String status = "Unpledged";
-    int price = 0;
+    double price = 0;
 
     showDialog(
         context: context,
@@ -92,7 +92,7 @@ class _MyGiftListState extends State<MyGiftList> {
                   decoration: const InputDecoration(labelText: 'Price'),
                   keyboardType: TextInputType.number, // Ensure keyboard is numeric
                   onChanged: (value) {
-                    price = int.tryParse(value) ?? 0; // Safely convert to int
+                    price = double.tryParse(value) ?? 0; // Safely convert to int
                   },
                 ),
               ],

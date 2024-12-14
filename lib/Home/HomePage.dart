@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/HomeController.dart';
+import 'package:hedieaty/Events/MyEvents/MyEventsPage.dart';
 import 'package:hedieaty/Home/AddFriendPage.dart';
 import 'package:hedieaty/Profile/ProfilePage.dart';
 import 'package:hedieaty/Model/User_Model.dart' as LocalUser;
 import 'package:hedieaty/Home/FriendsList.dart';
-import '../MyEvents/MyEventsPage.dart';
+
 
 
 class MyHomePage extends StatefulWidget {
