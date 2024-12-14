@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Events/FriendEvents/FriendsEventDetailsPage.dart';
-import 'package:hedieaty/Gifts/FriendGift/FriendsGiftListPage.dart';
+import 'package:hedieaty/Gifts/FriendGift/FriendGiftsPage.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
 
 class FriendsEventList extends StatelessWidget {
@@ -79,7 +79,7 @@ class FriendsEventList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FriendsGiftList(),
+                  builder: (context) => FriendGiftsPage(),
                 ),
               );
             },

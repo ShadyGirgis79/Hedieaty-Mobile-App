@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/ShowMessage.dart';
 import 'package:hedieaty/Events/MyEvents/MyEventsPage.dart';
-import 'package:hedieaty/Gifts/PledgedGift/PledgedGifts.dart';
+import 'package:hedieaty/Gifts/PledgedGift/PledgedGiftsPage.dart';
 import 'package:image_picker/image_picker.dart';
 import '../Controller/ProfileController.dart';
 import '../Controller/Validation.dart';
@@ -343,7 +343,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PLedgedGiftsPage(),
+                      builder: (context) => PledgedGiftsPage(),
                     ),
                   );
                 },

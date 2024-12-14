@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Controller/ShowMessage.dart';
 import 'package:hedieaty/Events/MyEvents/MyEventDetailsPage.dart';
-import 'package:hedieaty/Gifts/MyGifts/MyGiftListPage.dart';
+import 'package:hedieaty/Gifts/MyGifts/MyGiftsPage.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
 
 class EventsList extends StatelessWidget {
@@ -102,7 +102,7 @@ class EventsList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MyGiftList(),
+                  builder: (context) => MyGiftsPage(),
                 ),
               );
             },

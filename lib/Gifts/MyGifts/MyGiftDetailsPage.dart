@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hedieaty/Controller/ShowMessage.dart';
-import 'package:hedieaty/Gifts/MyGifts/MyGiftListPage.dart';
+import 'package:hedieaty/Gifts/MyGifts/MyGiftsPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -15,15 +15,15 @@ class MyGiftDetails extends StatefulWidget {
 }
 
 class _MyGiftDetailsState extends State<MyGiftDetails> {
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _priceController = TextEditingController();
-  String _category = 'Books';
-  bool _isPledged = false;
-  File? _image;
+  final formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final priceController = TextEditingController();
+  String category = 'Books';
+  bool isPledged = false;
+  File? image;
 
-  final _categories = ['Electronics', 'Books', 'Toys', 'Souvenir', 'Accessories', 'Other'];
+  final categories = ['Electronics', 'Books', 'Toys', 'Souvenir', 'Accessories', 'Other'];
 
   // Initialize your Gift object here
   final Gift gift = Gift(
@@ -36,11 +36,11 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
   @override
   void initState() {
     super.initState();
-    _nameController.text = gift.name;
-    _descriptionController.text = "Description here"; // Example description
-    _priceController.text = gift.price.toString();
-    _category = gift.category;
-    _isPledged = gift.status == "Unpledged";
+    nameController.text = gift.name;
+    descriptionController.text = "Description here"; // Example description
+    priceController.text = gift.price.toString();
+    category = gift.category;
+    isPledged = gift.status == "Unpledged";
   }
 
   Future<void> _pickImage() async {
@@ -48,7 +48,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        image = File(pickedFile.path);
       });
     }
   }
@@ -63,7 +63,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),),
-        backgroundColor: Colors.purpleAccent,
+        backgroundColor: Colors.purpleAccent[700],
         foregroundColor: Colors.white,
       ),
       body: SafeArea(
@@ -71,7 +71,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child:Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -82,13 +82,13 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                         Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: _isPledged ? Colors.red : Colors.green,
+                              color: isPledged ? Colors.red : Colors.green,
                               width: 12.0,
                             ),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: _image != null
-                              ? Image.file(_image!, height: 200, width: 200, fit: BoxFit.cover)
+                          child: image != null
+                              ? Image.file(image!, height: 200, width: 200, fit: BoxFit.cover)
                               : const Icon(Icons.image, size: 200, color: Colors.grey),
                         ),
 
@@ -102,7 +102,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                           label: const Text("Upload Image///Image/label"),
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor: Colors.purpleAccent,
+                            backgroundColor: Colors.purpleAccent[700],
                           ),
                         ),
                       ],
@@ -131,7 +131,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                         style: TextStyle(
                           fontSize: 18,
                         ),),
-                      trailing: !_isPledged ?
+                      trailing: !isPledged ?
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -193,18 +193,18 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),),
-                      subtitle: Text("${_descriptionController.text}" ,
+                      subtitle: Text("${descriptionController.text}" ,
                         style: TextStyle(
                           fontSize: 18,
                         ),),
-                      trailing: !_isPledged ?
+                      trailing: !isPledged ?
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit),
                             onPressed: (){
-                              String updatedDescription = _descriptionController.text;
+                              String updatedDescription = descriptionController.text;
 
                               showDialog(
                                   context: context,
@@ -213,7 +213,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                                       title: const Text("Description"),
                                       content: SizedBox(
                                         child: TextField(
-                                          controller: _descriptionController,
+                                          controller: descriptionController,
                                           onChanged: (value){
                                             updatedDescription = value;
                                           },
@@ -223,7 +223,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                                         ElevatedButton(
                                           onPressed: (){
                                             setState(() {
-                                              _descriptionController.text = updatedDescription;
+                                              descriptionController.text = updatedDescription;
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -263,7 +263,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                         style: TextStyle(
                           fontSize: 18,
                         ),),
-                      trailing: !_isPledged ?
+                      trailing: !isPledged ?
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -282,8 +282,8 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                                           mainAxisSize: MainAxisSize.min, // Minimize height to fit content
                                           children: [
                                             DropdownButtonFormField<String>(
-                                              value: _category,
-                                              items: _categories.map((String category) {
+                                              value: category,
+                                              items: categories.map((String category) {
                                                 return DropdownMenuItem<String>(
                                                   value: category,
                                                   child: Text(category),
@@ -303,7 +303,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                                           onPressed: (){
                                             setState(() {
                                               gift.category = updatedCategory;
-                                              _category = updatedCategory;
+                                              category = updatedCategory;
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -345,7 +345,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                           fontSize: 18,
                         ),
                       ),
-                      trailing: !_isPledged
+                      trailing: !isPledged
                           ? IconButton(
                         icon: const Icon(Icons.edit),
                         onPressed: () {
@@ -359,7 +359,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                                 content: SizedBox(
                                   //width: 200,
                                   child: TextField(
-                                    controller: _priceController,
+                                    controller: priceController,
                                     keyboardType: TextInputType.number,
                                     inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly, // Only digits
@@ -412,7 +412,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      subtitle: !_isPledged ?
+                      subtitle: !isPledged ?
                       Text(
                         "...............",
                         style: const TextStyle(
@@ -429,47 +429,19 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                   ),
 
                   const SizedBox(height: 10),
-                  // Pledged and Unpledged switch
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     SizedBox(width: 20,),
-                  //     const Text('Status',
-                  //     style: TextStyle(
-                  //       fontWeight: FontWeight.bold,
-                  //       fontSize: 20,
-                  //     ),),
-                  //     Switch(
-                  //       value: _isPledged,
-                  //       onChanged: (value) {
-                  //         setState(() {
-                  //           _isPledged = value;
-                  //           gift.status = _isPledged ? "Pledged" : "Unpledged";
-                  //         });
-                  //       },
-                  //     ),
-                  //     Text(_isPledged ? 'Pledged' : 'Unpledged',
-                  //       style: TextStyle(
-                  //       //fontWeight: FontWeight.bold,
-                  //       fontSize: 20,
-                  //     ),),
-                  //     SizedBox(width: 20,),
-                  //   ],
-                  // ),
 
-                  //const Spacer(),
                   const SizedBox(height: 20),
 
                   // Save Gift button
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
+                        if (formKey.currentState!.validate()) {
                           // If the form is valid, save the data and navigate back
                           Navigator.pop(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MyGiftList(),
+                              builder: (context) => MyGiftsPage(),
                             ),
                           );// Go back to GiftListPage
                         } else {
@@ -483,7 +455,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                         ),),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Colors.purpleAccent,
+                        backgroundColor: Colors.purpleAccent[700],
                       ),
                     ),
                   ),

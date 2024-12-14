@@ -1,22 +1,19 @@
+
 import 'package:flutter/material.dart';
-import 'package:hedieaty/Gifts/MyGifts/MyGiftDetailsPage.dart';
+import 'package:hedieaty/Gifts/FriendGift/FriendGiftsList.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 
-class MyGiftList extends StatefulWidget {
-  const MyGiftList({super.key});
+class FriendGiftsPage extends StatefulWidget {
+  const FriendGiftsPage({super.key});
 
   @override
-  State<MyGiftList> createState() => _MyGiftListState();
+  State<FriendGiftsPage> createState() => _FriendGiftsPageState();
 }
 
-class _MyGiftListState extends State<MyGiftList> {
-  List<Gift> gifts = [
-    Gift(name: "Teddy Bear", category: "Toy", status: "Pledged" , price:100),
-    Gift(name: "Phone", category: "Electronics", status: "Unpledged", price:24000),
-    Gift(name: "Watch", category: "Electronics", status: "Unpledged", price:8500),
-    Gift(name: "Harry Potter", category: "Books", status: "Pledged", price:70),
-    Gift(name: "Bracelet", category: "Accessories", status: "Pledged", price:350),
-  ];
+class _FriendGiftsPageState extends State<FriendGiftsPage> {
+  TextEditingController searchController = TextEditingController();
+  List<Gift> gifts = [];
+  List<Gift> filteredGifts = [];
 
   String sortBy = "name"; // Default sort by name
 
@@ -200,6 +197,15 @@ class _MyGiftListState extends State<MyGiftList> {
         });
   }
 
+  void searchGifts(String query) {
+    setState(() {
+      filteredGifts = gifts.where((event) {
+        return event.name.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -222,70 +228,29 @@ class _MyGiftListState extends State<MyGiftList> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: gifts.length,
-        itemBuilder: (context, index) {
-          final gift = gifts[index];
-          bool isPledged = gift.status == "Pledged";
-
-          return Container(
-            decoration: BoxDecoration(
-              color: !isPledged ? Colors.greenAccent.withOpacity(0.7) : Colors.redAccent.withOpacity(0.4),
-              border: Border.all(
-                color: isPledged ? Colors.red : Colors.green, // Red for pledged, green for unpledged
-                width: 2.0, // Adjust the width of the border as desired
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search events by name',
+                  prefixIcon: const Icon(Icons.search),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
               ),
-              borderRadius: BorderRadius.circular(8.0), // Optional: add rounded corners
             ),
-            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-            child: ListTile(
-              title: Text(gift.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),),
-              subtitle: Text("Category: ${gift.category} • Status: ${gift.status}",
-                style: TextStyle(
-                  //fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),),
-              //This is made to remove icons if Gift is pledged
-              trailing: !isPledged
-                  ? Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () => editGift(gift),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => deleteGift(gift),
-                  ),
-                ],
-              )
-                  : const Text("Name",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),), // No trailing icons if the item is pledged
-              //Here I want to add name of the person that will get gift
-              onTap: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyGiftDetails(),
-                  ),
-                );
-              },
+            Expanded(
+              child: FriendGiftsList(gifts: filteredGifts),
             ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: addGift,
-        //backgroundColor: Colors.purpleAccent,
-        child: const Icon(Icons.add),
+          ],
+        ),
       ),
     );
   }

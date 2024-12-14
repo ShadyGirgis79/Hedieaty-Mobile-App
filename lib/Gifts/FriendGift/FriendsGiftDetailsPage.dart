@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:hedieaty/Gifts/FriendGift/FriendsGiftListPage.dart';
+import 'package:hedieaty/Gifts/FriendGift/FriendGiftsPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'dart:io';
 
@@ -12,13 +12,13 @@ class FriendsGiftDetails extends StatefulWidget {
 }
 
 class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _priceController = TextEditingController();
-  String _category = 'Books';
-  bool _isPledged = false;
-  File? _image;
+  final formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final priceController = TextEditingController();
+  String category = 'Books';
+  bool isPledged = false;
+  File? image;
 
   final _categories = ['Electronics', 'Books', 'Toys', 'Souvenir', 'Accessories', 'Other'];
 
@@ -33,11 +33,11 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
   @override
   void initState() {
     super.initState();
-    _nameController.text = gift.name;
-    _descriptionController.text = "Description here"; // Example description
-    _priceController.text = gift.price.toString();
-    _category = gift.category;
-    _isPledged = gift.status == "Pledged";
+    nameController.text = gift.name;
+    descriptionController.text = "Description here"; // Example description
+    priceController.text = gift.price.toString();
+    category = gift.category;
+    isPledged = gift.status == "Pledged";
   }
 
   @override
@@ -57,7 +57,7 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
             child:Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -68,22 +68,16 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                         Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: _isPledged ? Colors.red : Colors.green,
+                              color: isPledged ? Colors.red : Colors.green,
                               width: 12.0,
                             ),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: _image != null
-                              ? Image.file(_image!, height: 200, width: 200, fit: BoxFit.cover)
+                          child: image != null
+                              ? Image.file(image!, height: 200, width: 200, fit: BoxFit.cover)
                               : const Icon(Icons.image, size: 200, color: Colors.grey),
                         ),
                         const SizedBox(height: 8),
-                        // ElevatedButton(
-                        //   onPressed: _isPledged ? null : () {
-                        //     // _pickImage();
-                        //   },
-                        //   child: const Text('Upload Image'),
-                        // ),
                       ],
                     ),
                   ),
@@ -109,50 +103,8 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                       subtitle: Text("${gift.name}" ,
                         style: TextStyle(
                           fontSize: 18,
-                        ),),
-
-                      //trailing: !_isPledged ?
-                      // Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: [
-                      //     IconButton(
-                      //       icon: const Icon(Icons.edit),
-                      //       onPressed: (){
-                      //         String updatedName = gift.name;
-                      //
-                      //         showDialog(
-                      //             context: context,
-                      //             builder: (BuildContext context){
-                      //               return AlertDialog(
-                      //                 title: const Text("Gift Name"),
-                      //                 content: SizedBox(
-                      //                   child: TextField(
-                      //                     controller: TextEditingController(text: updatedName),
-                      //                     onChanged: (value){
-                      //                       updatedName = value;
-                      //                     },
-                      //                   ),
-                      //                 ),
-                      //                 actions: [
-                      //                   ElevatedButton(
-                      //                     onPressed: (){
-                      //                       setState(() {
-                      //                         gift.name = updatedName;
-                      //                       });
-                      //                       Navigator.of(context).pop();
-                      //                     },
-                      //                     child: const Text("Save Changes"),
-                      //                   ),
-                      //                 ],
-                      //               );
-                      //             }
-                      //         );
-                      //       },
-                      //     )
-                      //   ],
-                      // )
-                      //     : null, //Null when the gift is pledged
-
+                        ),
+                      ),
                     ),
                   ),
 
@@ -174,53 +126,11 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),),
-                      subtitle: Text("${_descriptionController.text}" ,
+                      subtitle: Text("${descriptionController.text}" ,
                         style: TextStyle(
                           fontSize: 18,
-                        ),),
-
-                      // trailing: !_isPledged ?
-                      // Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: [
-                      //     IconButton(
-                      //       icon: const Icon(Icons.edit),
-                      //       onPressed: (){
-                      //         String updatedDescription = _descriptionController.text;
-                      //
-                      //         showDialog(
-                      //             context: context,
-                      //             builder: (BuildContext context){
-                      //               return AlertDialog(
-                      //                 title: const Text("Description"),
-                      //                 content: SizedBox(
-                      //                   child: TextField(
-                      //                     controller: _descriptionController,
-                      //                     onChanged: (value){
-                      //                       updatedDescription = value;
-                      //                     },
-                      //                   ),
-                      //                 ),
-                      //                 actions: [
-                      //                   ElevatedButton(
-                      //                     onPressed: (){
-                      //                       setState(() {
-                      //                         _descriptionController.text = updatedDescription;
-                      //                       });
-                      //                       Navigator.of(context).pop();
-                      //                     },
-                      //                     child: const Text("Save Changes"),
-                      //                   ),
-                      //                 ],
-                      //               );
-                      //             }
-                      //         );
-                      //       },
-                      //     )
-                      //   ],
-                      // )
-                      //     : null, //Null when the gift is pledged
-
+                        ),
+                      ),
                     ),
                   ),
 
@@ -245,64 +155,8 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                       subtitle: Text("${gift.category}" ,
                         style: TextStyle(
                           fontSize: 18,
-                        ),),
-
-                      // trailing: !_isPledged ?
-                      // Row(
-                      //   mainAxisSize: MainAxisSize.min,
-                      //   children: [
-                      //     IconButton(
-                      //       icon: const Icon(Icons.edit),
-                      //       onPressed: (){
-                      //         String updatedCategory = gift.category;
-                      //
-                      //         showDialog(
-                      //             context: context,
-                      //             builder: (BuildContext context){
-                      //               return AlertDialog(
-                      //                 title: const Text("Gift Category"),
-                      //                 content: SizedBox(
-                      //                   child: Column(
-                      //                     mainAxisSize: MainAxisSize.min, // Minimize height to fit content
-                      //                     children: [
-                      //                       DropdownButtonFormField<String>(
-                      //                         value: _category,
-                      //                         items: _categories.map((String category) {
-                      //                           return DropdownMenuItem<String>(
-                      //                             value: category,
-                      //                             child: Text(category),
-                      //                           );
-                      //                         }).toList(),
-                      //                         onChanged: (value) {
-                      //                           setState(() {
-                      //                             updatedCategory = value!;
-                      //                           });
-                      //                         },
-                      //                       ),
-                      //                     ],
-                      //                   ),
-                      //                 ),
-                      //                 actions: [
-                      //                   ElevatedButton(
-                      //                     onPressed: (){
-                      //                       setState(() {
-                      //                         gift.category = updatedCategory;
-                      //                         _category = updatedCategory;
-                      //                       });
-                      //                       Navigator.of(context).pop();
-                      //                     },
-                      //                     child: const Text("Save Changes"),
-                      //                   ),
-                      //                 ],
-                      //               );
-                      //             }
-                      //         );
-                      //       },
-                      //     )
-                      //   ],
-                      // )
-                      //     : null, //Null when the gift is pledged
-
+                        ),
+                      ),
                     ),
                   ),
 
@@ -330,122 +184,36 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                           fontSize: 18,
                         ),
                       ),
-
-                      // trailing: !_isPledged
-                      //     ? IconButton(
-                      //   icon: const Icon(Icons.edit),
-                      //   onPressed: () {
-                      //     int updatedPrice = gift.price;
-                      //
-                      //     showDialog(
-                      //       context: context,
-                      //       builder: (BuildContext context) {
-                      //         return AlertDialog(
-                      //           title: const Text("Edit Price"),
-                      //           content: SizedBox(
-                      //             //width: 200,
-                      //             child: TextField(
-                      //               controller: _priceController,
-                      //               keyboardType: TextInputType.number,
-                      //               inputFormatters: [
-                      //                 FilteringTextInputFormatter.digitsOnly, // Only digits
-                      //               ],
-                      //               decoration: const InputDecoration(
-                      //                 hintText: "Enter new price",
-                      //               ),
-                      //               onChanged: (value) {
-                      //                 // Temporarily store the parsed value
-                      //                 updatedPrice = int.tryParse(value) ?? gift.price;
-                      //               },
-                      //             ),
-                      //           ),
-                      //           actions: [
-                      //             ElevatedButton(
-                      //               onPressed: () {
-                      //                 setState(() {
-                      //                   // Update the price in the Gift object
-                      //                   gift.price = updatedPrice;
-                      //                 });
-                      //                 Navigator.of(context).pop(); // Close dialog
-                      //               },
-                      //               child: const Text("Save Changes"),
-                      //             ),
-                      //           ],
-                      //         );
-                      //       },
-                      //     );
-                      //   },
-                      // )
-                      //     : null, //Null when the gift is pledged
-
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 40),
 
-                  // Pledged/Unpledged switch
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(width: 20,),
-                      const Text('Status',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),),
-                      Switch(
-                        value: _isPledged,
-                        onChanged: (value) {
-                          setState(() {
-                            _isPledged = value;
-                            gift.status = _isPledged ? "Pledged" : "Unpledged";
-                          });
-                        },
-                      ),
-                      Text(_isPledged ? 'Pledged' : 'Unpledged',
-                        style: _isPledged?
-                        TextStyle(
-                          color: Colors.red,
-                          fontSize: 20,
-                        ):
-                          TextStyle(
-                            color: Colors.green,
-                            fontSize: 20,
-                          )
-                      ),
-                      SizedBox(width: 20,),
-                    ],
-                  ),
-
-                  //const Spacer(),
-                  const SizedBox(height: 20),
-
-                  // Save Gift button
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // If the form is valid, save the data and navigate back
-                          Navigator.pop(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FriendsGiftList(),
-                            ),
-                          ); // Go back to GiftListPage
-                        } else {
-                          // If form data is missing, show an error message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Please fill in all required fields')),
-                          );
-                        }
+                        setState(() {
+                          isPledged = !isPledged; // Toggle the pledged state
+                          gift.status = isPledged ? "Pledged" : "Unpledged";
+                        });
+
+                        // If needed, navigate back after updating the status
+                        Navigator.pop(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FriendGiftsPage(),
+                          ),
+                        );
                       },
-                      child: const Text('Save Gift',
-                        style: TextStyle(
+                      child: Text(
+                        isPledged ? 'Unpledged' : 'Pledged',
+                        style: const TextStyle(
                           fontSize: 18,
-                        ),),
+                        ),
+                      ),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Colors.purpleAccent,
+                        backgroundColor: isPledged ? Colors.red : Colors.green,
                       ),
                     ),
                   ),
