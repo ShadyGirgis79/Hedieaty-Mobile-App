@@ -12,16 +12,15 @@ class AddEventController{
 
   Future<String?> addEvent({
     required String name,
-    required String category,
+    String category = "General",
     String description = "",
     String location = "",
     required String date,
     required String status,
   }) async {
-    if (name.isEmpty || date.isEmpty || category.isEmpty ) {
+    if (name.isEmpty || date.isEmpty) {
       return "Please fill out at least the name and category and date";
     }
-
     try {
       // Create the Event object
       Event newEvent = Event(
@@ -46,10 +45,12 @@ class AddEventController{
 
       if (response > 0) {
         return null; // Successfully added
-      } else {
+      }
+      else {
         return "Failed to add event to local database";
       }
-    } catch (e) {
+    }
+    catch (e) {
       return "An error occurred: $e";
     }
   }

@@ -143,7 +143,7 @@ class _AddEventPageState extends State<AddEventPage> {
 
                         final result = await addEventController.addEvent(
                           name: name,
-                          category: category,
+                          category: category.isEmpty ? "General" : category,
                           status: status,
                           date: date,
                           description: description,

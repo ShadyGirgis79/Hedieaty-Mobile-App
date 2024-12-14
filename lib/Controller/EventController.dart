@@ -20,13 +20,14 @@ class EventController{
 
   Future<String> DeleteEvent(String name) async{
     await eventModel.deleteEvent(name);
-    return "$name event has been deleted ";
+    return "$name event has been deleted";
   }
 
   Future<List<Event>> getFriendEvents(int friendID) async {
     try {
       return await eventModel.getUserEvents(friendID);
-    } catch (e) {
+    }
+    catch (e) {
       print("Error fetching friend events from local DB: $e");
       return [];
     }
@@ -34,13 +35,13 @@ class EventController{
 
   Future<String> UpdateEvent(String name, String category , String description,
       String location , int id) async{
-
     try {
       await eventModel.updateEvent(name, category, description, location, id);
 
       return "Event updated successfully!";
 
-    } catch (e) {
+    }
+    catch (e) {
       // Handle any errors
       return "Failed to update event: $e";
     }
