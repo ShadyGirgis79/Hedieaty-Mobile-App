@@ -5,7 +5,6 @@ import 'package:hedieaty/GiftDetails/MyGiftDetailsPage.dart';
 import 'Registration/SignInPage.dart';
 import 'Registration/SignUpPage.dart';
 import 'GiftDetails/FriendsGiftDetailsPage.dart';
-import 'FriendEvents/FriendsEventListPage.dart';
 import 'Gifts/FriendsGiftListPage.dart';
 import 'Gifts/MyGiftListPage.dart';
 import 'Home/HomePage.dart';
@@ -55,7 +54,6 @@ class _HedieatyAppState extends State<HedieatyApp> {
             : MyHomePage(),
         routes: {
           '/Home': (context) => const MyHomePage(),
-          '/FriendsEvent': (context) => const FriendsEventList(),
           '/FriendsGiftList': (context) => const FriendsGiftList(),
           '/MyGiftList': (context) => const MyGiftList(),
           '/FriendsGiftDetails': (context) => const FriendsGiftDetails(),

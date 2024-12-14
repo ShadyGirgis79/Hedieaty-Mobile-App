@@ -23,6 +23,15 @@ class EventController{
     return "$name event has been deleted ";
   }
 
+  Future<List<Event>> getFriendEvents(int friendID) async {
+    try {
+      return await eventModel.getUserEvents(friendID);
+    } catch (e) {
+      print("Error fetching friend events from local DB: $e");
+      return [];
+    }
+  }
+
   Future<String> UpdateEvent(String name, String category , String description,
       String location , int id) async{
 
