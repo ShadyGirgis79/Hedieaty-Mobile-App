@@ -17,7 +17,7 @@ class _MyEventPageState extends State<MyEventPage> {
   final EventController eventController = EventController();
   TextEditingController searchController = TextEditingController();
   List<Event> events = [];
-  List<Event> filteredEvents = []; // List to hold the filtered events
+  List<Event> filteredEvents = [];
   String sortBy = 'name';
 
   @override
@@ -71,8 +71,7 @@ class _MyEventPageState extends State<MyEventPage> {
   void searchEvents(String query) {
     setState(() {
       filteredEvents = events.where((event) {
-        return event.name.toLowerCase().contains(query.toLowerCase()) ||
-            event.category.toLowerCase().contains(query.toLowerCase());
+        return event.name.toLowerCase().contains(query.toLowerCase());
       }).toList();
     });
   }
@@ -109,7 +108,7 @@ class _MyEventPageState extends State<MyEventPage> {
               child: TextField(
                 controller: searchController,
                 decoration: InputDecoration(
-                  hintText: 'Search events by name or category',
+                  hintText: 'Search events by name',
                   prefixIcon: const Icon(Icons.search),
                   filled: true,
                   fillColor: Colors.white,

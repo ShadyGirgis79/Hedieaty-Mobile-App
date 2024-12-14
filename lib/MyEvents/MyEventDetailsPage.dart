@@ -1,31 +1,70 @@
 import 'package:flutter/material.dart';
-
+import 'package:hedieaty/Controller/EventController.dart';
+import '../Controller/ShowMessage.dart';
 import '../Model/Event_Model.dart';
 
 class MyEventDetails extends StatefulWidget {
-  const MyEventDetails({super.key});
+
+  final Event event;
+  const MyEventDetails({super.key, required this.event});
+
 
   @override
   State<MyEventDetails> createState() => _MyEventDetailsState();
 }
 
 class _MyEventDetailsState extends State<MyEventDetails> {
+  final EventController eventController = EventController();
+  late String Name;
+  late String Category;
+  late String Description;
+  late String Location;
+  late String Status;
+  late String Date;
+  late int eventId;
 
-  final Event event = Event(
-    name: "Party",
-    category: "Birthday Party",
-    status: "Upcoming",
-    description: "",
-    location: "",
-    date: '',
-  );
+  @override
+  void initState() {
+    super.initState();
+    // Initialize updated values with the current event details
+    Name = widget.event.name;
+    Category = widget.event.category;
+    Description = widget.event.description;
+    Location = widget.event.location;
+    Status = widget.event.status;
+    Date = widget.event.date;
+    eventId = widget.event.id!;
+  }
+
+  Future<void> saveUpdates() async {
+
+    final response = await eventController.UpdateEvent(
+        Name,
+        Category,
+        Description,
+        Location,
+        eventId
+    );
+
+    showMessage(context, response);
+
+    // Update the UI and navigate back
+    setState(() {
+      widget.event.name = Name;
+      widget.event.category = Category;
+      widget.event.description = Description;
+      widget.event.location = Location;
+    });
+
+    Navigator.of(context).pop();
+  }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${event.name}",
+        title: Text("${Name}",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -54,19 +93,19 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),),
-                      subtitle: Text("${event.name}" ,
+                      subtitle: Text("${Name}" ,
                         style: TextStyle(
                           fontSize: 18,
                         ),),
                       leading: Icon(Icons.event),
-                      trailing: event.status == "Upcoming" ?
+                      trailing: Status == "Upcoming" || Status == "Current"?
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit),
                             onPressed: (){
-                              String updatedName = event.name;
+                              String updatedName = Name;
 
                               showDialog(
                                   context: context,
@@ -85,7 +124,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                                         ElevatedButton(
                                           onPressed: (){
                                             setState(() {
-                                              event.name = updatedName;
+                                              Name = updatedName;
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -120,19 +159,19 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),),
-                      subtitle: Text("${event.category}" ,
+                      subtitle: Text("${Category}" ,
                         style: TextStyle(
                           fontSize: 18,
                         ),),
                       leading: Icon(Icons.category),
-                      trailing: event.status == "Upcoming" ?
+                      trailing: Status == "Upcoming" || Status == "Current"?
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit),
                             onPressed: (){
-                              String updatedCategory = event.category;
+                              String updatedCategory = Category;
 
                               showDialog(
                                   context: context,
@@ -151,7 +190,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                                         ElevatedButton(
                                           onPressed: (){
                                             setState(() {
-                                              event.category = updatedCategory;
+                                              Category = updatedCategory;
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -187,19 +226,19 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),),
-                      subtitle: Text("${event.description}" ,
+                      subtitle: Text("${Description}" ,
                         style: TextStyle(
                           fontSize: 18,
                         ),),
                       leading: Icon(Icons.description),
-                      trailing: event.status == "Upcoming" ?
+                      trailing: Status == "Upcoming" || Status == "Current"?
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit),
                             onPressed: (){
-                              String updatedDescription = event.description;
+                              String updatedDescription = Description;
 
                               showDialog(
                                   context: context,
@@ -218,7 +257,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                                         ElevatedButton(
                                           onPressed: (){
                                             setState(() {
-                                              event.description = updatedDescription;
+                                              Description = updatedDescription;
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -253,19 +292,19 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),),
-                      subtitle: Text("${event.location}" ,
+                      subtitle: Text("${Location}" ,
                         style: TextStyle(
                           fontSize: 18,
                         ),),
                       leading: Icon(Icons.location_on_sharp),
-                      trailing: event.status == "Upcoming" ?
+                      trailing: Status == "Upcoming" || Status == "Current" ?
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit),
                             onPressed: (){
-                              String updatedLoc = event.location;
+                              String updatedLoc = Location;
 
                               showDialog(
                                   context: context,
@@ -284,7 +323,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                                         ElevatedButton(
                                           onPressed: (){
                                             setState(() {
-                                              event.location = updatedLoc;
+                                              Location = updatedLoc;
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -320,7 +359,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                         ),
                       ),
                       subtitle: Text(
-                        "${event.date}",
+                        "${Date}",
                         style: const TextStyle(
                           fontSize: 18,
                         ),
@@ -334,13 +373,13 @@ class _MyEventDetailsState extends State<MyEventDetails> {
 
                   Center(
                     child: ElevatedButton(
-                        onPressed: (){
-
-                        },
-                        child: Text("Save"),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.purpleAccent[700],
+                      onPressed: (){
+                        saveUpdates();
+                      },
+                      child: Text("Save"),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent[700],
                       ),
                     ),
                   )
@@ -352,3 +391,5 @@ class _MyEventDetailsState extends State<MyEventDetails> {
     );
   }
 }
+
+

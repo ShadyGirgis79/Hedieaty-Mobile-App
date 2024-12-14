@@ -3,6 +3,7 @@ import 'package:hedieaty/Model/Gift_Model.dart';
 import 'Database/Database.dart';
 
 class Event {
+  int? id;
   String name;
   String category;
   String date;
@@ -12,6 +13,7 @@ class Event {
   List<Gift> gifts;
 
   Event({
+    this.id,
     required this.name,
     required this.category,
     required this.date,
@@ -24,7 +26,7 @@ class Event {
   final db = HedieatyDatabase();
 
   Future<int> insertEvent({
-    required int id,
+    required int UserId,
     required String name,
     String category = "General",
     required String date,
@@ -34,13 +36,12 @@ class Event {
   }) async {
     String sql = '''
       INSERT INTO Events ('Name', 'Category', 'Date', 'Location', 'Description', 'Status' , 'UserID')
-      VALUES ("$name", "$category", "$date", "$location", "$description", "$status" , "$id")
+      VALUES ("$name", "$category", "$date", "$location", "$description", "$status" , "$UserId")
     ''';
     return await db.insertData(sql);
   }
 
   Future<List<Event>> getUserEvents(int userID) async {
-
     String sql = '''
     SELECT * FROM Events WHERE UserID = $userID
   ''';
@@ -48,6 +49,7 @@ class Event {
 
     return result.map((data) {
       return Event(
+        id: data['ID'],
         name: data['Name'],
         status: data['Status'],
         category: data['Category'],
@@ -62,5 +64,19 @@ class Event {
     String sql = "DELETE FROM Events WHERE Name = '$name'";
     await db.deleteData(sql);
   }
+
+  // Update user data in the database
+  Future<void> updateEvent(String name ,String category , String description,
+      String location, int id) async {
+    await db.updateData('''
+      UPDATE Events
+      SET Name = '$name',
+          Category = '$category',
+          Description = '$description',
+          Location = '$location'
+      WHERE ID = '$id';
+    ''');
+  }
+
 
 }

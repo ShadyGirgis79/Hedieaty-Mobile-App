@@ -35,7 +35,7 @@ class AddEventController{
 
       // Insert event into local database
       int response = await newEvent.insertEvent(
-        id: currentUserID.hashCode,
+        UserId: currentUserID.hashCode,
         name: name,
         category: category,
         date: date,

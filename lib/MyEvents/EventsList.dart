@@ -49,13 +49,16 @@ class EventsList extends StatelessWidget {
               style: const TextStyle(fontSize: 14),
             ),
             leading: IconButton(
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                final updatedEvent = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyEventDetails(),
+                    builder: (context) => MyEventDetails(event: event),
                   ),
                 );
+                if (updatedEvent != null) {
+                  events[index] = updatedEvent;
+                }
               },
               icon: const Icon(Icons.event),
             ),
@@ -72,7 +75,7 @@ class EventsList extends StatelessWidget {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () async {
-                                final String result = await eventController.Delete(event.name);
+                                final String result = await eventController.DeleteEvent(event.name);
                                 showMessage(context, result);
                                 Navigator.pop(context , true);
                               },
