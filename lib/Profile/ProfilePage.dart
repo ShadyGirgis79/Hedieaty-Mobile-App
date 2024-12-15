@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:hedieaty/Controller/ShowMessage.dart';
+import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Events/MyEvents/MyEventsPage.dart';
 import 'package:hedieaty/Gifts/PledgedGift/PledgedGiftsPage.dart';
 import 'package:image_picker/image_picker.dart';
 import '../Controller/ProfileController.dart';
-import '../Controller/Validation.dart';
+import '../Controller/Functions/Validation.dart';
 import '../Model/Database/Authentication.dart';
 import '../Model/User_Model.dart' as LocalUser; // Your custom User model
 

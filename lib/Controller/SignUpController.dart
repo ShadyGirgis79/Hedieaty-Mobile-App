@@ -1,7 +1,7 @@
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:hedieaty/Model/User_Model.dart';
-import 'Validation.dart';
+import 'Functions/Validation.dart';
 
 class SignUpController {
   final User userModel = User(name: '', email: '', password: '', phoneNumber: '');

@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
-import '../Controller/ShowMessage.dart';
+import '../Controller/Functions/ShowMessage.dart';
 import '../Controller/SignInController.dart';
-import '../Controller/Validation.dart';
+import '../Controller/Functions/Validation.dart';
 import '../Home/HomePage.dart';
 import '../Model/Database/Authentication.dart';
 import '../Model/User_Model.dart';

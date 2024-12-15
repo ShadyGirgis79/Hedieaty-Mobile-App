@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/EventController.dart';
-import 'package:hedieaty/Controller/ShowMessage.dart';
+import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
 
 class MyEventDetails extends StatefulWidget {

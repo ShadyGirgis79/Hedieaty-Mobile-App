@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/EventController.dart';
-import 'package:hedieaty/Controller/ShowMessage.dart';
+import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Events/MyEvents/AddEventPage.dart';
 import 'package:hedieaty/Events/MyEvents/MyEventDetailsPage.dart';
 import 'package:hedieaty/Gifts/MyGifts/MyGiftsPage.dart';

@@ -1,6 +1,6 @@
 
 import 'package:hedieaty/Model/User_Model.dart';
-import 'Validation.dart';
+import 'Functions/Validation.dart';
 
 class SignInController{
   final User userModel = User(name: '', email: '', password: '', phoneNumber: '');

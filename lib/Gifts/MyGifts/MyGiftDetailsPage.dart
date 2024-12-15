@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hedieaty/Controller/ShowMessage.dart';
+import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Gifts/MyGifts/MyGiftsPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'dart:io';

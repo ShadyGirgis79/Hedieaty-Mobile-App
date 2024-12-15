@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty/Home/HomePage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
-import '../Controller/ShowMessage.dart';
+import '../Controller/Functions/ShowMessage.dart';
 import '../Controller/SignUpController.dart';
-import '../Controller/Validation.dart';
+import '../Controller/Functions/Validation.dart';
 import '../Model/Database/Authentication.dart';
 
 

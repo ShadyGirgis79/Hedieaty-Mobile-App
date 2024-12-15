@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/AddEventController.dart';
-import 'package:hedieaty/Controller/ShowMessage.dart';
+import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 
 class AddEventPage extends StatefulWidget {
 

@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hedieaty/Controller/AddFriendController.dart';
-import 'package:hedieaty/Controller/ShowMessage.dart';
-import '../Controller/Validation.dart';
+import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
+import '../Controller/Functions/Validation.dart';
 import '../Model/User_Model.dart';
 
 class AddFriendPage extends StatefulWidget {
