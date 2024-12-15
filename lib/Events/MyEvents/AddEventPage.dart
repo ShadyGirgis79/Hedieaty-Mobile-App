@@ -15,10 +15,25 @@ class _AddEventPageState extends State<AddEventPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController locController = TextEditingController();
   final TextEditingController desController = TextEditingController();
-  final TextEditingController categoryController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   DateTime selectedDate = DateTime.now(); // To store the selected date
   final AddEventController addEventController = AddEventController();
+
+  String selectedCategory = "General"; // Default category
+  // Dropdown menu categories
+  final List<String> categories = [
+    "Birthday",
+    "Wedding",
+    "Corporate",
+    "Graduation",
+    "Valentine",
+    "Christmas",
+    "Ramadan",
+    "Festival",
+    "General",
+    "Other"
+  ];
+
 
   @override
   void initState() {
@@ -55,14 +70,28 @@ class _AddEventPageState extends State<AddEventPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              TextField(
-                controller: categoryController,
+
+              // Dropdown for category
+              DropdownButtonFormField<String>(
+                value: selectedCategory,
+                items: categories
+                    .map((category) => DropdownMenuItem(
+                  value: category,
+                  child: Text(category),
+                ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedCategory = value!;
+                  });
+                },
                 decoration: const InputDecoration(
                   labelText: "Category",
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.category),
                 ),
               ),
+
               const SizedBox(height: 20),
               TextField(
                 controller: desController,
@@ -123,7 +152,7 @@ class _AddEventPageState extends State<AddEventPage> {
                     ElevatedButton(
                       onPressed: () async {
                         String name = nameController.text.trim();
-                        String category = categoryController.text.trim();
+                        String category = selectedCategory;
                         String description = desController.text.trim();
                         String location = locController.text.trim();
                         String date = dateController.text.trim().toString();
@@ -143,7 +172,7 @@ class _AddEventPageState extends State<AddEventPage> {
 
                         final result = await addEventController.addEvent(
                           name: name,
-                          category: category.isEmpty ? "General" : category,
+                          category: category,
                           status: status,
                           date: date,
                           description: description,
@@ -152,7 +181,8 @@ class _AddEventPageState extends State<AddEventPage> {
 
                         if (result == null) {
                           Navigator.pop(context , true); // Close the add event page
-                        } else {
+                        }
+                        else {
                           showMessage(context, result);
                         }
                       },

@@ -18,8 +18,8 @@ class EventController{
     }
   }
 
-  Future<String> DeleteEvent(String name) async{
-    await eventModel.deleteEvent(name);
+  Future<String> DeleteEvent(String name , int id) async{
+    await eventModel.deleteEvent(name , id);
     return "$name event has been deleted";
   }
 
@@ -38,7 +38,7 @@ class EventController{
     try {
       await eventModel.updateEvent(name, category, description, location, id);
 
-      return "Event updated successfully!";
+      return "${name} event is updated successfully!";
 
     }
     catch (e) {

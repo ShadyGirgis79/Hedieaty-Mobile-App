@@ -60,8 +60,11 @@ class Event {
     }).toList();
   }
 
-  Future<void> deleteEvent(String name) async{
-    String sql = "DELETE FROM Events WHERE Name = '$name'";
+  Future<void> deleteEvent(String name , int id) async{
+    String sql = '''
+    DELETE FROM Events
+    WHERE ID = '$id' AND Name = '$name'
+    ''';
     await db.deleteData(sql);
   }
 

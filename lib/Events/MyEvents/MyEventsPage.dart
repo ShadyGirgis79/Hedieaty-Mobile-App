@@ -28,10 +28,10 @@ class _MyEventPageState extends State<MyEventPage> {
     searchController.addListener(() {
       searchEvents(searchController.text);
     });
-    loadFriends(); // Load events when the page is initialized
+    loadEvents(); // Load events when the page is initialized
   }
 
-  Future<void> loadFriends() async {
+  Future<void> loadEvents() async {
     final fetchedEvents = await eventController.eventsList();
     setState(() {
       events = fetchedEvents ?? [];
@@ -157,14 +157,14 @@ class _MyEventPageState extends State<MyEventPage> {
                       ),
                       leading: IconButton(
                         onPressed: () async {
-                          final updatedEvent = await Navigator.push(
+                          final bool? updatedEvent = await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => MyEventDetails(event: event),
                             ),
                           );
-                          if (updatedEvent != null) {
-                            events[index] = updatedEvent;
+                          if (updatedEvent == true) {
+                            loadEvents(); //Load updated events
                           }
                         },
                         icon: const Icon(Icons.event),
@@ -182,12 +182,13 @@ class _MyEventPageState extends State<MyEventPage> {
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () async {
-                                          final String result = await eventController.DeleteEvent(event.name);
+                                          final String result = await eventController.DeleteEvent(event.name , event.id!);
                                           if (result == "${event.name} event has been deleted") {
                                             // Remove the event from the list and update the UI
                                             setState(() {
                                               events.removeAt(index);
-                                              filteredEvents.removeWhere((e) => e.name == event.name);
+                                              //This removes event according to name and id
+                                              filteredEvents.removeWhere((e) => e.name == event.name && e.id == event.id);
                                             });
                                           }
                                           showMessage(context, result);
@@ -239,7 +240,7 @@ class _MyEventPageState extends State<MyEventPage> {
           );
           // If a new event was added, refresh the list
           if (isEventAdded == true) {
-            loadFriends(); // Reload the events list
+            loadEvents(); // Reload the events list
           }
         },
         child: const Icon(Icons.add),

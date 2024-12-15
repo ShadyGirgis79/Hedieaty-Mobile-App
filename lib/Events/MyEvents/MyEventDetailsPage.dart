@@ -56,8 +56,21 @@ class _MyEventDetailsState extends State<MyEventDetails> {
       widget.event.location = Location;
     });
 
-    Navigator.of(context).pop();
+    Navigator.pop(context , true); // Close the Details event page
   }
+
+  final List<String> categories = [
+    "Birthday",
+    "Wedding",
+    "Corporate",
+    "Graduation",
+    "Valentine",
+    "Christmas",
+    "Ramadan",
+    "Festival",
+    "General",
+    "Other"
+  ];
 
 
   @override
@@ -155,56 +168,75 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                     ),
                     margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                     child:ListTile(
-                      title: const Text("Category",
+                      title: const Text(
+                        "Category",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                        ),),
-                      subtitle: Text("${Category}" ,
-                        style: TextStyle(
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${Category}",
+                        style: const TextStyle(
                           fontSize: 18,
-                        ),),
+                        ),
+                      ),
                       leading: Icon(Icons.category),
-                      trailing: Status == "Upcoming" || Status == "Current"?
-                      Row(
+                      trailing: Status == "Upcoming" || Status == "Current"
+                          ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit),
-                            onPressed: (){
+                            onPressed: () {
+                              // Set the initial value for the updated category
                               String updatedCategory = Category;
 
                               showDialog(
-                                  context: context,
-                                  builder: (BuildContext context){
-                                    return AlertDialog(
-                                      title: const Text("Event Category"),
-                                      content: SizedBox(
-                                        child: TextField(
-                                          controller: TextEditingController(text: updatedCategory),
-                                          onChanged: (value){
-                                            updatedCategory = value;
-                                          },
-                                        ),
-                                      ),
-                                      actions: [
-                                        ElevatedButton(
-                                          onPressed: (){
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return AlertDialog(
+                                        title: const Text("Event Category"),
+                                        content: DropdownButton<String>(
+                                          value: updatedCategory,
+                                          isExpanded: true,
+                                          items: categories.map((String category) {
+                                            return DropdownMenuItem<String>(
+                                              value: category,
+                                              child: Text(category),
+                                            );
+                                          }).toList(),
+                                          onChanged: (value) {
                                             setState(() {
-                                              Category = updatedCategory;
+                                              updatedCategory = value!;
                                             });
-                                            Navigator.of(context).pop();
+                                            // Immediately update the main state for the category
                                           },
-                                          child: const Text("Save Changes"),
                                         ),
-                                      ],
-                                    );
-                                  }
+                                        actions: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              //Update Category
+                                              this.setState(() {
+                                                Category = updatedCategory;
+                                              });
+
+                                              Navigator.of(context).pop(); // Close the dialog
+                                            },
+                                            child: const Text("Save Changes"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
                               );
                             },
-                          )
+                          ),
                         ],
                       )
-                          : null, //Null when the gift is pledged
+                          : null, // Null when the event is not editable
                     ),
                   ),
 
