@@ -1,22 +1,50 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hedieaty/Gifts/MyGifts/MyGiftsList.dart';
+import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
+import 'package:hedieaty/Controller/GiftController.dart';
+import 'package:hedieaty/Gifts/MyGifts/AddGiftsPage.dart';
+import 'package:hedieaty/Gifts/MyGifts/MyGiftDetailsPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 
 class MyGiftsPage extends StatefulWidget {
-  const MyGiftsPage({super.key});
+  final int eventId; // Pass the Event ID to associate the gift
+  final String eventName;
+  const MyGiftsPage({super.key, required this.eventId, required this.eventName});
+
 
   @override
   State<MyGiftsPage> createState() => _MyGiftsPageState();
 }
 
 class _MyGiftsPageState extends State<MyGiftsPage> {
-
+  final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
   TextEditingController searchController = TextEditingController();
+  final GiftController giftController = GiftController();
   List<Gift> gifts = [];
   List<Gift> filteredGifts = [];
-
+  late int EventId;
+  late String EventName;
   String sortBy = "name"; // Default sort by name
+
+  @override
+  void initState() {
+    super.initState();
+    EventId = widget.eventId;
+    EventName = widget.eventName;
+    searchController.addListener(() {
+      searchGifts(searchController.text);
+    });
+    loadGifts(); // Load events when the page is initialized
+  }
+
+  Future<void> loadGifts() async {
+    final fetchedGifts = await giftController.giftsList(EventId);
+    setState(() {
+      gifts = fetchedGifts ?? [];
+      filteredGifts = fetchedGifts ?? []; // Initially, all events are displayed
+    });
+  }
 
   void sortGifts(String option) {
     setState(() {
@@ -40,162 +68,11 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
     switch(status){
       case 'Pledged':
         return 2;
-      case 'Unpledged':
+      case 'Available':
         return 1;
       default :
         return 0;
     }
-  }
-
-  void addGift() {
-    String name = "";
-    String category ="";
-    String status = "Unpledged";
-    double price = 0;
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Add Gift"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Name'),
-                  onChanged: (value){
-                    name = value;
-                  },
-                ),
-                const SizedBox(height: 10),
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(labelText: "Category"),
-                  value: category.isEmpty ? null : category, // Set value to null if category is empty
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      category = newValue!;
-                    });
-                  },
-                  items: <String>[
-                    'Electronics', 'Books', 'Toys', 'Souvenir', 'Accessories', 'Other'
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Price'),
-                  keyboardType: TextInputType.number, // Ensure keyboard is numeric
-                  onChanged: (value) {
-                    price = double.tryParse(value) ?? 0; // Safely convert to int
-                  },
-                ),
-              ],
-            ),
-            actions: [
-              ElevatedButton(
-                  onPressed: (){
-                    if(name.isNotEmpty && category.isNotEmpty) {
-                      setState(() {
-                        gifts.add(Gift(name: name, category: category, status: status ,price: price));
-                      });
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: const Text('Add')
-              ),
-            ],
-          );
-        }
-    );
-  }
-
-  void editGift(Gift gift) {
-    // Temporary variables to hold new values for the event.
-    String updatedName = gift.name;
-    String updatedCategory = gift.category;
-    String updatedStatus = gift.status;
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Edit Event"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: const InputDecoration(labelText: "Name"),
-                controller: TextEditingController(text: updatedName),
-                onChanged: (value) {
-                  updatedName = value;
-                },
-              ),
-              const SizedBox(height: 10),
-              DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: "Category"),
-                value: updatedCategory,
-                onChanged: (String? newValue) {
-                  updatedCategory = newValue!;
-                },
-                items: <String>['Electronics', 'Books', 'Toys', 'Souvenir','Accessories','Other']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  // Update the event's properties with the new values
-                  gift.name = updatedName;
-                  gift.category = updatedCategory;
-                  gift.status = updatedStatus;
-                });
-                Navigator.of(context).pop();
-              },
-              child: const Text("Save Changes"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void deleteGift(Gift gift) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Are you sure you want to delete?"),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    gifts.remove(gift);
-                  });
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Delete"),
-              ),
-              SizedBox(width: 10,),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Cancel")
-              ),
-            ],
-          );
-        });
   }
 
   void searchGifts(String query) {
@@ -206,11 +83,12 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Event Gift List",
+        title: Text("${EventName}\'s Gift List",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -236,7 +114,7 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
               child: TextField(
                 controller: searchController,
                 decoration: InputDecoration(
-                  hintText: 'Search events by name',
+                  hintText: 'Search gifts by name',
                   prefixIcon: const Icon(Icons.search),
                   filled: true,
                   fillColor: Colors.white,
@@ -247,14 +125,125 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
               ),
             ),
             Expanded(
-              child: MyGiftsList(gifts: filteredGifts),
+              child: gifts.isEmpty?
+              Center(
+                child: Text(
+                  'No Gifts yet. Add some!',
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                ),
+              )
+                  :
+              ListView.builder(
+                itemCount: gifts.length,
+                itemBuilder: (context, index) {
+                  final gift = gifts[index];
+                  bool isPledged = gift.status == "Pledged";
+
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: !isPledged ? Colors.greenAccent.withOpacity(0.7) : Colors.redAccent.withOpacity(0.4),
+                      border: Border.all(
+                        color: isPledged ? Colors.red : Colors.green, // Red for pledged, green for unpledged
+                        width: 2.0, // Adjust the width of the border as desired
+                      ),
+                      borderRadius: BorderRadius.circular(8.0), // Optional: add rounded corners
+                    ),
+                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                    child: ListTile(
+                      title: Text(gift.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      subtitle: Text("Category: ${gift.category} • Status: ${gift.status}",
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                      //This is made to remove icons if Gift is pledged
+                      trailing: !isPledged
+                          ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text("Are you sure you want to delete?"),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            final String result = await giftController.DeleteGift(gift.name , gift.id!);
+                                            if (result == "${gift.name} event has been deleted") {
+                                              // Remove the event from the list and update the UI
+                                              setState(() {
+                                                gifts.removeAt(index);
+                                                //This removes event according to name and id
+                                                filteredGifts.removeWhere((g) => g.name == gift.name && g.id == gift.id);
+                                              });
+                                            }
+                                            showMessage(context, result);
+                                            Navigator.pop(context , true);
+                                          },
+                                          child: const Text("Delete"),
+                                        ),
+                                        SizedBox(width: 10,),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("Cancel")
+                                        ),
+                                      ],
+                                    );
+                                  });
+
+                            },
+                          ),
+                        ],
+                      )
+                          :
+                      Text("Name",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),), // No trailing icons if the item is pledged
+                      //Here I want to add name of the person that will get gift
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyGiftDetails(),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: addGift,
-        //backgroundColor: Colors.purpleAccent,
+        onPressed: () async {
+          // Navigate to AddEventPage and wait for a result
+          final bool? isGiftAdded = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddGiftPage(eventId: EventId,eventName: EventName,),
+            ),
+          );
+          // If a new event was added, refresh the list
+          if (isGiftAdded == true) {
+            showMessage(context, "Gift has been added successfully");
+            loadGifts(); // Reload the events list
+          }
+        },
         child: const Icon(Icons.add),
       ),
     );

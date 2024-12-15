@@ -70,8 +70,6 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
-            child:Form(
-              key: formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -88,14 +86,17 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: image != null
-                              ? Image.file(image!, height: 200, width: 200, fit: BoxFit.cover)
-                              : const Icon(Icons.image, size: 200, color: Colors.grey),
+                              ? Image.file(image!, height: 200,
+                              width: 200,
+                              fit: BoxFit.cover)
+                              : const Icon(
+                              Icons.image, size: 200, color: Colors.grey),
                         ),
 
                         const SizedBox(height: 8),
 
                         ElevatedButton.icon(
-                          onPressed: (){
+                          onPressed: () {
                             _pickImage();
                           }, // Call pickImage function
                           icon: const Icon(Icons.camera_alt),
@@ -113,7 +114,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
 
                   //Container for the Gift Name
                   Container(
-                    decoration:BoxDecoration(
+                    decoration: BoxDecoration(
                       //color: Colors.white,
                       border: Border.all(
                         color: Colors.black,
@@ -121,13 +122,14 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                       ),
                       //borderRadius: BorderRadius.circular(8.0),
                     ),
-                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                    child:ListTile(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 8.0),
+                    child: ListTile(
                       title: const Text("Name",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),),
-                      subtitle: Text("${gift.name}" ,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      subtitle: Text("${gift.name}",
                         style: TextStyle(
                           fontSize: 18,
                         ),),
@@ -137,25 +139,26 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit),
-                            onPressed: (){
+                            onPressed: () {
                               String updatedName = gift.name;
 
                               showDialog(
                                   context: context,
-                                  builder: (BuildContext context){
+                                  builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: const Text("Gift Name"),
                                       content: SizedBox(
                                         child: TextField(
-                                          controller: TextEditingController(text: updatedName),
-                                          onChanged: (value){
+                                          controller: TextEditingController(
+                                              text: updatedName),
+                                          onChanged: (value) {
                                             updatedName = value;
                                           },
                                         ),
                                       ),
                                       actions: [
                                         ElevatedButton(
-                                          onPressed: (){
+                                          onPressed: () {
                                             setState(() {
                                               gift.name = updatedName;
                                             });
@@ -171,7 +174,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                           )
                         ],
                       )
-                      : null, //Null when the gift is pledged
+                          : null, //Null when the gift is pledged
                     ),
                   ),
 
@@ -179,7 +182,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
 
                   //Container for the Description
                   Container(
-                    decoration:BoxDecoration(
+                    decoration: BoxDecoration(
                       //color: Colors.white,
                       border: Border.all(
                         color: Colors.black,
@@ -187,13 +190,14 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                       ),
                       //borderRadius: BorderRadius.circular(8.0),
                     ),
-                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                    child:ListTile(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 8.0),
+                    child: ListTile(
                       title: const Text("Description",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),),
-                      subtitle: Text("${descriptionController.text}" ,
+                      subtitle: Text("${descriptionController.text}",
                         style: TextStyle(
                           fontSize: 18,
                         ),),
@@ -203,27 +207,29 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit),
-                            onPressed: (){
-                              String updatedDescription = descriptionController.text;
+                            onPressed: () {
+                              String updatedDescription = descriptionController
+                                  .text;
 
                               showDialog(
                                   context: context,
-                                  builder: (BuildContext context){
+                                  builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: const Text("Description"),
                                       content: SizedBox(
                                         child: TextField(
                                           controller: descriptionController,
-                                          onChanged: (value){
+                                          onChanged: (value) {
                                             updatedDescription = value;
                                           },
                                         ),
                                       ),
                                       actions: [
                                         ElevatedButton(
-                                          onPressed: (){
+                                          onPressed: () {
                                             setState(() {
-                                              descriptionController.text = updatedDescription;
+                                              descriptionController.text =
+                                                  updatedDescription;
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -245,7 +251,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
 
                   //Container for the Category
                   Container(
-                    decoration:BoxDecoration(
+                    decoration: BoxDecoration(
                       //color: Colors.white,
                       border: Border.all(
                         color: Colors.black,
@@ -253,13 +259,14 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                       ),
                       //borderRadius: BorderRadius.circular(8.0),
                     ),
-                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                    child:ListTile(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 8.0),
+                    child: ListTile(
                       title: const Text("Category",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),),
-                      subtitle: Text("${gift.category}" ,
+                      subtitle: Text("${gift.category}",
                         style: TextStyle(
                           fontSize: 18,
                         ),),
@@ -269,21 +276,23 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit),
-                            onPressed: (){
+                            onPressed: () {
                               String updatedCategory = gift.category;
 
                               showDialog(
                                   context: context,
-                                  builder: (BuildContext context){
+                                  builder: (BuildContext context) {
                                     return AlertDialog(
                                       title: const Text("Gift Category"),
                                       content: SizedBox(
                                         child: Column(
-                                          mainAxisSize: MainAxisSize.min, // Minimize height to fit content
+                                          mainAxisSize: MainAxisSize.min,
+                                          // Minimize height to fit content
                                           children: [
                                             DropdownButtonFormField<String>(
                                               value: category,
-                                              items: categories.map((String category) {
+                                              items: categories.map((
+                                                  String category) {
                                                 return DropdownMenuItem<String>(
                                                   value: category,
                                                   child: Text(category),
@@ -300,7 +309,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                                       ),
                                       actions: [
                                         ElevatedButton(
-                                          onPressed: (){
+                                          onPressed: () {
                                             setState(() {
                                               gift.category = updatedCategory;
                                               category = updatedCategory;
@@ -331,7 +340,8 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                         width: 2.0,
                       ),
                     ),
-                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 8.0),
                     child: ListTile(
                       title: const Text(
                         "Price",
@@ -362,14 +372,16 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                                     controller: priceController,
                                     keyboardType: TextInputType.number,
                                     inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly, // Only digits
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      // Only digits
                                     ],
                                     decoration: const InputDecoration(
                                       hintText: "Enter new price",
                                     ),
                                     onChanged: (value) {
                                       // Temporarily store the parsed value
-                                      updatedPrice = double.tryParse(value) ?? gift.price;
+                                      updatedPrice =
+                                          double.tryParse(value) ?? gift.price;
                                     },
                                   ),
                                 ),
@@ -380,7 +392,8 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                                         // Update the price in the Gift object
                                         gift.price = updatedPrice;
                                       });
-                                      Navigator.of(context).pop(); // Close dialog
+                                      Navigator.of(context)
+                                          .pop(); // Close dialog
                                     },
                                     child: const Text("Save Changes"),
                                   ),
@@ -404,7 +417,8 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                         width: 2.0,
                       ),
                     ),
-                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 8.0),
                     child: ListTile(
                       title: const Text(
                         "Pledged By",
@@ -419,7 +433,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                           fontSize: 18,
                         ),
                       )
-                      :Text(
+                          : Text(
                         "Name",
                         style: const TextStyle(
                           fontSize: 18,
@@ -436,18 +450,14 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        if (formKey.currentState!.validate()) {
                           // If the form is valid, save the data and navigate back
-                          Navigator.pop(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MyGiftsPage(),
-                            ),
-                          );// Go back to GiftListPage
-                        } else {
-                          // If form data is missing, show an error message
-                          showMessage(context, 'Please fill in all required fields');
-                        }
+                          // Navigator.pop(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => MyGiftsPage(),
+                          //   ),
+                          // ); // Go back to GiftListPage
+
                       },
                       child: const Text('Save Gift',
                         style: TextStyle(
@@ -463,7 +473,6 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                   const SizedBox(height: 30),
                 ],
               ),
-            ),
           ),
         ),
       ),
