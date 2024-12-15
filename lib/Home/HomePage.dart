@@ -66,53 +66,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void addOptions() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Add Friends"),
-          content: Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () async {
-
-                    final LocalUser.User? currentUser = await homeController.fetchUserFromLocalDB();
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddFriendPage(
-                          friends: friends,
-                          currentUser: currentUser!,
-                        ),
-                      ),
-                    ).then((value) {
-                      if (value == true) {
-                        loadFriends(currentUserID); // Reload the friends list after a successful addition
-                      }
-                    });
-                  },
-                  child: const Text("Manually"),
-                ),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Contacts"),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   void onMenuSelected(String value) {
     if (value == 'create_event_list') {
       Navigator.push(
@@ -145,6 +98,14 @@ class _MyHomePageState extends State<MyHomePage> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent[700],
         actions: [
+          IconButton(
+            //This button is for getting friends by contact
+              onPressed: (){
+
+              }, icon: Icon(Icons.contact_phone_outlined)
+          ),
+          SizedBox(width: 20,),
+
           PopupMenuButton<String>(
             onSelected: onMenuSelected,
             itemBuilder: (BuildContext context) {
@@ -184,8 +145,26 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+
       floatingActionButton: FloatingActionButton(
-        onPressed: addOptions,
+        //Adding Friends manually
+        onPressed: () async {
+          final LocalUser.User? currentUser = await homeController.fetchUserFromLocalDB();
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddFriendPage(
+                friends: friends,
+                currentUser: currentUser!,
+              ),
+            ),
+          ).then((value) {
+            if (value == true) {
+              loadFriends(currentUserID); // Reload the friends list after a successful addition
+            }
+          });
+        },
         child: const Icon(Icons.add),
       ),
     );
