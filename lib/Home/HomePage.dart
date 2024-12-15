@@ -98,14 +98,6 @@ class _MyHomePageState extends State<MyHomePage> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent[700],
         actions: [
-          IconButton(
-            //This button is for getting friends by contact
-              onPressed: (){
-
-              }, icon: Icon(Icons.contact_phone_outlined)
-          ),
-          SizedBox(width: 20,),
-
           PopupMenuButton<String>(
             onSelected: onMenuSelected,
             itemBuilder: (BuildContext context) {

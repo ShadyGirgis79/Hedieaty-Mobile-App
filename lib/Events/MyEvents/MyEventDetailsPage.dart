@@ -403,18 +403,34 @@ class _MyEventDetailsState extends State<MyEventDetails> {
 
                   const SizedBox(height: 60),
 
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: (){
-                        saveUpdates();
-                      },
-                      child: Text("Save"),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.purpleAccent[700],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: (){
+                          saveUpdates();
+                        },
+                        child: Text("Save"),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.purpleAccent[700],
+                        ),
                       ),
-                    ),
-                  )
+
+                      const SizedBox(width: 40),
+                      ElevatedButton(
+                        onPressed: () async {
+
+                        },
+                        child: const Text("Publish"),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.purpleAccent[700],
+                        ),
+                      ),
+                    ],
+                  ),
+
                 ],
               ),
             ),

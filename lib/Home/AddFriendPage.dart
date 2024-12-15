@@ -35,67 +35,80 @@ class _AddFriendState extends State<AddFriendPage> {
         title: const Text("Add Friend"),
         backgroundColor: Colors.purpleAccent[700],
         foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            //This button is for getting friends by contact
+              onPressed: (){
+
+              }, 
+              icon: Icon(Icons.contact_phone_outlined)
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 50),
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: "Name",
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.person),
-              ),
-            ),
-            const SizedBox(height: 20),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 50),
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: "Name",
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                ),
+                const SizedBox(height: 20),
 
-            TextField(
-              controller: phoneController,
-              decoration: InputDecoration(
-                labelText: "Phone",
-                border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.phone),
-                errorText: phoneController.text.isNotEmpty &&
-                    !validatePhoneNumber(phoneController.text)
-                    ? "Invalid Egyptian phone number"
-                    : null,
-              ),
-              keyboardType: TextInputType.phone,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
+                TextField(
+                  controller: phoneController,
+                  decoration: InputDecoration(
+                    labelText: "Phone",
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.phone),
+                    errorText: phoneController.text.isNotEmpty &&
+                        !validatePhoneNumber(phoneController.text)
+                        ? "Invalid Egyptian phone number"
+                        : null,
+                  ),
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                ),
+
+                const SizedBox(height: 40),
+                ElevatedButton(
+                  onPressed: () async {
+                    String result = await addFriendController.addFriendLocalDB(
+                        nameController.text,
+                        phoneController.text,
+                        );
+
+                    // String resultFirebase = await addFriendController.addFriendFirebase(
+                    //   nameController.text,
+                    //   phoneController.text,
+                    // );
+
+
+                    showMessage(context, result);
+
+                    // Navigate back to the previous screen on success
+                    if (result == "Friend added successfully!") {
+                      Navigator.pop(context, true);
+                    }
+                  },
+                  child: const Text("Add Friend"),
+                ),
+                const SizedBox(height: 16),
               ],
-              onChanged: (value) {
-                setState(() {});
-              },
             ),
-
-            const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () async {
-                String result = await addFriendController.addFriendLocalDB(
-                    nameController.text,
-                    phoneController.text,
-                    );
-
-                // String resultFirebase = await addFriendController.addFriendFirebase(
-                //   nameController.text,
-                //   phoneController.text,
-                // );
-
-
-                showMessage(context, result);
-
-                // Navigate back to the previous screen on success
-                if (result == "Friend added successfully!") {
-                  Navigator.pop(context, true);
-                }
-              },
-              child: const Text("Add Friend"),
-            ),
-            const SizedBox(height: 16),
-          ],
+          ),
         ),
       ),
     );
