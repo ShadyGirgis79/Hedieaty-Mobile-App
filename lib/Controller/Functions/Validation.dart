@@ -12,3 +12,11 @@ bool validateEmail(String email) {
   );
   return email.isNotEmpty && emailRegex.hasMatch(email);
 }
+
+
+bool validatePrice(String price){
+  final priceRegex = RegExp(
+      r'^\d+\.?\d{0,2}'
+  );
+  return price.isNotEmpty && priceRegex.hasMatch(price);
+}
