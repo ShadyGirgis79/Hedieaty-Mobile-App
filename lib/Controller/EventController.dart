@@ -13,7 +13,7 @@ class EventController{
       return await eventModel.getUserEvents(hashedID);
     }
     catch (e) {
-      print("Error fetching user from local DB: $e");
+      print("Error fetching events from local Database: $e");
       return null;
     }
   }

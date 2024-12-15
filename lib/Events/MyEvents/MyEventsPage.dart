@@ -194,7 +194,7 @@ class _MyEventPageState extends State<MyEventPage> {
                                           showMessage(context, result);
                                           Navigator.pop(context , true);
                                         },
-                                        child: const Text("Yes"),
+                                        child: const Text("Delete"),
                                       ),
                                     ),
                                     const SizedBox(width: 20),
@@ -217,7 +217,7 @@ class _MyEventPageState extends State<MyEventPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MyGiftsPage(),
+                            builder: (context) => MyGiftsPage(eventId: event.id!,eventName: event.name,),
                           ),
                         );
                       },
@@ -240,6 +240,7 @@ class _MyEventPageState extends State<MyEventPage> {
           );
           // If a new event was added, refresh the list
           if (isEventAdded == true) {
+            showMessage(context, "Event has been added successfully");
             loadEvents(); // Reload the events list
           }
         },
