@@ -21,5 +21,19 @@ class GiftController{
     return "$name gift has been deleted";
   }
 
+  Future<String> UpdateGift(String name, String category , String description,
+      String status , double price , String imageURL , int giftId) async{
+    try {
+      await giftModel.updateGift(name, category, status, imageURL, description, price , giftId);
+
+      return "${name} event is updated successfully!";
+
+    }
+    catch (e) {
+      // Handle any errors
+      return "Failed to update event: $e";
+    }
+  }
+
 
 }

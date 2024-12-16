@@ -70,13 +70,14 @@ class Gift {
   }
 
 // Update user data in the database
-  Future<void> updateGift(String name ,String category , String image,
-      String description, int price, int giftId) async {
+  Future<void> updateGift(String name ,String category ,String status, String image,
+      String description, double price, int giftId) async {
     await db.updateData('''
       UPDATE Gifts
       SET Name = '$name',
           Category = '$category',
           Description = '$description',
+          Status = '$status',
           Price = '$price',
           Image = '$image'
       WHERE ID = '$giftId';

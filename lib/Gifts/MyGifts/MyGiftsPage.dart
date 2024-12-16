@@ -32,9 +32,7 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
     super.initState();
     EventId = widget.eventId;
     EventName = widget.eventName;
-    searchController.addListener(() {
-      searchGifts(searchController.text);
-    });
+    searchController.addListener(searchGifts);
     loadGifts(); // Load events when the page is initialized
   }
 
@@ -75,11 +73,13 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
     }
   }
 
-  void searchGifts(String query) {
+
+  void searchGifts() {
+    String query = searchController.text.toLowerCase();
     setState(() {
-      filteredGifts = gifts.where((event) {
-        return event.name.toLowerCase().contains(query.toLowerCase());
-      }).toList();
+      filteredGifts = gifts
+          .where((gift) => gift.name.toLowerCase().contains(query))
+          .toList();
     });
   }
 
@@ -134,9 +134,9 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
               )
                   :
               ListView.builder(
-                itemCount: gifts.length,
+                itemCount: filteredGifts.length,
                 itemBuilder: (context, index) {
-                  final gift = gifts[index];
+                  final gift = filteredGifts[index];
                   bool isPledged = gift.status == "Pledged";
 
                   return Container(
@@ -213,13 +213,17 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
                           fontSize: 16,
                         ),), // No trailing icons if the item is pledged
                       //Here I want to add name of the person that will get gift
-                      onTap: (){
-                        Navigator.push(
+                      onTap: () async {
+                        bool? updatedGift =await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MyGiftDetails(),
+                            builder: (context) => MyGiftDetails(gift: gift,),
                           ),
                         );
+
+                        if(updatedGift == true){
+                          loadGifts();
+                        }
                       },
                     ),
                   );
