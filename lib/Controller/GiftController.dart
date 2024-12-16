@@ -1,9 +1,11 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
+import 'package:hedieaty/Model/User_Model.dart' as LocalUser;
 
 class GiftController{
   final Gift giftModel= Gift(name: "", category: "", price: 0, status: "");
+  final LocalUser.User userModel = LocalUser.User(name: '', email: '', password: '', phoneNumber: '');
   final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
 
   Future<List<Gift>?> giftsList(int eventId) async {
@@ -65,6 +67,13 @@ class GiftController{
     else{
       return false;
     }
+  }
+
+  Future<String?> getPledgedUserName(int giftId) async{
+    final int userId = await giftModel.getPledgedUserID(giftId);
+
+    final LocalUser.User? user = await LocalUser.User.fetchUserByID(userId);
+    return user!.name;
   }
 
 }

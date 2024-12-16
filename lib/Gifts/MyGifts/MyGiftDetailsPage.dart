@@ -30,6 +30,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
   XFile? image;
   late double Price;
   late int giftId;
+  late String pledgedName;
 
   final categoriesGift = [
     'Electronics',
@@ -51,6 +52,10 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
     Price = widget.gift.price;
     giftId = widget.gift.id!;
     isPledged = Status != "Available";
+
+    if (isPledged) {
+      fetchPledgedUserName(); // Fetch the pledged user's name if pledged
+    }
   }
 
   Future<void> pickImage() async {
@@ -94,6 +99,28 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
     Navigator.pop(context, true);
   }
 
+  Future<void> fetchPledgedUserName() async {
+    try {
+      String? name = await getPledgedUserName(giftId);
+      setState(() {
+        pledgedName = name!;
+      });
+    }
+    catch (e) {
+      debugPrint("Error fetching pledged user name: $e");
+    }
+  }
+
+  Future<String?> getPledgedUserName(int giftId) async {
+    try {
+      return await giftController.getPledgedUserName(giftId);
+    }
+    catch (e) {
+      print("Error fetching pledged user name: $e");
+      return null; // Return null if there's an error
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +146,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Colors.grey,
+                            color: isPledged? Colors.red : Colors.green,
                             width: 12.0,
                           ),
                           borderRadius: BorderRadius.circular(10),
@@ -461,7 +488,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                       ),
                     )
                         : Text(
-                      "Name",
+                      "${pledgedName}",
                       style: const TextStyle(
                         fontSize: 18,
                       ),

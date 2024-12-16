@@ -33,42 +33,52 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
     EventId = widget.eventId;
     EventName = widget.eventName;
     searchController.addListener(searchGifts);
-    loadGifts(); // Load events when the page is initialized
+    loadGifts(); // Load gifts when the page is initialized
   }
 
   Future<void> loadGifts() async {
     final fetchedGifts = await giftController.giftsList(EventId);
     setState(() {
       gifts = fetchedGifts ?? [];
-      filteredGifts = fetchedGifts ?? []; // Initially, all events are displayed
+      filteredGifts = fetchedGifts ?? []; // Initially, all gifts are displayed
     });
+  }
+
+  Future<String?> getPledgedUserName(int giftId) async {
+    try {
+      return await giftController.getPledgedUserName(giftId);
+    }
+    catch (e) {
+      print("Error fetching pledged user name: $e");
+      return null; // Return null if there's an error
+    }
   }
 
   void sortGifts(String option) {
     setState(() {
-      sortBy =  option;
-      gifts.sort((a,b) {
-        switch(option){
+      sortBy = option;
+      gifts.sort((a, b) {
+        switch (option) {
           case 'name':
             return a.name.compareTo(b.name);
           case 'category':
             return a.category.compareTo(b.category);
           case 'status':
             return statusPriority(a.status).compareTo(statusPriority(b.status));
-          default :
+          default:
             return 0;
         }
       });
     });
   }
 
-  int statusPriority(String status){
-    switch(status){
+  int statusPriority(String status) {
+    switch (status) {
       case 'Pledged':
         return 2;
       case 'Available':
         return 1;
-      default :
+      default:
         return 0;
     }
   }
@@ -82,16 +92,17 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${EventName}\'s Gift List",
+        title: Text(
+          "${EventName}'s Gift List",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-          ),),
+          ),
+        ),
         backgroundColor: Colors.purpleAccent[700],
         foregroundColor: Colors.white,
         actions: [
@@ -124,107 +135,119 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
               ),
             ),
             Expanded(
-              child: gifts.isEmpty?
-              Center(
+              child: gifts.isEmpty
+                  ? Center(
                 child: Text(
                   'No Gifts yet. Add some!',
                   style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                 ),
               )
-                  :
-              ListView.builder(
+                  : ListView.builder(
                 itemCount: filteredGifts.length,
                 itemBuilder: (context, index) {
                   final gift = filteredGifts[index];
                   bool isPledged = gift.status == "Pledged";
 
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: !isPledged ? Colors.greenAccent.withOpacity(0.7) : Colors.redAccent.withOpacity(0.4),
-                      border: Border.all(
-                        color: isPledged ? Colors.red : Colors.green, // Red for pledged, green for unpledged
-                        width: 2.0, // Adjust the width of the border as desired
-                      ),
-                      borderRadius: BorderRadius.circular(8.0), // Optional: add rounded corners
-                    ),
-                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                    child: ListTile(
-                      title: Text(gift.name,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                  return FutureBuilder<String?>(
+                    future: getPledgedUserName(gift.id!), // Fetch pledged user's name
+                    builder: (context, snapshot) {
+                      final pledgedName = snapshot.data ?? 'N/A';
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: !isPledged
+                              ? Colors.greenAccent.withOpacity(0.7)
+                              : Colors.redAccent.withOpacity(0.4),
+                          border: Border.all(
+                            color: isPledged ? Colors.red : Colors.green, // Red for pledged, green for unpledged
+                            width: 2.0, // Adjust the width of the border as desired
+                          ),
+                          borderRadius: BorderRadius.circular(8.0), // Optional: add rounded corners
                         ),
-                      ),
-                      subtitle: Text("Category: ${gift.category} • Status: ${gift.status}",
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      //This is made to remove icons if Gift is pledged
-                      trailing: !isPledged
-                          ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text("Are you sure you want to delete?"),
-                                      actions: [
-                                        ElevatedButton(
-                                          onPressed: () async {
-                                            final String result = await giftController.DeleteGift(gift.name , gift.id!);
-                                            if (result == "${gift.name} event has been deleted") {
-                                              // Remove the event from the list and update the UI
-                                              setState(() {
-                                                gifts.removeAt(index);
-                                                //This removes event according to name and id
-                                                filteredGifts.removeWhere((g) => g.name == gift.name && g.id == gift.id);
-                                              });
-                                            }
-                                            showMessage(context, result);
-                                            Navigator.pop(context , true);
-                                          },
-                                          child: const Text("Delete"),
-                                        ),
-                                        SizedBox(width: 10,),
-                                        ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
+                        margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                        child: ListTile(
+                          title: Text(
+                            gift.name,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          subtitle: Text(
+                            "Category: ${gift.category} • Status: ${gift.status}",
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                          trailing: isPledged
+                              ? Text(
+                            pledgedName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          )
+                              : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("Are you sure you want to delete ${gift.name} permanently ?"),
+                                        actions: [
+                                          ElevatedButton(
+                                            onPressed: () async {
+                                              final String result =
+                                              await giftController.DeleteGift(
+                                                  gift.name, gift.id!);
+                                              if (result ==
+                                                  "${gift.name} event has been deleted") {
+                                                // Remove the gift from the list and update the UI
+                                                setState(() {
+                                                  gifts.removeAt(index);
+                                                  filteredGifts.removeWhere((g) => g.name == gift.name && g.id == gift.id);
+                                                });
+                                              }
+                                              showMessage(context, result);
+                                              Navigator.pop(context, true);
                                             },
-                                            child: const Text("Cancel")
-                                        ),
-                                      ],
-                                    );
-                                  });
-
-                            },
+                                            child: const Text("Delete"),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("Cancel")),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
                           ),
-                        ],
-                      )
-                          :
-                      Text("Name",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),), // No trailing icons if the item is pledged
-                      //Here I want to add name of the person that will get gift
-                      onTap: () async {
-                        bool? updatedGift =await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyGiftDetails(gift: gift,),
-                          ),
-                        );
+                          onTap: () async {
+                            bool? updatedGift = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyGiftDetails(gift: gift,),
+                              ),
+                            );
 
-                        if(updatedGift == true){
-                          loadGifts();
-                        }
-                      },
-                    ),
+                            if (updatedGift == true) {
+                              loadGifts();
+                            }
+                          },
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -234,17 +257,20 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // Navigate to AddEventPage and wait for a result
+          // Navigate to AddGiftPage and wait for a result
           final bool? isGiftAdded = await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddGiftPage(eventId: EventId,eventName: EventName,),
+              builder: (context) => AddGiftPage(
+                eventId: EventId,
+                eventName: EventName,
+              ),
             ),
           );
-          // If a new event was added, refresh the list
+          // If a new gift was added, refresh the list
           if (isGiftAdded == true) {
             showMessage(context, "Gift has been added successfully");
-            loadGifts(); // Reload the events list
+            loadGifts(); // Reload the gifts list
           }
         },
         child: const Icon(Icons.add),
