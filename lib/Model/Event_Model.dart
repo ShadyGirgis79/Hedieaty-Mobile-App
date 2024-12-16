@@ -68,6 +68,14 @@ class Event {
     await db.deleteData(sql);
   }
 
+  Future<void> deleteGiftsBelongToEvent(int eventId) async{
+    String sql = '''
+    DELETE FROM Gifts
+    WHERE EventID = '$eventId'
+    ''';
+    await db.deleteData(sql);
+  }
+
   // Update user data in the database
   Future<void> updateEvent(String name ,String category , String description,
       String location, int id) async {

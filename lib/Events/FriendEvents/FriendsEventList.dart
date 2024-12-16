@@ -79,7 +79,7 @@ class FriendsEventList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FriendGiftsPage(),
+                  builder: (context) => FriendGiftsPage(eventId: event.id!,eventName: event.name,),
                 ),
               );
             },

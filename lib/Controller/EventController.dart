@@ -20,6 +20,7 @@ class EventController{
 
   Future<String> DeleteEvent(String name , int id) async{
     await eventModel.deleteEvent(name , id);
+    await eventModel.deleteGiftsBelongToEvent(id);
     return "$name event has been deleted";
   }
 
