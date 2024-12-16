@@ -163,7 +163,6 @@ class _FriendGiftsPageState extends State<FriendGiftsPage> {
                             builder: (context) => FriendsGiftDetails(gift: gift,),
                           ),
                         );
-
                           loadGifts(); // Reload the events list
                         }
                     ),

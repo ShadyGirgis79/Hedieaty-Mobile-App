@@ -27,7 +27,6 @@ class GiftController{
       String status , double price , String imageURL , int giftId) async{
     try {
       await giftModel.updateGift(name, category, status, imageURL, description, price , giftId);
-
       return "${name} event is updated successfully!";
 
     }
@@ -74,6 +73,16 @@ class GiftController{
 
     final LocalUser.User? user = await LocalUser.User.fetchUserByID(userId);
     return user!.name;
+  }
+
+  Future<List<Gift>?> getUserPledgedGift(int userId) async {
+    try{
+      return await giftModel.getUserPledgedGifts(userId);
+    }
+    catch (e) {
+      print("Error fetching user from local DB: $e");
+      return null;
+    }
   }
 
 }

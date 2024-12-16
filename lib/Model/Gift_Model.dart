@@ -106,7 +106,8 @@ class Gift {
       // If no rows are returned, consider it as not pledged (false)
       return false;
 
-    } catch (e) {
+    }
+    catch (e) {
       // Log the error (optional, use a logger if available)
       print('Error in isPledgedCheck: $e');
       // Return false in case of an error
@@ -147,8 +148,25 @@ class Gift {
   }
 
 
+  Future<List<Gift>> getUserPledgedGifts(int userId) async {
+    String sql = '''
+    SELECT * FROM Gifts 
+    WHERE PledgedID = $userId AND Status = 'Pledged'
+    ''';
+    List<Map<String, dynamic>> result = await db.readData(sql);
 
-
+    return result.map((data) {
+      return Gift(
+        id: data['ID'],
+        name: data['Name'],
+        status: data['Status'],
+        category: data['Category'],
+        price: data['Price'],
+        imageURL: data['Image'],
+        description: data['Description'],
+      );
+    }).toList();
+  }
 
 
 }
