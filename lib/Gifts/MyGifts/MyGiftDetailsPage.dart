@@ -31,7 +31,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
   late double Price;
   late int giftId;
 
-  final categories = [
+  final categoriesGift = [
     'Electronics',
     'Books',
     'Toys',
@@ -63,7 +63,8 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
           ImageURL = pickedFile.path;
         });
       }
-    } catch (e) {
+    }
+    catch (e) {
       debugPrint("Error picking image: $e");
     }
   }
@@ -322,7 +323,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                                           DropdownButtonFormField<String>(
                                             value: updatedCategory,
                                             isExpanded: true,
-                                            items: categories.map((
+                                            items: categoriesGift.map((
                                                 String category) {
                                               return DropdownMenuItem<String>(
                                                 value: category,
@@ -471,7 +472,6 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                 const SizedBox(height: 10),
 
                 const SizedBox(height: 20),
-
 
                 // Save Gift Button
                 const SizedBox(height: 20),

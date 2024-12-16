@@ -35,5 +35,36 @@ class GiftController{
     }
   }
 
+  Future<bool> isPledgedChecker(int giftId) async{
+    return await giftModel.isPledgedCheck(giftId);
+  }
+
+  Future<String> toggleIsPledged(int giftId , int userId , String name) async{
+    bool result = await giftModel.isPledgedCheck(giftId);
+
+    if(result == true){
+      await giftModel.unpledgeGift(giftId);
+      return "${name} is Available";
+    }
+    else{
+      await giftModel.pledgeGift(giftId, userId);
+      return "${name} is Pledged";
+    }
+  }
+
+  Future<int> getPledgingUserID(int giftId) async {
+    return await giftModel.getPledgedUserID(giftId);
+  }
+
+  Future<bool> checkPledgedUser(int giftId, int userId) async{
+    int result = await giftModel.getPledgedUserID(giftId);
+
+    if(result == userId){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 
 }

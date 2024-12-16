@@ -73,7 +73,6 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
     }
   }
 
-
   void searchGifts() {
     String query = searchController.text.toLowerCase();
     setState(() {

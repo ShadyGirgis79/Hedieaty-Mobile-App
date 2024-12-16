@@ -72,7 +72,7 @@ class Gift {
 // Update user data in the database
   Future<void> updateGift(String name ,String category ,String status, String image,
       String description, double price, int giftId) async {
-    await db.updateData('''
+    String sql = '''
       UPDATE Gifts
       SET Name = '$name',
           Category = '$category',
@@ -81,11 +81,78 @@ class Gift {
           Price = '$price',
           Image = '$image'
       WHERE ID = '$giftId';
-    ''');
+    ''';
+
+    await db.updateData(sql);
+  }
+
+  // Function to check if a gift is pledged
+  Future<bool> isPledgedCheck(int giftId) async {
+    try {
+      String sql = '''
+    SELECT PledgedID FROM Gifts WHERE ID = $giftId
+    ''';
+
+      // Execute the query
+      List<Map<String, dynamic>> result = await db.readData(sql);
+
+      // Check if the query returned any data
+      if (result.isNotEmpty) {
+        // Extract PledgedID from the result and check if it's non-zero
+        int pledgedId = result.first['PledgedID'] ?? 0;
+        return pledgedId != 0; // True if non-zero, false if zero
+      }
+
+      // If no rows are returned, consider it as not pledged (false)
+      return false;
+
+    } catch (e) {
+      // Log the error (optional, use a logger if available)
+      print('Error in isPledgedCheck: $e');
+      // Return false in case of an error
+      return false;
+    }
+  }
+
+  Future<int> getPledgedUserID(int giftId) async{
+    String sql = '''
+    SELECT PledgedID FROM Gifts WHERE ID = $giftId
+    ''';
+    List<Map<String, dynamic>> result = await db.readData(sql);
+
+    return result.first['PledgedID'];
+  }
+
+  Future<void> pledgeGift(int giftId , int userId) async{
+    String sql = '''
+      UPDATE Gifts
+      SET Status = 'Pledged',
+          PledgedID = '$userId'
+      WHERE ID = '$giftId';
+    ''';
+
+    await db.updateData(sql);
+  }
+
+  Future<void> unpledgeGift(int giftId) async{
+    String sql = '''
+      UPDATE Gifts
+      SET Status = 'Available',
+          PledgedID = '0'
+      WHERE ID = '$giftId';
+    ''';
+
+    await db.updateData(sql);
+
   }
 
 
 
 
 
+
 }
+
+
+
+

@@ -90,12 +90,6 @@ class _AddFriendState extends State<AddFriendPage> {
                         phoneController.text,
                         );
 
-                    // String resultFirebase = await addFriendController.addFriendFirebase(
-                    //   nameController.text,
-                    //   phoneController.text,
-                    // );
-
-
                     showMessage(context, result);
 
                     // Navigate back to the previous screen on success

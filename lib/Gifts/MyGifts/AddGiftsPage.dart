@@ -79,21 +79,17 @@ class _AddGiftPageState extends State<AddGiftPage> {
           child: Column(
             children: [
               // Image Container
-              Center(
-                child: Container(
-                  height: 200,
-                  width: 200,
+              Container(
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.purpleAccent,
-                      width: 2.0,
+                      color: Colors.grey,
+                      width: 12.0,
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: image != null
                       ? Image.file(image!, height: 200, width: 200, fit: BoxFit.cover)
                       : const Icon(Icons.image, size: 200, color: Colors.grey),
-                ),
               ),
               const SizedBox(height: 10),
 
@@ -195,8 +191,6 @@ class _AddGiftPageState extends State<AddGiftPage> {
                   else {
                     showMessage(context, result);
                   }
-
-
                 },
                 child: const Text("Add Gift"),
                 style: ElevatedButton.styleFrom(

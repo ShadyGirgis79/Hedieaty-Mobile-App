@@ -1,50 +1,70 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hedieaty/Gifts/FriendGift/FriendGiftsPage.dart';
+import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
+import 'package:hedieaty/Controller/GiftController.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'dart:io';
 
 class FriendsGiftDetails extends StatefulWidget {
-  const FriendsGiftDetails({super.key});
+  final Gift gift;
+  const FriendsGiftDetails({super.key, required this.gift});
 
   @override
   State<FriendsGiftDetails> createState() => _FriendsGiftDetailsState();
 }
 
 class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
-  final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final priceController = TextEditingController();
-  String category = 'Books';
+  final int currentUserID = FirebaseAuth.instance.currentUser!.uid.hashCode;
+  final GiftController giftController = GiftController();
+
   bool isPledged = false;
-  File? image;
-
-  final _categories = ['Electronics', 'Books', 'Toys', 'Souvenir', 'Accessories', 'Other'];
-
-  // Initialize your Gift object here
-  final Gift gift = Gift(
-    name: "Teddy Bear",
-    category: "Toys",
-    status: "Pledged",
-    price: 100,
-  );
+  bool showButton = false;
+  late String Name;
+  late String Category;
+  late String Status;
+  late String Description;
+  late String ImageURL;
+  late double Price;
+  late int giftId;
 
   @override
   void initState() {
     super.initState();
-    nameController.text = gift.name;
-    descriptionController.text = "Description here"; // Example description
-    priceController.text = gift.price.toString();
-    category = gift.category;
-    isPledged = gift.status == "Pledged";
+    Name = widget.gift.name;
+    Category = widget.gift.category;
+    Status = widget.gift.status;
+    Description = widget.gift.description;
+    ImageURL = widget.gift.imageURL;
+    Price = widget.gift.price;
+    giftId = widget.gift.id!;
+    isPledged = Status == "Pledged";
+
+    checkButtonVisibility();
   }
+
+  Future<void> checkButtonVisibility() async {
+    if (isPledged) {
+      // If the gift is pledged, check if the current user is the pledger
+      bool isPledgingUser = await giftController.checkPledgedUser(giftId, currentUserID);
+      setState(() {
+        showButton = isPledgingUser; // Show the button only if the current user pledged the gift
+      });
+    } else {
+      // If the gift is not pledged, show the button
+      setState(() {
+        showButton = true;
+      });
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gift Details',
+        title: Text('${Name} Details',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -56,8 +76,6 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
-            child:Form(
-              key: formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -73,8 +91,8 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                             ),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: image != null
-                              ? Image.file(image!, height: 200, width: 200, fit: BoxFit.cover)
+                          child: ImageURL != ""
+                              ? Image.file(File(ImageURL), height: 200, width: 200, fit: BoxFit.cover)
                               : const Icon(Icons.image, size: 200, color: Colors.grey),
                         ),
                         const SizedBox(height: 8),
@@ -99,8 +117,9 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                       title: const Text("Name",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                        ),),
-                      subtitle: Text("${gift.name}" ,
+                        ),
+                      ),
+                      subtitle: Text("${Name}" ,
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -125,8 +144,9 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                       title: const Text("Description",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                        ),),
-                      subtitle: Text("${descriptionController.text}" ,
+                        ),
+                      ),
+                      subtitle: Text("${Description}" ,
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -151,8 +171,9 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                       title: const Text("Category",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                        ),),
-                      subtitle: Text("${gift.category}" ,
+                        ),
+                      ),
+                      subtitle: Text("${Category}" ,
                         style: TextStyle(
                           fontSize: 18,
                         ),
@@ -179,7 +200,7 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                         ),
                       ),
                       subtitle: Text(
-                        "${gift.price}",
+                        "${Price}",
                         style: const TextStyle(
                           fontSize: 18,
                         ),
@@ -189,24 +210,17 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
 
                   const SizedBox(height: 40),
 
+                  if (showButton)
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          isPledged = !isPledged; // Toggle the pledged state
-                          gift.status = isPledged ? "Pledged" : "Unpledged";
-                        });
+                      onPressed: () async {
+                        String response = await giftController.toggleIsPledged(giftId, currentUserID, Name);
+                        showMessage(context, response);
 
-                        // If needed, navigate back after updating the status
-                        Navigator.pop(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FriendGiftsPage(),
-                          ),
-                        );
+                        Navigator.pop(context, true);
                       },
                       child: Text(
-                        isPledged ? 'Unpledged' : 'Pledged',
+                        isPledged ? 'Pledged' : 'Available',
                         style: const TextStyle(
                           fontSize: 18,
                         ),
@@ -224,7 +238,6 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
             ),
           ),
         ),
-      ),
     );
   }
 }
