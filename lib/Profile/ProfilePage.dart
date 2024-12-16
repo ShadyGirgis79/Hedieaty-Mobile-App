@@ -184,171 +184,167 @@ class _ProfilePageState extends State<ProfilePage> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.purpleAccent[700],
       ),
+      resizeToAvoidBottomInset: true, // Important to avoid overflow when keyboard shows
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            height: size.height,
-            width: size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 20),
-                // Profile Image and Name
-                Container(
-                  width: 200,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.purple.withOpacity(0.5),
-                      width: 5.0,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    radius: 100,
-                    backgroundColor: Colors.purpleAccent[700],
-                    backgroundImage: imageFile != null
-                        ? FileImage(File(imageFile!.path))
-                        : null,
-                    //AssetImage(profileURL) as ImageProvider,
-                  ),
-                ),
-        
-                const SizedBox(height: 10),
-                Text(
-                  username,
-                  style: TextStyle(
-                    color: Colors.purpleAccent[700],
-                    fontSize: 24,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-        
-                Text(
-                  email,
-                  style: TextStyle(
-                    color: Colors.black.withOpacity(0.3),
-                    fontSize: 15,
-                  ),
-                ),
-        
-                Text(
-                  phoneNumber,
-                  style: TextStyle(
-                    color: Colors.black.withOpacity(0.3),
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 10),
-        
-                ElevatedButton.icon(
-                  onPressed: pickImage, // Call pickImage function
-                  icon: const Icon(Icons.camera_alt),
-                  label: const Text("Change Profile Image"),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.purpleAccent[700],
-                  ),
-                ),
-                const SizedBox(height: 10),
-        
-                // Buttons to update profile a
-                ElevatedButton.icon(
-                  onPressed: editPersonalInfo,
-                  icon: const Icon(Icons.person),
-                  label: const Text("Update Personal Information"),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.purpleAccent[700],
-                  ),
-                ),
-                const SizedBox(height: 10),
-        
-                //Notification settings
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // Action to update notification settings
-                  },
-                  icon: const Icon(Icons.notifications),
-                  label: const Text("Notification Settings"),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.purpleAccent[700],
-                  ),
-                ),
-                const SizedBox(height: 10),
-        
-                // List of user's created events
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyEventPage(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: size.height, // Ensures it fills the screen height
+            ),
+            child: IntrinsicHeight( // Adapts to content height
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    // Profile Image and Name
+                    Container(
+                      width: 200,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.purple.withOpacity(0.5),
+                          width: 5.0,
+                        ),
                       ),
-                    );
-                  },
-                  icon: const Icon(Icons.event_available_rounded),
-                  label: const Text('My Created Events'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.purpleAccent[700],
-                  ),
-                ),
-                const SizedBox(height: 40),
-        
-                ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text("Are you sure you want to Sign Out?"),
-                          actions: [
-                            ElevatedButton(
-                              onPressed: () {
-                                authService.signOut();
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                  '/SignIn',
-                                      (Route<dynamic> route) => false, // Clears the navigation stack
-                                );
-                              },
-                              child: const Text("Yes"),
-                            ),
-                            const SizedBox(width: 10),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text("Cancel"),
-                            ),
-                          ],
+                      child: CircleAvatar(
+                        radius: 100,
+                        backgroundColor: Colors.purpleAccent[700],
+                        backgroundImage: imageFile != null
+                            ? FileImage(File(imageFile!.path))
+                            : null,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      username,
+                      style: TextStyle(
+                        color: Colors.purpleAccent[700],
+                        fontSize: 24,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      email,
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.3),
+                        fontSize: 15,
+                      ),
+                    ),
+                    Text(
+                      phoneNumber,
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.3),
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton.icon(
+                      onPressed: pickImage, // Call pickImage function
+                      icon: const Icon(Icons.camera_alt),
+                      label: const Text("Change Profile Image"),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent[700],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Buttons to update profile
+                    ElevatedButton.icon(
+                      onPressed: editPersonalInfo,
+                      icon: const Icon(Icons.person),
+                      label: const Text("Update Personal Information"),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent[700],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Notification settings
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        // Action to update notification settings
+                      },
+                      icon: const Icon(Icons.notifications),
+                      label: const Text("Notification Settings"),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent[700],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // List of user's created events
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyEventPage(),
+                          ),
                         );
                       },
-                    );
-                  },
-                  child: const Text('Sign Out'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.red[700],
-                  ),
-                ),
-                const SizedBox(height: 60),
-        
-                ListTile(
-                  leading: const Icon(Icons.card_giftcard),
-                  title: const Text('My Pledged Gifts'),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PledgedGiftsPage(),
+                      icon: const Icon(Icons.event_available_rounded),
+                      label: const Text('My Created Events'),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent[700],
                       ),
-                    );
-                  },
+                    ),
+                    const SizedBox(height: 40),
+                    ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Are you sure you want to Sign Out?"),
+                              actions: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    authService.signOut();
+                                    Navigator.of(context).pushNamedAndRemoveUntil(
+                                      '/SignIn',
+                                          (Route<dynamic> route) => false, // Clears the navigation stack
+                                    );
+                                  },
+                                  child: const Text("Yes"),
+                                ),
+                                const SizedBox(width: 10),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Cancel"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: const Text('Sign Out'),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.red[700],
+                      ),
+                    ),
+                    const SizedBox(height: 60),
+                    ListTile(
+                      leading: const Icon(Icons.card_giftcard),
+                      title: const Text('My Pledged Gifts'),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PledgedGiftsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
