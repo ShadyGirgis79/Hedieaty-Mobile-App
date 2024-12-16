@@ -27,12 +27,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final HomeController homeController = HomeController();
 
 
-
-
   @override
   void initState() {
     super.initState();
-    searchController.addListener(filterFriends);
+    searchController.addListener(searchFriends);
     loadFriends(currentUserID); // Load friends when the page is initialized
   }
 
@@ -57,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void filterFriends() {
+  void searchFriends() {
     String query = searchController.text.toLowerCase();
     setState(() {
       filteredFriends = friends

@@ -25,9 +25,7 @@ class _MyEventPageState extends State<MyEventPage> {
   @override
   void initState() {
     super.initState();
-    searchController.addListener(() {
-      searchEvents(searchController.text);
-    });
+    searchController.addListener(searchEvents);
     loadEvents(); // Load events when the page is initialized
   }
 
@@ -70,11 +68,12 @@ class _MyEventPageState extends State<MyEventPage> {
     }
   }
 
-  void searchEvents(String query) {
+  void searchEvents() {
+    String query = searchController.text.toLowerCase();
     setState(() {
-      filteredEvents = events.where((event) {
-        return event.name.toLowerCase().contains(query.toLowerCase());
-      }).toList();
+      filteredEvents = events
+          .where((event) => event.name.toLowerCase().contains(query))
+          .toList();
     });
   }
 
@@ -130,9 +129,9 @@ class _MyEventPageState extends State<MyEventPage> {
               )
                   :
               ListView.builder(
-                itemCount: events.length,
+                itemCount: filteredEvents.length,
                 itemBuilder: (context, index) {
-                  final event = events[index];
+                  final event = filteredEvents[index];
                   return Container(
                     decoration: BoxDecoration(
                       color: event.status == "Past" ? const Color(0xFF9393FF) : const Color(0xABABFFFF),
@@ -176,7 +175,7 @@ class _MyEventPageState extends State<MyEventPage> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: const Text("Are you sure you want to delete event?"),
+                                title: const Text("Are you sure you want to delete the event permanently?"),
                                 content: Row(
                                   children: [
                                     Expanded(
