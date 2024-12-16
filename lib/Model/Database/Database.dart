@@ -23,8 +23,6 @@ class HedieatyDatabase{
     String path = join(mypath, "myDataBase.db");
 
     checking();
-    //For deleting Database
-    //deleteDB();
 
     Database mydb = await openDatabase(path, version: Version,
         onCreate: (db, Version) async {
@@ -126,7 +124,7 @@ class HedieatyDatabase{
     return response;
   }
 
-  mydeletedatabase() async {
+  deleteMyDatabase() async {
     String database = await getDatabasesPath();
     String Path = join(database, 'myDataBase.db');
     bool ifitexist = await databaseExists(Path);
