@@ -50,7 +50,8 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
       setState(() {
         showButton = isPledgingUser; // Show the button only if the current user pledged the gift
       });
-    } else {
+    }
+    else {
       // If the gift is not pledged, show the button
       setState(() {
         showButton = true;
@@ -210,9 +211,9 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
 
                   const SizedBox(height: 40),
 
-                  if (showButton)
                   Center(
-                    child: ElevatedButton(
+                    child: showButton == true
+                    ? ElevatedButton(
                       onPressed: () async {
                         String response = await giftController.toggleIsPledged(giftId, currentUserID, Name);
                         showMessage(context, response);
@@ -228,6 +229,20 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: isPledged ? Colors.red : Colors.green,
+                      ),
+                    )
+                    :ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(context, true);
+                      },
+                      child: Text("Back",
+                        style: const TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent[700],
                       ),
                     ),
                   ),

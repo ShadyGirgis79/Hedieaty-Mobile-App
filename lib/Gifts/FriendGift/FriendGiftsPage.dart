@@ -157,17 +157,15 @@ class _FriendGiftsPageState extends State<FriendGiftsPage> {
                       ),
 
                       onTap: () async{
-                        bool isGiftSelected = await Navigator.push(
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => FriendsGiftDetails(gift: gift,),
                           ),
                         );
 
-                        if (isGiftSelected == true) {
                           loadGifts(); // Reload the events list
                         }
-                      },
                     ),
                   );
                 },
