@@ -1,6 +1,7 @@
 ﻿import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Model/Database/SyncFirebaseAndLocalDB.dart';
 import 'Registration/SignInPage.dart';
 import 'Registration/SignUpPage.dart';
 import 'Home/HomePage.dart';
@@ -9,6 +10,9 @@ import 'Profile/ProfilePage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  SyncFirebaseAndLocalDB syncController = SyncFirebaseAndLocalDB();
+  await syncController.syncFirebaseToLocalDB();
   runApp(HedieatyApp());
 }
 

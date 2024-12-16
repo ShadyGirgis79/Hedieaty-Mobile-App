@@ -119,7 +119,6 @@ class User{
   // Update user data in the database
   Future<void> updateUser(String name,String profileURL , String phone, String pref,
       String email , String pass) async {
-
     String sql='''
     UPDATE Users
     SET Name = '$name',

@@ -53,6 +53,7 @@ class HedieatyDatabase{
             'Location' TEXT,
             'Description' TEXT,
             'Status' TEXT NOT NULL,
+            'Publish' INTEGER DEFAULT 0,
             'UserID' INTEGER NOT NULL,
             FOREIGN KEY (UserID) REFERENCES Users (ID) ON DELETE CASCADE
           );
@@ -67,8 +68,9 @@ class HedieatyDatabase{
             'Category' TEXT NOT NULL,
             'Status' TEXT NOT NULL,
             'Price' REAL,
-            'Description' TEXT NOT NULL,
-            'Image' TEXT NOT NULL,
+            'Description' TEXT,
+            'Image' TEXT,
+            'Publish' INTEGER DEFAULT 0,
             'EventID' INTEGER NOT NULL,
             'PledgedID' INTEGER NOT NULL,
             FOREIGN KEY (PledgedID) REFERENCES Users (ID) ON DELETE CASCADE,
@@ -83,11 +85,10 @@ class HedieatyDatabase{
             'UserID' INTEGER NOT NULL,
             'FriendID' INTEGER NOT NULL,
             PRIMARY KEY(userID, friendID),
-            FOREIGN KEY(userID) REFERENCES Users(ID),
-            FOREIGN KEY(friendID) REFERENCES Users(ID)
+            FOREIGN KEY(userID) REFERENCES Users (ID),
+            FOREIGN KEY(friendID) REFERENCES Users (ID)
           );
           ''');
-
 
           print("Database has been created .......");
         },

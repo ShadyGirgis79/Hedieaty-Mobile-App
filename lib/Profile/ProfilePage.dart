@@ -28,7 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String username ='';
   String phoneNumber = '';
   String preference ='';
-  String? profileURL;
+  String profileURL= '';
   String email = '';
 
   final AuthService authService = AuthService();
@@ -66,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
         profileURL = imageFile!.path;
       });
     }
-    await profileController.storeProfileImageInLocalDB(profileURL!, currentUserID.hashCode);
+    await profileController.storeProfileImage(profileURL!, currentUserID.hashCode);
   }
 
 
@@ -182,11 +182,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       child: ClipOval(
-                        child: profileURL != null
+                        child: profileURL != ''
                             ? Image.file(File(profileURL!), height: 200, width: 200, fit: BoxFit.cover,
                         )
-                            : const Icon(Icons.image, size: 200, color: Colors.grey,
-                        ),
+                            : const Icon(Icons.image, size: 200, color: Colors.grey,),
                       ),
                     ),
                     const SizedBox(height: 10),

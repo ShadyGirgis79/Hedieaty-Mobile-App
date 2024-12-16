@@ -6,7 +6,7 @@ class ProfileController {
   final LocalUser.User userModel = LocalUser.User(name: '', email: '', password: '', phoneNumber: ''); // Instance of the local User model
   final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
 
-  /// Fetch user data from SQLite by ID
+  // Fetch user data from SQLite by ID
   Future<LocalUser.User?> fetchUserFromLocalDB() async {
     try {
       final int hashedID = currentUserID.hashCode;
@@ -18,7 +18,7 @@ class ProfileController {
     }
   }
 
-  /// Fetch user data from Firebase
+  // Fetch user data from Firebase
   Future<Map<dynamic, dynamic>?> fetchUserFromFirebase() async {
     try {
       final DatabaseReference userRef = FirebaseDatabase.instance.ref("users/$currentUserID");
@@ -36,7 +36,7 @@ class ProfileController {
     }
   }
 
-  /// Update user data in both SQLite and Firebase
+  // Update user data in both SQLite and Firebase
   Future<void> updateUserData({
     required String newName,
     required String newPhoneNumber,
@@ -47,7 +47,7 @@ class ProfileController {
       final int hashedID = currentUserID.hashCode;
 
       // Update in Firebase
-      final DatabaseReference userRef = FirebaseDatabase.instance.ref("users/$currentUserID");
+      final DatabaseReference userRef = FirebaseDatabase.instance.ref("users/$hashedID");
       await userRef.update({
         'name': newName,
         'phone': newPhoneNumber,
@@ -77,9 +77,23 @@ class ProfileController {
     }
   }
 
-  Future<void> storeProfileImageInLocalDB(String profileURL , int id) async{
-    await userModel.updateProfileImage(profileURL, id);
-    print("================Image updated=================");
+  // Update user Image in both SQLite and Firebase
+  Future<void> storeProfileImage(String profileURL , int id) async{
+    try{
+      //For local database
+      await userModel.updateProfileImage(profileURL, id);
+      print("================Image updated=================");
+
+      //For Real time Firebase
+      final DatabaseReference userRef = FirebaseDatabase.instance.ref("users/$id");
+      await userRef.update({
+        'profileURL': profileURL,
+      });
+    }
+    catch (e) {
+      print("Error updating user data: $e");
+    }
+
   }
 
 
