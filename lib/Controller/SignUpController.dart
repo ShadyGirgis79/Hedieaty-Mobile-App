@@ -68,9 +68,9 @@ class SignUpController {
 
 
       // Sync this user data with Firebase
-      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('users').child(userId);
+      DatabaseReference userRef = FirebaseDatabase.instance.ref()
+          .child('users').child(userId.hashCode.toString());
       await userRef.set({
-        'userID': userId.hashCode,
         'name': name,
         'email': email,
         'phone': phone,
