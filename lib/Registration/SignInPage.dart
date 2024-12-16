@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Controller/Internet.dart';
 import '../Controller/Functions/ShowMessage.dart';
 import '../Controller/SignInController.dart';
 import '../Controller/Functions/Validation.dart';
@@ -18,7 +19,7 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
+  final Internet internet = Internet();
   final SignInController signInController = SignInController();
 
   void SignIn() async {
@@ -135,12 +136,19 @@ class _SignInPageState extends State<SignInPage> {
                       child: const Text("Sign In",
                         style: TextStyle(
                           fontSize: 18,
-                        ),),
+                        ),
+                      ),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.purpleAccent[700],
                       ),
-                      onPressed: (){
+                      onPressed: () async {
+                        bool isConnected = await internet.checkInternetConnection();
+                        if (!isConnected) {
+                          internet.showLoadingIndicator(context); // Show loading until connected
+                          await internet.waitForInternetConnection(); // Wait for internet
+                          Navigator.pop(context); // Close the loading dialog
+                        }
                         SignIn();
                       },
 
@@ -168,7 +176,9 @@ class _SignInPageState extends State<SignInPage> {
                     ])
                   ),
                 ),
-              )
+              ),
+
+              const SizedBox(height: 40),
             ],
           ),
         ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hedieaty/Controller/Internet.dart';
 import 'package:hedieaty/Home/HomePage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController confirmPasswordController = TextEditingController();
   File? imageFile;
   final SignUpController signUpController = SignUpController();
+  final Internet internet = Internet();
 
   Future<void> pickImage() async {
     final picker = ImagePicker();
@@ -229,7 +231,16 @@ class _SignUpPageState extends State<SignUpPage> {
 
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: SignUp,
+                onPressed: () async{
+                  bool isConnected = await internet.checkInternetConnection();
+                  if (!isConnected) {
+                    internet.showLoadingIndicator(context); // Show loading until connected
+                    await internet.waitForInternetConnection(); // Wait for internet
+                    Navigator.pop(context); // Close the loading dialog
+                  }
+
+                  SignUp;
+                },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 50, vertical: 15),
