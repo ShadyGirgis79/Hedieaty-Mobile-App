@@ -42,7 +42,7 @@ class _AddGiftPageState extends State<AddGiftPage> {
   }
 
   // Function to pick an image
-  Future<void> _pickImage() async {
+  Future<void> pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -95,7 +95,7 @@ class _AddGiftPageState extends State<AddGiftPage> {
 
               // Upload Image Button
               ElevatedButton.icon(
-                onPressed: _pickImage,
+                onPressed: pickImage,
                 icon: const Icon(Icons.camera_alt),
                 label: const Text("Upload Image"),
                 style: ElevatedButton.styleFrom(
@@ -196,7 +196,6 @@ class _AddGiftPageState extends State<AddGiftPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purpleAccent[700],
                   foregroundColor: Colors.white,
-
                 ),
               ),
             ],

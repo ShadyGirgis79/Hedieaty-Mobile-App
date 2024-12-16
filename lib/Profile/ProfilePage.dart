@@ -22,26 +22,25 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
-  XFile? imageFile;
-  final ImagePicker _picker = ImagePicker();
+  final ProfileController profileController = ProfileController();
+  File? imageFile;
 
-  String username = '';
+  String username ='';
   String phoneNumber = '';
-  String preference = '';
-  String profileURL = '';
+  String preference ='';
+  String? profileURL;
   String email = '';
 
   final AuthService authService = AuthService();
 
   @override
   void initState() {
-    super.initState();
     fetchUserData();
+    super.initState();
   }
 
   Future<void> fetchUserData() async {
     try {
-      final ProfileController profileController = ProfileController();
       final LocalUser.User? localUser = await profileController.fetchUserFromLocalDB();
       if (localUser != null) {
         setState(() {
@@ -52,49 +51,24 @@ class _ProfilePageState extends State<ProfilePage> {
           profileURL = localUser.profileURL;
         });
       }
-    } catch (e) {
+    }
+    catch (e) {
       print("Error fetching user data: $e");
     }
   }
 
   Future<void> pickImage() async {
-    try {
-      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
-      if (pickedFile != null) {
-        setState(() {
-          imageFile = pickedFile;
-        });
-
-        await uploadProfileImage(pickedFile);
-      }
-    } catch (e) {
-      debugPrint("Error picking image: $e");
-    }
-  }
-
-  Future<void> uploadProfileImage(XFile imageFile) async {
-    try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child("profilePictures/$uid.jpg");
-
-      final uploadTask = ref.putFile(File(imageFile.path));
-      final snapshot = await uploadTask;
-      final downloadURL = await snapshot.ref.getDownloadURL();
-
-      final DatabaseReference userRef =
-      FirebaseDatabase.instance.ref("users/$uid");
-      await userRef.update({'profileURL': downloadURL});
-
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
       setState(() {
-        profileURL = downloadURL;
+        imageFile = File(pickedFile.path);
+        profileURL = imageFile!.path;
       });
-    } catch (e) {
-      debugPrint("Error uploading profile image: $e");
     }
+    await profileController.storeProfileImageInLocalDB(profileURL!, currentUserID.hashCode);
   }
+
 
   void editPersonalInfo() {
     final usernameController = TextEditingController(text: username);
@@ -200,7 +174,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(height: 20),
                     // Profile Image and Name
                     Container(
-                      width: 200,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
@@ -208,12 +181,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           width: 5.0,
                         ),
                       ),
-                      child: CircleAvatar(
-                        radius: 100,
-                        backgroundColor: Colors.purpleAccent[700],
-                        backgroundImage: imageFile != null
-                            ? FileImage(File(imageFile!.path))
-                            : null,
+                      child: ClipOval(
+                        child: profileURL != null
+                            ? Image.file(File(profileURL!), height: 200, width: 200, fit: BoxFit.cover,
+                        )
+                            : const Icon(Icons.image, size: 200, color: Colors.grey,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),

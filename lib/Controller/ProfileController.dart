@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hedieaty/Model/User_Model.dart' as LocalUser;
 
 class ProfileController {
-  final LocalUser.User localUser = LocalUser.User(name: '', email: '', password: '', phoneNumber: ''); // Instance of the local User model
+  final LocalUser.User userModel = LocalUser.User(name: '', email: '', password: '', phoneNumber: ''); // Instance of the local User model
   final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
 
   /// Fetch user data from SQLite by ID
@@ -76,4 +76,11 @@ class ProfileController {
       print("Error updating user data: $e");
     }
   }
+
+  Future<void> storeProfileImageInLocalDB(String profileURL , int id) async{
+    await userModel.updateProfileImage(profileURL, id);
+    print("================Image updated=================");
+  }
+
+
 }

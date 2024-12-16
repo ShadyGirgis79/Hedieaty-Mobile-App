@@ -24,21 +24,16 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController preferenceController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
-  XFile? imageFile;
-  final ImagePicker picker = ImagePicker();
-
+  File? imageFile;
   final SignUpController signUpController = SignUpController();
 
   Future<void> pickImage() async {
-    try {
-      final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        setState(() {
-          imageFile = pickedFile;
-        });
-      }
-    } catch (e) {
-      debugPrint('Error picking image: $e');
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
     }
   }
 
@@ -50,7 +45,7 @@ class _SignUpPageState extends State<SignUpPage> {
     final preference = preferenceController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPasswordController.text.trim();
-    final profilePath = imageFile != null ? imageFile!.path : "";
+    final profilePath = imageFile?.path ?? "";
 
     String? errorMessage = await signUpController.signUp(
       name: name,
@@ -103,7 +98,6 @@ class _SignUpPageState extends State<SignUpPage> {
             children: [
               const SizedBox(height: 20),
               Container(
-                width: 200,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
@@ -111,19 +105,15 @@ class _SignUpPageState extends State<SignUpPage> {
                     width: 5.0,
                   ),
                 ),
-                child: CircleAvatar(
-                  radius: 100,
-                  backgroundImage: imageFile != null
-                      ? FileImage(File(imageFile!.path))
-                      : null ,
-                  //AssetImage("Assets/MyPhoto.png") as ImageProvider,
+                child: ClipOval(
+                  child: imageFile != null
+                    ? Image.file(imageFile!, height: 300, width: 300, fit: BoxFit.cover)
+                    : const Icon(Icons.image,size: 300, color: Colors.grey ),
                 ),
               ),
               const SizedBox(height: 10),
               ElevatedButton.icon(
-                onPressed: () {
-                  pickImage();
-                },
+                onPressed: pickImage,
                 icon: const Icon(Icons.camera_alt),
                 label: const Text("Change Profile Image"),
                 style: ElevatedButton.styleFrom(

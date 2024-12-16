@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Events/FriendEvents/FriendsEventPage.dart';
 import 'package:hedieaty/Model/User_Model.dart';
@@ -24,10 +26,19 @@ class FriendsList extends StatelessWidget {
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
           child: ListTile(
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(friend.profileURL.isEmpty
-                  ? 'https://via.placeholder.com/150'
-                  : friend.profileURL),
+            leading: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.purple.withOpacity(0.5),
+                  width: 2.0,
+                ),
+              ),
+              child: ClipOval(
+                child: friend.profileURL != ''
+                    ? Image.file(File(friend.profileURL), height: 50, width: 50, fit: BoxFit.cover,)
+                    : Image.network('https://via.placeholder.com/150'),
+              ),
             ),
             title: Text(
               friend.name,

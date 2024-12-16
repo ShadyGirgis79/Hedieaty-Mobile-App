@@ -119,14 +119,16 @@ class User{
   // Update user data in the database
   Future<void> updateUser(String name,String profileURL , String phone, String pref,
       String email , String pass) async {
-    await db.updateData('''
-      UPDATE Users
-      SET Name = '$name',
-          ProfileURL = '$profileURL',
-          PhoneNumber = '$phone',
-          Preferences = '$pref'
-      WHERE Email = '$email' AND Password = '$pass';
-    ''');
+
+    String sql='''
+    UPDATE Users
+    SET Name = '$name',
+        ProfileURL = '$profileURL',
+        PhoneNumber = '$phone',
+        Preferences = '$pref'
+    WHERE Email = '$email' AND Password = '$pass';
+    ''';
+    await db.updateData(sql);
   }
 
   Future<Map<String, dynamic>?> getUserByPhoneNumber(String phoneNumber) async {
@@ -186,6 +188,15 @@ class User{
   Future<void> deleteUser(String name) async{
     String sql = "DELETE FROM Users WHERE Name = '$name'";
     await db.deleteData(sql);
+  }
+
+  Future<void> updateProfileImage(String profileURL , int userId) async {
+    String sql ='''
+      UPDATE Users
+      SET ProfileURL = '$profileURL'
+      WHERE ID = '$userId' ;
+      ''';
+    await db.updateData(sql);
   }
 
 }
