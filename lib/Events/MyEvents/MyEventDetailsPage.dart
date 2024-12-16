@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
+import 'package:hedieaty/Controller/Internet.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
 
 class MyEventDetails extends StatefulWidget {
@@ -15,6 +16,7 @@ class MyEventDetails extends StatefulWidget {
 
 class _MyEventDetailsState extends State<MyEventDetails> {
   final EventController eventController = EventController();
+  final Internet internet = Internet();
   late String Name;
   late String Category;
   late String Description;
@@ -420,6 +422,14 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                       const SizedBox(width: 40),
                       ElevatedButton(
                         onPressed: () async {
+
+                          bool isConnected = await internet.checkInternetConnection();
+                          if (!isConnected) {
+                            internet.showLoadingIndicator(context); // Show loading until connected
+                            await internet.waitForInternetConnection(); // Wait for internet
+                            Navigator.pop(context); // Close the loading dialog
+                          }
+
 
                         },
                         child: const Text("Publish"),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hedieaty/Controller/AddFriendController.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
+import 'package:hedieaty/Controller/Internet.dart';
 import '../Controller/Functions/Validation.dart';
 import '../Model/User_Model.dart';
 
@@ -20,7 +21,7 @@ class AddFriendPage extends StatefulWidget {
 class _AddFriendState extends State<AddFriendPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-
+  final Internet internet = Internet();
   final AddFriendController addFriendController = AddFriendController();
 
   @override
@@ -85,6 +86,13 @@ class _AddFriendState extends State<AddFriendPage> {
                 const SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: () async {
+                    bool isConnected = await internet.checkInternetConnection();
+                    if (!isConnected) {
+                      internet.showLoadingIndicator(context); // Show loading until connected
+                      await internet.waitForInternetConnection(); // Wait for internet
+                      Navigator.pop(context); // Close the loading dialog
+                    }
+
                     String result = await addFriendController.addFriendLocalDB(
                         nameController.text,
                         phoneController.text,

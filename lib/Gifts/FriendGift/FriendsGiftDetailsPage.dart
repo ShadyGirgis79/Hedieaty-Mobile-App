@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Controller/GiftController.dart';
+import 'package:hedieaty/Controller/Internet.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'dart:io';
 
@@ -17,6 +18,7 @@ class FriendsGiftDetails extends StatefulWidget {
 class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
   final int currentUserID = FirebaseAuth.instance.currentUser!.uid.hashCode;
   final GiftController giftController = GiftController();
+  final Internet internet = Internet();
 
   bool isPledged = false;
   bool showButton = false;
@@ -215,6 +217,13 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                     child: showButton == true
                     ? ElevatedButton(
                       onPressed: () async {
+
+                        bool isConnected = await internet.checkInternetConnection();
+                        if (!isConnected) {
+                          internet.showLoadingIndicator(context); // Show loading until connected
+                          await internet.waitForInternetConnection(); // Wait for internet
+                          Navigator.pop(context); // Close the loading dialog
+                        }
                         String response = await giftController.toggleIsPledged(giftId, currentUserID, Name);
                         showMessage(context, response);
 

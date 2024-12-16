@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Controller/GiftController.dart';
+import 'package:hedieaty/Controller/Internet.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -19,6 +20,7 @@ class MyGiftDetails extends StatefulWidget {
 class _MyGiftDetailsState extends State<MyGiftDetails> {
   final int currentUserID = FirebaseAuth.instance.currentUser!.uid.hashCode;
   final GiftController giftController = GiftController();
+  final Internet internet = Internet();
   final ImagePicker picker = ImagePicker();
   bool isPledged = false;
 
@@ -521,6 +523,13 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
 
                     ElevatedButton(
                       onPressed: () async {
+
+                        bool isConnected = await internet.checkInternetConnection();
+                        if (!isConnected) {
+                          internet.showLoadingIndicator(context); // Show loading until connected
+                          await internet.waitForInternetConnection(); // Wait for internet
+                          Navigator.pop(context); // Close the loading dialog
+                        }
 
                       },
                       child: const Text("Publish"),
