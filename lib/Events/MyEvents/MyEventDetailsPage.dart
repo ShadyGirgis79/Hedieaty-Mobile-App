@@ -59,7 +59,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
     Navigator.pop(context , true); // Close the Details event page
   }
 
-  final List<String> categories = [
+  final List<String> categoriesEvent = [
     "Birthday",
     "Wedding",
     "Corporate",
@@ -188,47 +188,47 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                           IconButton(
                             icon: const Icon(Icons.edit),
                             onPressed: () {
-                              // Set the initial value for the updated category
+                              // Initialize updatedCategory with a valid value
                               String updatedCategory = Category;
 
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return StatefulBuilder(
-                                    builder: (context, setState) {
-                                      return AlertDialog(
-                                        title: const Text("Event Category"),
-                                        content: DropdownButton<String>(
-                                          value: updatedCategory,
-                                          isExpanded: true,
-                                          items: categories.map((String category) {
-                                            return DropdownMenuItem<String>(
-                                              value: category,
-                                              child: Text(category),
-                                            );
-                                          }).toList(),
-                                          onChanged: (value) {
-                                            setState(() {
-                                              updatedCategory = value!;
-                                            });
-                                            // Immediately update the main state for the category
-                                          },
-                                        ),
-                                        actions: [
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              //Update Category
-                                              this.setState(() {
-                                                Category = updatedCategory;
+                                  return AlertDialog(
+                                    title: const Text("Event Category"),
+                                    content: SizedBox(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          DropdownButtonFormField<String>(
+                                            value: updatedCategory,
+                                            isExpanded: true,
+                                            items: categoriesEvent.map((String category) {
+                                              return DropdownMenuItem<String>(
+                                                value: category,
+                                                child: Text(category),
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                updatedCategory = value!;
                                               });
-
-                                              Navigator.of(context).pop(); // Close the dialog
                                             },
-                                            child: const Text("Save Changes"),
                                           ),
                                         ],
-                                      );
-                                    },
+                                      ),
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          this.setState(() {
+                                            Category = updatedCategory;
+                                          });
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("Save Changes"),
+                                      ),
+                                    ],
                                   );
                                 },
                               );
