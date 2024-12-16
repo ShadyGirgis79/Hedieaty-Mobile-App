@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/EventController.dart';
+import 'package:hedieaty/Controller/GiftController.dart';
 import 'package:hedieaty/Events/FriendEvents/FriendsEventList.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
 
@@ -18,6 +19,7 @@ class _FriendsEventPageState extends State<FriendsEventPage> {
 
   final EventController eventController = EventController();
   TextEditingController searchController = TextEditingController();
+  final GiftController giftController = GiftController();
   List<Event> events = [];
   List<Event> filteredEvents = [];
   String sortBy = 'name';
@@ -27,6 +29,7 @@ class _FriendsEventPageState extends State<FriendsEventPage> {
   void initState() {
     super.initState();
     Name = widget.friendName;
+    searchController.addListener(searchEvents);
     loadFriendEvents();
   }
 
@@ -36,6 +39,18 @@ class _FriendsEventPageState extends State<FriendsEventPage> {
       events = fetchedEvents;
       filteredEvents = fetchedEvents;
     });
+    
+    fetchEventGifts(filteredEvents);
+  }
+
+  void fetchEventGifts(List<Event> events) async{
+    for (var event in events) {
+      final gifts = await giftController.giftsList(event.id!);
+
+      setState(() {
+        event.gifts = gifts!;
+      });
+    }
   }
 
   void sortEvents(String sortBy) {
@@ -69,11 +84,12 @@ class _FriendsEventPageState extends State<FriendsEventPage> {
     }
   }
 
-  void searchEvents(String query) {
+  void searchEvents() {
+    String query = searchController.text.toLowerCase();
     setState(() {
-      filteredEvents = events.where((event) {
-        return event.name.toLowerCase().contains(query.toLowerCase());
-      }).toList();
+      filteredEvents = events
+          .where((event) => event.name.toLowerCase().contains(query))
+          .toList();
     });
   }
 

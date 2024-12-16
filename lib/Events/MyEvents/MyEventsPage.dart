@@ -35,6 +35,8 @@ class _MyEventPageState extends State<MyEventPage> {
       events = fetchedEvents ?? [];
       filteredEvents = fetchedEvents ?? []; // Initially, all events are displayed
     });
+
+
   }
 
   void sortEvents(String sortBy) {
