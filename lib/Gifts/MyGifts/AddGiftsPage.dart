@@ -164,40 +164,58 @@ class _AddGiftPageState extends State<AddGiftPage> {
               ),
               const SizedBox(height: 50),
 
-              // Save Button
-              ElevatedButton(
-                onPressed: () async{
-                  final String name = nameController.text.trim();
-                  final String description = desController.text.trim();
-                  final String priceText = priceController.text.trim();
-                  final double? price = double.tryParse(priceText);
-                  final String status = "Available";
-                  final int pledgedId = 0;
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Save Button
+                  ElevatedButton(
+                    onPressed: () async{
+                      final String name = nameController.text.trim();
+                      final String description = desController.text.trim();
+                      final String priceText = priceController.text.trim();
+                      final double? price = double.tryParse(priceText);
+                      final String status = "Available";
+                      final int pledgedId = 0;
 
-                  final result = await addGiftController.addGift(
-                    name: name,
-                    category: selectedCategory,
-                    description: description,
-                    image: image?.path ?? "", // Save the image path or an empty string if no image
-                    price: price!,
-                    status: status,
-                    eventId: EventId,
-                    pledgedId: pledgedId,
-                  );
+                      final result = await addGiftController.addGift(
+                        name: name,
+                        category: selectedCategory,
+                        description: description,
+                        image: image?.path ?? "", // Save the image path or an empty string if no image
+                        price: price!,
+                        status: status,
+                        eventId: EventId,
+                        pledgedId: pledgedId,
+                      );
 
-                  if (result == null) {
-                    Navigator.pop(context , true); // Close the add event page
-                  }
-                  else {
-                    showMessage(context, result);
-                  }
-                },
-                child: const Text("Add Gift"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purpleAccent[700],
-                  foregroundColor: Colors.white,
-                ),
-              ),
+                      if (result == null) {
+                        Navigator.pop(context , true); // Close the add event page
+                      }
+                      else {
+                        showMessage(context, result);
+                      }
+                    },
+                    child: const Text("Add Gift"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purpleAccent[700],
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+
+                  const SizedBox(width: 40),
+
+                  ElevatedButton(
+                    onPressed: () async {
+
+                    },
+                    child: const Text("Publish"),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.purpleAccent[700],
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),

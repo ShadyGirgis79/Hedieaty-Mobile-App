@@ -502,18 +502,34 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
 
                 // Save Gift Button
                 const SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: saveUpdate,
-                    child: const Text(
-                      'Save Changes',
-                      style: TextStyle(fontSize: 18),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children:[
+                    ElevatedButton(
+                      onPressed: saveUpdate,
+                      child: const Text(
+                        'Save Changes',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent[700],
+                      ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.purpleAccent[700],
+
+                    const SizedBox(width: 40),
+
+                    ElevatedButton(
+                      onPressed: () async {
+
+                      },
+                      child: const Text("Publish"),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent[700],
+                      ),
                     ),
-                  ),
+                  ]
                 ),
               ],
             ),
