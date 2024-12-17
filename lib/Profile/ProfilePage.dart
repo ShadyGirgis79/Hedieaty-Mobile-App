@@ -76,7 +76,6 @@ class _ProfilePageState extends State<ProfilePage> {
     final phoneController = TextEditingController(text: phoneNumber);
     final preferenceController = TextEditingController(text: preference);
 
-    // Error message variable
     String phoneError = '';
 
     showDialog(
@@ -84,89 +83,84 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Edit Personal Information"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: const InputDecoration(labelText: "Username"),
-                controller: usernameController,
-              ),
-              const SizedBox(height: 20),
-              // Phone field with error message
-              TextField(
-                decoration: InputDecoration(
-                  labelText: "Phone",
-                  errorText: phoneError.isEmpty ? null : phoneError,
+          content: SingleChildScrollView( // Make content scrollable
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  decoration: const InputDecoration(labelText: "Username"),
+                  controller: usernameController,
                 ),
-                controller: phoneController,
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                decoration: const InputDecoration(labelText: "Preference"),
-                controller: preferenceController,
-              ),
-            ],
+                const SizedBox(height: 20),
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: "Phone",
+                    errorText: phoneError.isEmpty ? null : phoneError,
+                  ),
+                  controller: phoneController,
+                  keyboardType: TextInputType.phone,
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  decoration: const InputDecoration(labelText: "Preference"),
+                  controller: preferenceController,
+                ),
+              ],
+            ),
           ),
           actions: [
-
             Column(
               children: [
                 ElevatedButton(
-                    onPressed: () async{
-                      await profileController.storeProfileImage('', currentUserID.hashCode);
-                      showMessage(context, 'Profile Image has been removed');
-                      setState(() {
-                        profileURL = '';
-                      });
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Remove Image"),
+                  onPressed: () async {
+                    await profileController.storeProfileImage('', currentUserID.hashCode);
+                    showMessage(context, 'Profile Image has been removed');
+                    setState(() {
+                      profileURL = '';
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Remove Image"),
                 ),
-
-                SizedBox(height: 20,),
-
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        // Validate phone number
-                        if (validatePhoneNumber(phoneController.text)) {
-                          await ProfileController().updateUserData(
-                            newName: usernameController.text,
-                            newPhoneNumber: phoneController.text,
-                            newPreference: preferenceController.text,
-                          );
-                          setState(() {
-                            username = usernameController.text;
-                            phoneNumber = phoneController.text;
-                            preference = preferenceController.text;
-                          });
-                          // Close dialog
-                          Navigator.of(context).pop();
-                        }
-                        else {
-                          // Set error message if phone number is invalid
-                          showMessage(context, 'Please enter a valid phone number');
-                        }
-                      },
-                      child: const Text("Save"),
+                    Flexible(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (validatePhoneNumber(phoneController.text)) {
+                            await ProfileController().updateUserData(
+                              newName: usernameController.text,
+                              newPhoneNumber: phoneController.text,
+                              newPreference: preferenceController.text,
+                            );
+                            setState(() {
+                              username = usernameController.text;
+                              phoneNumber = phoneController.text;
+                              preference = preferenceController.text;
+                            });
+                            Navigator.of(context).pop();
+                          } else {
+                            showMessage(context, 'Please enter a valid phone number');
+                          }
+                        },
+                        child: const Text("Save"),
+                      ),
                     ),
-
-                    SizedBox(width: 20),
-
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("Cancel"),
+                    const SizedBox(width: 10),
+                    Flexible(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Cancel"),
+                      ),
                     ),
                   ],
-                )
-
+                ),
               ],
             ),
-
           ],
         );
       },
