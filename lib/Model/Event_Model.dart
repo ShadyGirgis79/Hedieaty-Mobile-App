@@ -67,7 +67,7 @@ class Event {
   Future<List<Event>> getFriendsEvents(int userID) async {
     String sql = '''
     SELECT * FROM Events 
-    WHERE UserID = "$userID" And Publish = 1
+    WHERE UserID = "$userID" AND Publish = 1
     ''';
     List<Map<String, dynamic>> result = await db.readData(sql);
 
@@ -80,6 +80,7 @@ class Event {
         date: data['Date'],
         location: data['Location'],
         description: data['Description'],
+        publish: data['Publish'],
       );
     }).toList();
   }
