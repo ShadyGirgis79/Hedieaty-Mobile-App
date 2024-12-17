@@ -26,6 +26,7 @@ class User{
   final db = HedieatyDatabase();
 
   Future<int> insertUser({
+    required int id,
     required String name,
     required String password,
     String profileURL ='',
@@ -34,8 +35,8 @@ class User{
     String preferences='',
   }) async {
     String sql = '''
-      INSERT INTO Users ('Name', 'Password', 'ProfileURL', 'PhoneNumber', 'Email', 'Preferences')
-      VALUES ("$name", "$password", "$profileURL", "$phoneNumber", "$email", "$preferences")
+      INSERT INTO Users ('ID','Name', 'Password', 'ProfileURL', 'PhoneNumber', 'Email', 'Preferences')
+      VALUES ("$id", "$name", "$password", "$profileURL", "$phoneNumber", "$email", "$preferences")
     ''';
     return await db.insertData(sql);
   }

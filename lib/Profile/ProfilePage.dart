@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Events/MyEvents/MyEventsPage.dart';
 import 'package:hedieaty/Gifts/PledgedGift/PledgedGiftsPage.dart';
+import 'package:hedieaty/Model/Database/SyncFirebaseAndLocalDB.dart';
 import 'package:image_picker/image_picker.dart';
 import '../Controller/ProfileController.dart';
 import '../Controller/Functions/Validation.dart';
@@ -273,7 +274,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               title: const Text("Are you sure you want to Sign Out?"),
                               actions: [
                                 ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
+
+                                    SyncFirebaseAndLocalDB syncController = SyncFirebaseAndLocalDB();
+                                    await syncController.syncFirebaseToLocalDB();
+
                                     authService.signOut();
                                     Navigator.of(context).pushNamedAndRemoveUntil(
                                       '/SignIn',

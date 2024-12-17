@@ -30,7 +30,7 @@ class HedieatyDatabase{
           //Create Users Table
           await db.execute('''
           CREATE TABLE IF NOT EXISTS 'Users' (
-            'ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            'ID' INTEGER NOT NULL PRIMARY KEY,
             'Name' TEXT UNIQUE NOT NULL,
             'Email' TEXT UNIQUE NOT NULL,
             'Preferences' TEXT,

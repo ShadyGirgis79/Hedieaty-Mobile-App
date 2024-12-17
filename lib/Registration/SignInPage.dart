@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/Internet.dart';
+import 'package:hedieaty/Model/Database/SyncFirebaseAndLocalDB.dart';
 import '../Controller/Functions/ShowMessage.dart';
 import '../Controller/SignInController.dart';
 import '../Controller/Functions/Validation.dart';
@@ -34,6 +35,10 @@ class _SignInPageState extends State<SignInPage> {
       if(currentUser != null){
         await signInController.updateID(email, password, user.uid.hashCode);
         showMessage(context, "Logged in successfully!");
+
+        SyncFirebaseAndLocalDB syncController = SyncFirebaseAndLocalDB();
+        await syncController.syncFirebaseToLocalDB();
+
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => MyHomePage()),
         );

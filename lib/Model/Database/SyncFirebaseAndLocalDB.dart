@@ -17,7 +17,7 @@ class SyncFirebaseAndLocalDB {
             INSERT OR REPLACE INTO Users 
             (ID, Name, Email, Preferences, Password, ProfileURL, PhoneNumber, Notifications) 
             VALUES (
-              ${user.key.hashCode},
+              ${int.parse(user.key)},
               '${user.value['name']}',
               '${user.value['email']}',
               '${user.value['preference']}',
@@ -41,7 +41,7 @@ class SyncFirebaseAndLocalDB {
             INSERT OR REPLACE INTO Events 
             (ID, Name, Category, Date, Location, Description, Status, Publish, UserID) 
             VALUES (
-              ${event.key.hashCode},
+              ${int.parse(event.key)},
               '${event.value['name']}',
               '${event.value['category']}',
               '${event.value['date']}',
@@ -66,7 +66,7 @@ class SyncFirebaseAndLocalDB {
             INSERT OR REPLACE INTO Gifts 
             (ID, Name, Category, Status, Price, Description, Image, Publish, EventID, PledgedID) 
             VALUES (
-              ${gift.key.hashCode},
+              ${int.parse(gift.key)},
               '${gift.value['name']}',
               '${gift.value['category']}',
               '${gift.value['status']}',

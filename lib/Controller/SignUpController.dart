@@ -7,6 +7,7 @@ class SignUpController {
   final User userModel = User(name: '', email: '', password: '', phoneNumber: '');
 
   Future<String?>signUp({
+    required int id,
     required String name,
     required String email,
     required String phone,
@@ -37,7 +38,7 @@ class SignUpController {
 
 
     int response = await userModel.insertUser(
-
+      id:id,
       name: name,
       password: password,
       profileURL: profilePath,
@@ -48,17 +49,19 @@ class SignUpController {
 
     userModel.getAllUsers();
 
+
+
     return response > 0 ? null : "Failed to register user";
   }
 
 
-  Future<void> listenForUserInsertion(String id) async {
+  Future<void> listenForUserInsertion(int id) async {
     // Fetch all users from the local SQLite database
     List<Map> users = await userModel.getAllUsers();
 
 
     for (var user in users) {
-      String userId = id;
+      int userId = id;
       String name = user['Name'];
       String email = user['Email'];
       String phone = user['PhoneNumber'];
@@ -69,7 +72,7 @@ class SignUpController {
 
       // Sync this user data with Firebase
       DatabaseReference userRef = FirebaseDatabase.instance.ref()
-          .child('users').child(userId.hashCode.toString());
+          .child('users').child(userId.toString());
       await userRef.set({
         'name': name,
         'email': email,
@@ -81,23 +84,4 @@ class SignUpController {
     }
   }
 
-  Future<void> updateID(String email, String password, int newId) async {
-    // Fetch the user by email and password
-    User? user = await User.fetchUserByEmailAndPassword(email, password);
-
-    if (user != null) {
-      // Update the user's ID in the local database
-      int updateUser = await user.updateUserID(email, password, newId);
-
-      if (updateUser > 0) {
-        print("User ID updated successfully.");
-      }
-      else {
-        print("Failed to update user ID.");
-      }
-    }
-    else {
-      print("User not found. Cannot update ID.");
-    }
-  }
 }

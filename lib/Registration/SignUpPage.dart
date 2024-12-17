@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/Internet.dart';
 import 'package:hedieaty/Home/HomePage.dart';
+import 'package:hedieaty/Model/Database/SyncFirebaseAndLocalDB.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 import '../Controller/Functions/ShowMessage.dart';
@@ -49,7 +50,13 @@ class _SignUpPageState extends State<SignUpPage> {
     final confirmPassword = confirmPasswordController.text.trim();
     final profilePath = imageFile?.path ?? "";
 
+    User? firebaseUser = await AuthService().signUp(email, password);
+    int currentUserId = firebaseUser!.uid.hashCode;
+
+    print(currentUserId);
+
     String? errorMessage = await signUpController.signUp(
+      id: currentUserId,
       name: name,
       email: email,
       phone: phone,
@@ -65,14 +72,15 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     try {
-      User? firebaseUser = await AuthService().signUp(email, password);
 
       if (firebaseUser != null) {
 
-        await signUpController.listenForUserInsertion(firebaseUser.uid);
-        await signUpController.updateID(email, password, firebaseUser.uid.hashCode);
+        await signUpController.listenForUserInsertion(currentUserId);
 
         showMessage(context, "$name registered successfully!");
+
+        SyncFirebaseAndLocalDB syncController = SyncFirebaseAndLocalDB();
+        await syncController.syncFirebaseToLocalDB();
 
         // Delayed navigation to ensure context is stable
         Navigator.of(context).pushAndRemoveUntil(
@@ -239,7 +247,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     Navigator.pop(context); // Close the loading dialog
                   }
 
-                  SignUp;
+                  SignUp();
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
