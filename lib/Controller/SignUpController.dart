@@ -7,7 +7,6 @@ class SignUpController {
   final User userModel = User(name: '', email: '', password: '', phoneNumber: '');
 
   Future<String?>signUp({
-    required int id,
     required String name,
     required String email,
     required String phone,
@@ -36,9 +35,26 @@ class SignUpController {
       return "Password must at least 6 characters";
     }
 
+    // Check for duplicates
+    bool isDuplicateName = await userModel.isDuplicatedUserName(name);
+    bool isDuplicateEmail = await userModel.isDuplicatedUserEmail(email);
+    bool isDuplicatePhone = await userModel.isDuplicatedUserPhone(phone);
+    bool isDuplicatePassword = await userModel.isDuplicatedUserPassword(password);
+
+    if (isDuplicateName) {
+      return "A user with the same name already exists.";
+    }
+    if (isDuplicateEmail) {
+      return "A user with the same email already exists.";
+    }
+    if (isDuplicatePhone) {
+      return "A user with the same phone number already exists.";
+    }
+    if (isDuplicatePassword) {
+      return "A user with the same password already exists.";
+    }
 
     int response = await userModel.insertUser(
-      id:id,
       name: name,
       password: password,
       profileURL: profilePath,
@@ -46,10 +62,6 @@ class SignUpController {
       email: email,
       preferences: preference,
     );
-
-    userModel.getAllUsers();
-
-
 
     return response > 0 ? null : "Failed to register user";
   }
@@ -84,4 +96,23 @@ class SignUpController {
     }
   }
 
+  Future<void> updateID(String email, String password, int newId) async {
+    // Fetch the user by email and password
+    User? user = await User.fetchUserByEmailAndPassword(email, password);
+
+    if (user != null) {
+      // Update the user's ID in the local database
+      int updateUser = await user.updateUserID(email, password, newId);
+
+      if (updateUser > 0) {
+        print("User ID updated successfully.");
+      }
+      else {
+        print("Failed to update user ID.");
+      }
+    }
+    else {
+      print("User not found. Cannot update ID.");
+    }
+  }
 }

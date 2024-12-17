@@ -50,13 +50,9 @@ class _SignUpPageState extends State<SignUpPage> {
     final confirmPassword = confirmPasswordController.text.trim();
     final profilePath = imageFile?.path ?? "";
 
-    User? firebaseUser = await AuthService().signUp(email, password);
-    int currentUserId = firebaseUser!.uid.hashCode;
 
-    print(currentUserId);
 
     String? errorMessage = await signUpController.signUp(
-      id: currentUserId,
       name: name,
       email: email,
       phone: phone,
@@ -72,10 +68,12 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     try {
+      User? firebaseUser = await AuthService().signUp(email, password);
 
       if (firebaseUser != null) {
 
-        await signUpController.listenForUserInsertion(currentUserId);
+        await signUpController.listenForUserInsertion(firebaseUser.uid.hashCode);
+        await signUpController.updateID(email, password, firebaseUser.uid.hashCode);
 
         showMessage(context, "$name registered successfully!");
 
