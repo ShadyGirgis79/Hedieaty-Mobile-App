@@ -53,11 +53,7 @@ class AddFriendController {
         'UserId': userId,
         'FriendId': friendId,
       });
-
     }
-
-
-
   }
 
 }

@@ -1,11 +1,13 @@
 
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import '../Model/Event_Model.dart';
 
 class EventController{
   final Event eventModel= Event(name: "", category: "", date: "");
   final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
+  final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
 
   Future<List<Event>?> eventsList() async{
     try {
@@ -19,14 +21,18 @@ class EventController{
   }
 
   Future<String> DeleteEvent(String name , int id) async{
+    //Delete from Local Database
     await eventModel.deleteEvent(name , id);
     await eventModel.deleteGiftsBelongToEvent(id);
+
+    //Delete from Firebase
+    await databaseRef.child('events').child(id.toString()).remove();
     return "$name event has been deleted";
   }
 
   Future<List<Event>> getFriendEvents(int friendID) async {
     try {
-      return await eventModel.getUserEvents(friendID);
+      return await eventModel.getFriendsEvents(friendID);
     }
     catch (e) {
       print("Error fetching friend events from local DB: $e");
@@ -37,14 +43,37 @@ class EventController{
   Future<String> UpdateEvent(String name, String category , String description,
       String location , int id) async{
     try {
+      //Update in Local Database
       await eventModel.updateEvent(name, category, description, location, id);
 
+      // Update event in Firebase
+      await databaseRef.child('events').child(id.toString()).update({
+        'name': name,
+        'category': category,
+        'description': description,
+        'location': location,
+      });
       return "${name} event is updated successfully!";
-
     }
     catch (e) {
       // Handle any errors
       return "Failed to update event: $e";
+    }
+  }
+
+  Future<void> MakeEventPublic(int id) async{
+    try {
+      //Update in Local Database
+      await eventModel.makeEventPublic(id);
+
+      // Update event in Firebase
+      await databaseRef.child('events').child(id.toString()).update({
+        'publish': 1,
+      });
+    }
+    catch (e) {
+      // Handle any errors
+      print("Failed to update event: $e");
     }
   }
 

@@ -49,7 +49,7 @@ class SyncFirebaseAndLocalDB {
               '${event.value['description']}',
               '${event.value['status']}',
               ${event.value['publish'] ?? 0},
-              ${event.value['userID']}
+              ${event.value['UserId']}
             );
           ''');
         }

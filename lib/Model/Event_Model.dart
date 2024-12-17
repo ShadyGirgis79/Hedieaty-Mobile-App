@@ -10,6 +10,7 @@ class Event {
   String status; // "Upcoming", "Current", or "Past"
   String location;
   String description;
+  int? publish;
   List<Gift> gifts;
 
   Event({
@@ -20,6 +21,7 @@ class Event {
     this.status = "Upcoming",
     this.location = "",
     this.description = "",
+    this.publish,
     this.gifts = const [],
   });
 
@@ -33,17 +35,39 @@ class Event {
     required String status,
     String location ='',
     String description ='',
+    int publish = 0,
   }) async {
     String sql = '''
-      INSERT INTO Events ('Name', 'Category', 'Date', 'Location', 'Description', 'Status' , 'UserID')
-      VALUES ("$name", "$category", "$date", "$location", "$description", "$status" , "$UserId")
+      INSERT INTO Events ('Name', 'Category', 'Date', 'Location', 'Description', 'Status', 'Publish' , 'UserID')
+      VALUES ("$name", "$category", "$date", "$location", "$description", "$status", "$publish" , "$UserId")
     ''';
     return await db.insertData(sql);
   }
 
   Future<List<Event>> getUserEvents(int userID) async {
     String sql = '''
-    SELECT * FROM Events WHERE UserID = $userID
+    SELECT * FROM Events WHERE UserID = "$userID"
+    ''';
+    List<Map<String, dynamic>> result = await db.readData(sql);
+
+    return result.map((data) {
+      return Event(
+        id: data['ID'],
+        name: data['Name'],
+        status: data['Status'],
+        category: data['Category'],
+        date: data['Date'],
+        location: data['Location'],
+        description: data['Description'],
+        publish: data['Publish'],
+      );
+    }).toList();
+  }
+
+  Future<List<Event>> getFriendsEvents(int userID) async {
+    String sql = '''
+    SELECT * FROM Events 
+    WHERE UserID = "$userID" And Publish = 1
     ''';
     List<Map<String, dynamic>> result = await db.readData(sql);
 
@@ -88,4 +112,17 @@ class Event {
       WHERE ID = '$id';
     ''');
   }
+
+  Future<void> makeEventPublic(int id) async {
+    await db.updateData('''
+      UPDATE Events
+      SET Publish = 1
+      WHERE ID = '$id';
+    ''');
+  }
+
+  Future<List<Map>> getAllEvents() async {
+    return await db.readData("SELECT * FROM Events");
+  }
+
 }

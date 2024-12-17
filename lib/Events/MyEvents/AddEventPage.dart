@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/AddEventController.dart';
+import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
+import 'package:hedieaty/Controller/Internet.dart';
 
 class AddEventPage extends StatefulWidget {
 
@@ -16,8 +18,10 @@ class _AddEventPageState extends State<AddEventPage> {
   final TextEditingController locController = TextEditingController();
   final TextEditingController desController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
+  final Internet internet = Internet();
   DateTime selectedDate = DateTime.now(); // To store the selected date
   final AddEventController addEventController = AddEventController();
+  final EventController eventController = EventController();
 
   String selectedCategory = "General"; // Default category
   // Dropdown menu categories
@@ -198,6 +202,48 @@ class _AddEventPageState extends State<AddEventPage> {
 
                       ElevatedButton(
                         onPressed: () async {
+                          String name = nameController.text.trim();
+                          String category = selectedCategory;
+                          String description = desController.text.trim();
+                          String location = locController.text.trim();
+                          String date = dateController.text.trim().toString();
+                          String status = "";
+
+                          if (selectedDate.day == DateTime.now().day &&
+                              selectedDate.month == DateTime.now().month &&
+                              selectedDate.year == DateTime.now().year) {
+                            status = "Current";
+                          }
+                          else if (selectedDate.isAfter(DateTime.now())) {
+                            status = "Upcoming";
+                          }
+                          else {
+                            status = "Past";
+                          }
+
+                          bool isConnected = await internet.checkInternetConnection();
+                          if (!isConnected) {
+                            internet.showLoadingIndicator(context); // Show loading until connected
+                            await internet.waitForInternetConnection(); // Wait for internet
+                            Navigator.pop(context); // Close the loading dialog
+                          }
+
+                          final result = await addEventController.addEventPublic(
+                            name: name,
+                            category: category,
+                            status: status,
+                            date: date,
+                            description: description,
+                            location: location,
+                          );
+
+
+                          if (result == null) {
+                            Navigator.pop(context , true); // Close the add event page
+                          }
+                          else {
+                            showMessage(context, result);
+                          }
 
                         },
                         child: const Text("Publish"),

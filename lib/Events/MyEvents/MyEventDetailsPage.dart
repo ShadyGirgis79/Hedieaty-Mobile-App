@@ -23,6 +23,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
   late String Location;
   late String Status;
   late String Date;
+  late int publish;
   late int giftsNumber;
   late int eventId;
 
@@ -36,12 +37,12 @@ class _MyEventDetailsState extends State<MyEventDetails> {
     Location = widget.event.location;
     Status = widget.event.status;
     Date = widget.event.date;
-    eventId = widget.event.id!;
     giftsNumber = widget.event.gifts.length;
+    eventId = widget.event.id!;
+    publish = widget.event.publish!;
   }
 
   Future<void> saveUpdates() async {
-
     final response = await eventController.UpdateEvent(
         Name,
         Category,
@@ -49,7 +50,6 @@ class _MyEventDetailsState extends State<MyEventDetails> {
         Location,
         eventId
     );
-
     showMessage(context, response);
 
     // Update the UI and navigate back
@@ -58,9 +58,8 @@ class _MyEventDetailsState extends State<MyEventDetails> {
       widget.event.category = Category;
       widget.event.description = Description;
       widget.event.location = Location;
+      widget.event.publish = publish;
     });
-
-    Navigator.pop(context , true); // Close the Details event page
   }
 
   final List<String> categoriesEvent = [
@@ -439,22 +438,60 @@ class _MyEventDetailsState extends State<MyEventDetails> {
 
                   const SizedBox(height: 60),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: (){
-                          saveUpdates();
-                        },
-                        child: Text("Save"),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.purpleAccent[700],
+                  Center(
+                    child: publish == 0 && Status != "Past"
+                    ?Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: (){
+                            saveUpdates();
+                            Navigator.pop(context , true); // Close the Details event page
+                          },
+                          child: Text("Save"),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.purpleAccent[700],
+                          ),
                         ),
-                      ),
 
-                      const SizedBox(width: 40),
-                      ElevatedButton(
+                        const SizedBox(width: 20),
+
+                        ElevatedButton(
+                          onPressed: () async {
+
+                            bool isConnected = await internet.checkInternetConnection();
+                            if (!isConnected) {
+                              internet.showLoadingIndicator(context); // Show loading until connected
+                              await internet.waitForInternetConnection(); // Wait for internet
+                              Navigator.pop(context); // Close the loading dialog
+                            }
+
+                            saveUpdates();
+                            await eventController.MakeEventPublic(eventId);
+
+                            Navigator.pop(context , true);
+                          },
+                          child: const Text("Publish"),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.purpleAccent[700],
+                          ),
+                        ),
+                      ],
+                    )
+                    : Status =='Past'
+                        ?ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(context , true);
+                      },
+                      child: const Text("Back"),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.purpleAccent[700],
+                      ),
+                    )
+                        :ElevatedButton(
                         onPressed: () async {
 
                           bool isConnected = await internet.checkInternetConnection();
@@ -464,21 +501,24 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                             Navigator.pop(context); // Close the loading dialog
                           }
 
+                          saveUpdates();
+                          await eventController.MakeEventPublic(eventId);
 
+                          Navigator.pop(context , true);
                         },
-                        child: const Text("Publish"),
+                        child: const Text("Save"),
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.purpleAccent[700],
                         ),
                       ),
-                    ],
                   ),
 
+                  const SizedBox(width: 40),
                 ],
               ),
             ),
-          )
+          ),
       ),
     );
   }
