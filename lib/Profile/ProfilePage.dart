@@ -108,36 +108,65 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           actions: [
-            ElevatedButton(
-              onPressed: () async {
-                // Validate phone number
-                if (validatePhoneNumber(phoneController.text)) {
-                  await ProfileController().updateUserData(
-                    newName: usernameController.text,
-                    newPhoneNumber: phoneController.text,
-                    newPreference: preferenceController.text,
-                  );
-                  setState(() {
-                    username = usernameController.text;
-                    phoneNumber = phoneController.text;
-                    preference = preferenceController.text;
-                  });
-                  // Close dialog
-                  Navigator.of(context).pop();
-                }
-                else {
-                  // Set error message if phone number is invalid
-                  showMessage(context, 'Please enter a valid phone number');
-                }
-              },
-              child: const Text("Save"),
+
+            Column(
+              children: [
+                ElevatedButton(
+                    onPressed: () async{
+                      await profileController.storeProfileImage('', currentUserID.hashCode);
+                      showMessage(context, 'Profile Image has been removed');
+                      setState(() {
+                        profileURL = '';
+                      });
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Remove Image"),
+                ),
+
+                SizedBox(height: 20,),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        // Validate phone number
+                        if (validatePhoneNumber(phoneController.text)) {
+                          await ProfileController().updateUserData(
+                            newName: usernameController.text,
+                            newPhoneNumber: phoneController.text,
+                            newPreference: preferenceController.text,
+                          );
+                          setState(() {
+                            username = usernameController.text;
+                            phoneNumber = phoneController.text;
+                            preference = preferenceController.text;
+                          });
+                          // Close dialog
+                          Navigator.of(context).pop();
+                        }
+                        else {
+                          // Set error message if phone number is invalid
+                          showMessage(context, 'Please enter a valid phone number');
+                        }
+                      },
+                      child: const Text("Save"),
+                    ),
+
+                    SizedBox(width: 20),
+
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Cancel"),
+                    ),
+                  ],
+                )
+
+              ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Cancel"),
-            ),
+
           ],
         );
       },
