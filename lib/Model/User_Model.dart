@@ -26,7 +26,6 @@ class User{
   final db = HedieatyDatabase();
 
   Future<int> insertUser({
-    required int id,
     required String name,
     required String password,
     String profileURL ='',
@@ -35,8 +34,8 @@ class User{
     String preferences='',
   }) async {
     String sql = '''
-      INSERT INTO Users ('ID','Name', 'Password', 'ProfileURL', 'PhoneNumber', 'Email', 'Preferences')
-      VALUES ("$id", "$name", "$password", "$profileURL", "$phoneNumber", "$email", "$preferences")
+      INSERT INTO Users ('Name', 'Password', 'ProfileURL', 'PhoneNumber', 'Email', 'Preferences')
+      VALUES ("$name", "$password", "$profileURL", "$phoneNumber", "$email", "$preferences")
     ''';
     return await db.insertData(sql);
   }
@@ -197,6 +196,46 @@ class User{
       WHERE ID = '$userId' ;
       ''';
     await db.updateData(sql);
+  }
+
+  Future<bool> isDuplicatedUserName(String name) async {
+    String query = '''
+    SELECT * FROM Users 
+    WHERE Name = "$name"
+  ''';
+
+    List<Map<String, dynamic>> result = await db.readData(query);
+    return result.isNotEmpty; // If any result exists, there's a duplicate
+  }
+
+  Future<bool> isDuplicatedUserEmail(String email) async {
+    String query = '''
+    SELECT * FROM Users 
+    WHERE Email = "$email" 
+  ''';
+
+    List<Map<String, dynamic>> result = await db.readData(query);
+    return result.isNotEmpty; // If any result exists, there's a duplicate
+  }
+
+  Future<bool> isDuplicatedUserPhone(String phone) async {
+    String query = '''
+    SELECT * FROM Users 
+    WHERE PhoneNumber = "$phone"
+  ''';
+
+    List<Map<String, dynamic>> result = await db.readData(query);
+    return result.isNotEmpty; // If any result exists, there's a duplicate
+  }
+
+  Future<bool> isDuplicatedUserPassword(String? password) async {
+    String query = '''
+    SELECT * FROM Users 
+    WHERE Password = "$password"
+  ''';
+
+    List<Map<String, dynamic>> result = await db.readData(query);
+    return result.isNotEmpty; // If any result exists, there's a duplicate
   }
 
 }

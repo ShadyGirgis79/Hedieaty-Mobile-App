@@ -90,8 +90,9 @@ class SyncFirebaseAndLocalDB {
         for (var friend in friendsData.entries) {
           await localDB.insertData('''
             INSERT OR REPLACE INTO Friends 
-            (UserID, FriendID) 
+            (ID, UserID, FriendID) 
             VALUES (
+            ${int.parse(friend.key)},
               ${friend.value['userID']},
               ${friend.value['friendID']}
             );
