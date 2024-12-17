@@ -84,22 +84,31 @@ class SyncFirebaseAndLocalDB {
     });
 
     // Sync Friends
+    // Sync Friends
     FirebaseDatabase.instance.ref('friends').onValue.listen((event) async {
-      final friendsData = event.snapshot.value as Map<dynamic, dynamic>?;
-      if (friendsData != null) {
-        for (var friend in friendsData.entries) {
-          await localDB.insertData('''
-            INSERT OR REPLACE INTO Friends 
-            (ID, UserID, FriendID) 
-            VALUES (
-            ${int.parse(friend.key)},
-              ${friend.value['userID']},
-              ${friend.value['friendID']}
-            );
-          ''');
+      final friendsData = event.snapshot.value;
+      if (friendsData is List<dynamic>) {
+        // Handle data as List
+        for (int i = 0; i < friendsData.length; i++) {
+          var friend = friendsData[i];
+          if (friend != null) {// Avoid null entries in the list
+            await localDB.insertData('''
+          INSERT OR REPLACE INTO Friends 
+          (ID, UserID, FriendID) 
+          VALUES (
+            ${i},  -- Use the index as the ID
+            ${friend['UserId']},
+            ${friend['FriendId']}
+          );
+        ''');
+          }
         }
-        print("Friends synced to local database");
       }
+      else {
+        print("Friends data is in an unsupported format: ${friendsData.runtimeType}");
+      }
+
+      print("Friends synced to local database");
     });
   }
 }

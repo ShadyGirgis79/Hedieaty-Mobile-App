@@ -53,6 +53,8 @@ class _AddFriendState extends State<AddFriendPage> {
             child: Column(
               children: [
                 const SizedBox(height: 50),
+
+                //Text field for Name
                 TextField(
                   controller: nameController,
                   decoration: const InputDecoration(
@@ -63,6 +65,7 @@ class _AddFriendState extends State<AddFriendPage> {
                 ),
                 const SizedBox(height: 20),
 
+                //Text field for Phone
                 TextField(
                   controller: phoneController,
                   decoration: InputDecoration(
@@ -84,8 +87,11 @@ class _AddFriendState extends State<AddFriendPage> {
                 ),
 
                 const SizedBox(height: 40),
+
                 ElevatedButton(
                   onPressed: () async {
+
+                    //Check for internet connection
                     bool isConnected = await internet.checkInternetConnection();
                     if (!isConnected) {
                       internet.showLoadingIndicator(context); // Show loading until connected

@@ -53,6 +53,14 @@ class User{
     return await db.readData(sql);
   }
 
+  Future<Map<String, dynamic>?> getUserByPhoneNumber(String phoneNumber) async {
+    String sql = '''
+      SELECT * FROM Users WHERE PhoneNumber = "$phoneNumber"
+    ''';
+    List<Map<String, dynamic>> result = await db.readData(sql);
+    return result.isNotEmpty ? result.first : null;
+  }
+
   static Future<User?> fetchUserByEmailAndPassword(String email , String password) async {
     final db = HedieatyDatabase();
     final response = await db.readData(
@@ -130,37 +138,12 @@ class User{
     await db.updateData(sql);
   }
 
-  Future<Map<String, dynamic>?> getUserByPhoneNumber(String phoneNumber) async {
-    String sql = '''
-      SELECT * FROM Users WHERE PhoneNumber = "$phoneNumber"
-    ''';
-    List<Map<String, dynamic>> result = await db.readData(sql);
-    return result.isNotEmpty ? result.first : null;
-  }
-
-// Add a friend relationship
-  Future<void> addFriend(int userId, int friendId) async {
-    String sql = '''
-      INSERT INTO Friends (UserID, FriendID)
-      VALUES ("$userId", "$friendId")
-    ''';
-    await db.insertData(sql);
-  }
-
   Future<int> updateUserID(String email, String password, int newId) async {
     String sql = '''
     UPDATE Users SET ID = "$newId"
     WHERE Email = "$email" AND Password = "$password"
     ''';
     return await db.updateData(sql);
-  }
-
-  Future<bool> checkIfFriends(int userId, int friendId) async {
-    String sql = '''
-    SELECT * FROM Friends WHERE UserID = $userId AND FriendID = $friendId
-  ''';
-    List<Map<String, dynamic>> result = await db.readData(sql);
-    return result.isNotEmpty;
   }
 
   Future<List<User>> getFriends(int userId) async {
@@ -239,7 +222,3 @@ class User{
   }
 
 }
-
-
-
-
