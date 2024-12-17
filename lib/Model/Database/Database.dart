@@ -82,9 +82,9 @@ class HedieatyDatabase{
 
           await db.execute('''
           CREATE TABLE IF NOT EXISTS 'Friends' (
+            'ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             'UserID' INTEGER NOT NULL,
             'FriendID' INTEGER NOT NULL,
-            PRIMARY KEY(userID, friendID),
             FOREIGN KEY(userID) REFERENCES Users (ID),
             FOREIGN KEY(friendID) REFERENCES Users (ID)
           );
