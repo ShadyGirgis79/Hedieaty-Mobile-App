@@ -19,6 +19,7 @@ class _FriendsEventDetailsPageState extends State<FriendsEventDetailsPage> {
   late String Location;
   late String Status;
   late String Date;
+  late int giftsNumber;
   late int eventId;
 
   @override
@@ -32,6 +33,7 @@ class _FriendsEventDetailsPageState extends State<FriendsEventDetailsPage> {
     Status = widget.event.status;
     Date = widget.event.date;
     eventId = widget.event.id!;
+    giftsNumber = widget.event.gifts.length;
   }
 
   @override
@@ -52,6 +54,8 @@ class _FriendsEventDetailsPageState extends State<FriendsEventDetailsPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+
+                  //Container for Name
                   Container(
                     decoration:BoxDecoration(
                       //color: Colors.white,
@@ -77,6 +81,7 @@ class _FriendsEventDetailsPageState extends State<FriendsEventDetailsPage> {
 
                   const SizedBox(height: 10),
 
+                  //Container of Category
                   Container(
                     decoration:BoxDecoration(
                       //color: Colors.white,
@@ -128,6 +133,7 @@ class _FriendsEventDetailsPageState extends State<FriendsEventDetailsPage> {
 
                   const SizedBox(height: 10),
 
+                  //Container of location
                   Container(
                     decoration:BoxDecoration(
                       //color: Colors.white,
@@ -153,6 +159,7 @@ class _FriendsEventDetailsPageState extends State<FriendsEventDetailsPage> {
 
                   const SizedBox(height: 10),
 
+                  //Container of Date
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -177,6 +184,35 @@ class _FriendsEventDetailsPageState extends State<FriendsEventDetailsPage> {
                       leading: const Icon(Icons.calendar_today),
                     ),
                   ),
+
+                  const SizedBox(height: 10),
+
+                  //Container of Gifts
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
+                    ),
+                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                    child: ListTile(
+                      title: const Text(
+                        "Gifts",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${giftsNumber}",
+                        style: const TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      leading: const Icon(Icons.card_giftcard),
+                    ),
+                  ),
+
                   const SizedBox(height: 60),
                 ],
               ),

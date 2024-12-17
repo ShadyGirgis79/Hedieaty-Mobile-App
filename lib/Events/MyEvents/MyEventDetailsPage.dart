@@ -23,6 +23,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
   late String Location;
   late String Status;
   late String Date;
+  late int giftsNumber;
   late int eventId;
 
   @override
@@ -36,6 +37,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
     Status = widget.event.status;
     Date = widget.event.date;
     eventId = widget.event.id!;
+    giftsNumber = widget.event.gifts.length;
   }
 
   Future<void> saveUpdates() async {
@@ -93,6 +95,8 @@ class _MyEventDetailsState extends State<MyEventDetails> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+
+                  //Container for Name
                   Container(
                     decoration:BoxDecoration(
                       //color: Colors.white,
@@ -159,6 +163,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
 
                   const SizedBox(height: 10),
 
+                  //Container for Category
                   Container(
                     decoration:BoxDecoration(
                       //color: Colors.white,
@@ -311,6 +316,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
 
                   const SizedBox(height: 10),
 
+                  //Container for location
                   Container(
                     decoration:BoxDecoration(
                       //color: Colors.white,
@@ -377,6 +383,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
 
                   const SizedBox(height: 10),
 
+                  //Container for Date
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -402,6 +409,33 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                     ),
                   ),
 
+                  const SizedBox(height: 10),
+
+                  //Container for Gifts
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 2.0,
+                      ),
+                    ),
+                    margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                    child: ListTile(
+                      title: const Text(
+                        "Gifts",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${giftsNumber}",
+                        style: const TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      leading: const Icon(Icons.card_giftcard),
+                    ),
+                  ),
 
                   const SizedBox(height: 60),
 

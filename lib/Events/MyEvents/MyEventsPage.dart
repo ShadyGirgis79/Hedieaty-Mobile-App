@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
+import 'package:hedieaty/Controller/GiftController.dart';
 import 'package:hedieaty/Events/MyEvents/AddEventPage.dart';
 import 'package:hedieaty/Events/MyEvents/MyEventDetailsPage.dart';
 import 'package:hedieaty/Gifts/MyGifts/MyGiftsPage.dart';
@@ -18,6 +19,7 @@ class _MyEventPageState extends State<MyEventPage> {
   final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
   final EventController eventController = EventController();
   TextEditingController searchController = TextEditingController();
+  final GiftController giftController = GiftController();
   List<Event> events = [];
   List<Event> filteredEvents = [];
   String sortBy = 'name';
@@ -36,7 +38,17 @@ class _MyEventPageState extends State<MyEventPage> {
       filteredEvents = fetchedEvents ?? []; // Initially, all events are displayed
     });
 
+    fetchEventGifts(filteredEvents);
+  }
 
+  void fetchEventGifts(List<Event> events) async{
+    for (var event in events) {
+      final gifts = await giftController.giftsList(event.id!);
+
+      setState(() {
+        event.gifts = gifts!;
+      });
+    }
   }
 
   void sortEvents(String sortBy) {
