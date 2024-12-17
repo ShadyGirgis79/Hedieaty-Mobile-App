@@ -96,7 +96,7 @@ class SyncFirebaseAndLocalDB {
           INSERT OR REPLACE INTO Friends 
           (ID, UserID, FriendID) 
           VALUES (
-            ${i},  -- Use the index as the ID
+            ${i},  
             ${friend['UserId']},
             ${friend['FriendId']}
           );
