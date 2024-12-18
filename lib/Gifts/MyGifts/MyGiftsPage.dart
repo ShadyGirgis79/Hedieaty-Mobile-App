@@ -206,17 +206,11 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
                                             onPressed: () async {
                                               final String result = await giftController.DeleteGift(gift.name, gift.id!);
 
-                                              if (result == "${gift.name} event has been deleted") {
+                                              if (result == "${gift.name} gift has been deleted") {
                                                 setState(() {
-                                                  gifts.removeAt(index);
-                                                  filteredGifts.removeAt(index);
-                                                  // Directly remove from the lists
-                                                  gifts.removeWhere((g) => g.id == gift.id);
-                                                  filteredGifts.removeWhere((g) => g.id == gift.id);
+                                                  gifts.removeWhere((g) => g.id == gift.id); // Remove from the main list
+                                                  filteredGifts.removeWhere((g) => g.id == gift.id); // Remove from the filtered list
                                                 });
-
-                                                // Optionally reload gifts to ensure consistency
-                                                await loadGifts();
                                               }
 
                                               showMessage(context, result);
