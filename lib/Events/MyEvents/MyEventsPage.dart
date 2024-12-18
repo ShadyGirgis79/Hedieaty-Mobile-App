@@ -7,6 +7,7 @@ import 'package:hedieaty/Events/MyEvents/AddEventPage.dart';
 import 'package:hedieaty/Events/MyEvents/MyEventDetailsPage.dart';
 import 'package:hedieaty/Gifts/MyGifts/MyGiftsPage.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
+import 'package:intl/intl.dart';
 
 class MyEventPage extends StatefulWidget {
   const MyEventPage({super.key});
@@ -20,6 +21,7 @@ class _MyEventPageState extends State<MyEventPage> {
   final EventController eventController = EventController();
   TextEditingController searchController = TextEditingController();
   final GiftController giftController = GiftController();
+  DateFormat dateFormat = DateFormat("dd-MM-yyyy");
   List<Event> events = [];
   List<Event> filteredEvents = [];
   String sortBy = 'name';
@@ -34,11 +36,16 @@ class _MyEventPageState extends State<MyEventPage> {
   Future<void> loadEvents() async {
     final fetchedEvents = await eventController.eventsList();
     setState(() {
-      events = fetchedEvents ?? [];
-      filteredEvents = fetchedEvents ?? []; // Initially, all events are displayed
+      events = fetchedEvents?.map((event) {
+        // Parse the event's date
+        DateTime eventDate = dateFormat.parse(event.date); // Assuming `event.date` is in "dd-MM-yyyy" format
+        event.status = determineEventStatus(eventDate); // Update status dynamically
+        return event;
+      }).toList() ?? [];
+      filteredEvents = events; // Initially, all events are displayed
     });
 
-    fetchEventGifts(filteredEvents);
+    fetchEventGifts(filteredEvents); // Fetch gifts for the updated events
   }
 
   void fetchEventGifts(List<Event> events) async{
@@ -48,6 +55,19 @@ class _MyEventPageState extends State<MyEventPage> {
       setState(() {
         event.gifts = gifts!;
       });
+    }
+  }
+
+  String determineEventStatus(DateTime eventDate) {
+    final DateTime now = DateTime.now();
+    if (eventDate.isBefore(now)) {
+      return 'Past';
+    } else if (eventDate.year == now.year &&
+        eventDate.month == now.month &&
+        eventDate.day == now.day) {
+      return 'Current';
+    } else {
+      return 'Upcoming';
     }
   }
 

@@ -4,6 +4,7 @@ import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Controller/GiftController.dart';
 import 'package:hedieaty/Events/FriendEvents/FriendsEventList.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
+import 'package:intl/intl.dart';
 
 class FriendsEventPage extends StatefulWidget {
   final int friendId;
@@ -20,6 +21,7 @@ class _FriendsEventPageState extends State<FriendsEventPage> {
   final EventController eventController = EventController();
   TextEditingController searchController = TextEditingController();
   final GiftController giftController = GiftController();
+  DateFormat dateFormat = DateFormat("dd-MM-yyyy");
   List<Event> events = [];
   List<Event> filteredEvents = [];
   String sortBy = 'name';
@@ -36,8 +38,13 @@ class _FriendsEventPageState extends State<FriendsEventPage> {
   void loadFriendEvents() async {
     final fetchedEvents = await eventController.getFriendEvents(widget.friendId);
     setState(() {
-      events = fetchedEvents;
-      filteredEvents = fetchedEvents;
+      events = fetchedEvents.map((event) {
+        // Parse the event's date
+        DateTime eventDate = dateFormat.parse(event.date); // Assuming `event.date` is in "dd-MM-yyyy" format
+        event.status = determineEventStatus(eventDate); // Update status dynamically
+        return event;
+      }).toList();
+      filteredEvents = events; // Initially, all events are displayed
     });
     
     fetchEventGifts(filteredEvents);
@@ -50,6 +57,19 @@ class _FriendsEventPageState extends State<FriendsEventPage> {
       setState(() {
         event.gifts = gifts!;
       });
+    }
+  }
+
+  String determineEventStatus(DateTime eventDate) {
+    final DateTime now = DateTime.now();
+    if (eventDate.isBefore(now)) {
+      return 'Past';
+    } else if (eventDate.year == now.year &&
+        eventDate.month == now.month &&
+        eventDate.day == now.day) {
+      return 'Current';
+    } else {
+      return 'Upcoming';
     }
   }
 
