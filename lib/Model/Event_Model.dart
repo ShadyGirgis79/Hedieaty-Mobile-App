@@ -124,13 +124,15 @@ class Event {
 
   // Update user data in the database
   Future<void> updateEvent(String name ,String category , String description,
-      String location, int id) async {
+      String location, String date , String status , int id) async {
     await db.updateData('''
       UPDATE Events
       SET Name = '$name',
           Category = '$category',
           Description = '$description',
-          Location = '$location'
+          Location = '$location',
+          Date = '$date',
+          Status = '$status'
       WHERE ID = '$id';
     ''');
   }

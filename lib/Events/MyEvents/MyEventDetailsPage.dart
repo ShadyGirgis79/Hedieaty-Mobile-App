@@ -3,6 +3,7 @@ import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Controller/Internet.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
+import 'package:intl/intl.dart';
 
 class MyEventDetails extends StatefulWidget {
 
@@ -17,13 +18,14 @@ class MyEventDetails extends StatefulWidget {
 class _MyEventDetailsState extends State<MyEventDetails> {
   final EventController eventController = EventController();
   final Internet internet = Internet();
+  DateFormat dateFormat = DateFormat("dd-MM-yyyy");
   late String Name;
   late String Category;
   late String Description;
   late String Location;
   late String Status;
   late String Date;
-  late int publish;
+  late int Publish;
   late int giftsNumber;
   late int eventId;
 
@@ -39,7 +41,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
     Date = widget.event.date;
     giftsNumber = widget.event.gifts.length;
     eventId = widget.event.id!;
-    publish = widget.event.publish!;
+    Publish = widget.event.publish!;
   }
 
   Future<void> saveUpdates() async {
@@ -48,6 +50,8 @@ class _MyEventDetailsState extends State<MyEventDetails> {
         Category,
         Description,
         Location,
+        Date,
+        Status,
         eventId
     );
     showMessage(context, response);
@@ -58,7 +62,9 @@ class _MyEventDetailsState extends State<MyEventDetails> {
       widget.event.category = Category;
       widget.event.description = Description;
       widget.event.location = Location;
-      widget.event.publish = publish;
+      widget.event.publish = Publish;
+      widget.event.status = Status;
+      widget.event.date = Date;
     });
   }
 
@@ -383,6 +389,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                   const SizedBox(height: 10),
 
                   //Container for Date
+                  // Container for Date
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -405,6 +412,45 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                         ),
                       ),
                       leading: const Icon(Icons.calendar_today),
+                      trailing: Status == "Upcoming" || Status == "Current"
+                          ? IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () async {
+                          // Allow the user to pick a new date
+                          DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: dateFormat.parse(Date), // Use the current date
+                            firstDate: DateTime(2000), // Earliest date available
+                            lastDate: DateTime(2100), // Latest date available
+                          );
+
+                          if (pickedDate != null) {
+                            // Format the selected date as a string
+                            String formattedDate = "${pickedDate.day.toString().padLeft(2, '0')}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.year}";
+
+                            // Update the status based on the selected date
+                            String updatedStatus;
+                            DateTime currentDate = DateTime.now();
+                            if (pickedDate.isBefore(currentDate)) {
+                              updatedStatus = "Past";
+                            }
+                            else if (pickedDate.isAtSameMomentAs(currentDate) ||
+                                pickedDate.isAfter(currentDate)) {
+                              updatedStatus = "Upcoming";
+                            }
+                            else {
+                              updatedStatus = "Current"; // This shouldn't happen logically
+                            }
+
+                            // Update the UI
+                            setState(() {
+                              Date = formattedDate;
+                              Status = updatedStatus;
+                            });
+                          }
+                        },
+                      )
+                          : null, // Null when the event is not editable
                     ),
                   ),
 
@@ -439,7 +485,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                   const SizedBox(height: 30),
 
                   Center(
-                    child: publish == 0 && Status != "Past"
+                    child: Publish == 0 && Status != "Past"
                     ?Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

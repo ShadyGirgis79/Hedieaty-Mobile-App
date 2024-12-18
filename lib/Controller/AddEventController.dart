@@ -19,7 +19,7 @@ class AddEventController{
     required String status,
   }) async {
     if (name.isEmpty || date.isEmpty) {
-      return "Please fill out at least the name and category and date";
+      return "Please fill out at least the name and date";
     }
     try {
       // Create the Event object
@@ -67,7 +67,7 @@ class AddEventController{
     required String status,
   }) async {
     if (name.isEmpty || date.isEmpty) {
-      return "Please fill out at least the name and category and date";
+      return "Please fill out at least the name and date";
     }
     try {
       // Create the Event object

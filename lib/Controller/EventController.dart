@@ -60,10 +60,10 @@ class EventController{
   }
 
   Future<String> UpdateEvent(String name, String category , String description,
-      String location , int id) async{
+      String location ,String date, String status , int id) async{
     try {
       //Update in Local Database
-      await eventModel.updateEvent(name, category, description, location, id);
+      await eventModel.updateEvent(name, category, description, location, date, status, id);
 
       // Update event in Firebase
       await databaseRef.child('events').child(id.toString()).update({
@@ -71,6 +71,8 @@ class EventController{
         'category': category,
         'description': description,
         'location': location,
+        'date': date,
+        'status': status,
       });
       return "${name} event is updated successfully!";
     }
