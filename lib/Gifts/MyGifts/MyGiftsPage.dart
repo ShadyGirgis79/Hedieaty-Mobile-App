@@ -202,15 +202,17 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
                                           ElevatedButton(
                                             onPressed: () async {
                                               final String result =
-                                              await giftController.DeleteGift(
-                                                  gift.name, gift.id!);
+                                              await giftController.DeleteGift(gift.name, gift.id!);
                                               if (result ==
                                                   "${gift.name} event has been deleted") {
                                                 // Remove the gift from the list and update the UI
                                                 setState(() {
-                                                  gifts.removeAt(index);
-                                                  filteredGifts.removeWhere((g) => g.name == gift.name && g.id == gift.id);
+                                                  // Remove from the main list
+                                                  gifts.removeWhere((g) => g.id == gift.id);
+                                                  // Remove from the filtered list
+                                                  filteredGifts.removeWhere((g) => g.id == gift.id);
                                                 });
+                                                await loadGifts();
                                               }
                                               showMessage(context, result);
                                               Navigator.pop(context, true);

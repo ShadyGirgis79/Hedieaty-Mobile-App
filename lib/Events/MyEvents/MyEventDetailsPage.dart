@@ -436,7 +436,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                     ),
                   ),
 
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 30),
 
                   Center(
                     child: publish == 0 && Status != "Past"
@@ -514,7 +514,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                       ),
                   ),
 
-                  const SizedBox(width: 40),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),

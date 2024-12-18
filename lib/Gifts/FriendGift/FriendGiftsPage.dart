@@ -32,7 +32,7 @@ class _FriendGiftsPageState extends State<FriendGiftsPage> {
   }
 
   Future<void> loadGifts() async {
-    final fetchedGifts = await giftController.giftsList(EventId);
+    final fetchedGifts = await giftController.friendGiftsList(EventId);
     setState(() {
       gifts = fetchedGifts ?? [];
       filteredGifts = fetchedGifts ?? []; // Initially, all events are displayed

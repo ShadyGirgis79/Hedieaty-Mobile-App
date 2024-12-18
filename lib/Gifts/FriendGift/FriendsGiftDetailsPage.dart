@@ -215,7 +215,7 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
 
                   Center(
                     child: showButton == true
-                    ? ElevatedButton(
+                      ? ElevatedButton(
                       onPressed: () async {
 
                         bool isConnected = await internet.checkInternetConnection();
@@ -240,7 +240,7 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                         backgroundColor: isPledged ? Colors.red : Colors.green,
                       ),
                     )
-                    :ElevatedButton(
+                      : ElevatedButton(
                       onPressed: () async {
                         Navigator.pop(context, true);
                       },

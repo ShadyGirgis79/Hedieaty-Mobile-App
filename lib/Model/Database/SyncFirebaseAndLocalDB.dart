@@ -34,53 +34,61 @@ class SyncFirebaseAndLocalDB {
 
     // Sync Events
     FirebaseDatabase.instance.ref('events').onValue.listen((event) async {
-      final eventsData = event.snapshot.value as Map<dynamic, dynamic>?;
-      if (eventsData != null) {
-        for (var event in eventsData.entries) {
-          await localDB.insertData('''
+      final eventsData = event.snapshot.value;
+      if (eventsData is List) {
+        // Handle as List
+        for (int index = 0; index < eventsData.length; index++) {
+          final event = eventsData[index];
+          if (event != null) {
+            await localDB.insertData('''
             INSERT OR REPLACE INTO Events 
             (ID, Name, Category, Date, Location, Description, Status, Publish, UserID) 
             VALUES (
-              ${int.parse(event.key)},
-              '${event.value['name']}',
-              '${event.value['category']}',
-              '${event.value['date']}',
-              '${event.value['location']}',
-              '${event.value['description']}',
-              '${event.value['status']}',
-              ${event.value['publish'] ?? 0},
-              ${event.value['UserId']}
+              $index,
+              '${event['name']}',
+              '${event['category']}',
+              '${event['date']}',
+              '${event['location']}',
+              '${event['description']}',
+              '${event['status']}',
+              ${event['publish'] ?? 0},
+              ${event['UserId']}
             );
           ''');
+          }
         }
-        print("Events synced to local database");
       }
+      print("Events synced to local database");
     });
 
     // Sync Gifts
     FirebaseDatabase.instance.ref('gifts').onValue.listen((event) async {
-      final giftsData = event.snapshot.value as Map<dynamic, dynamic>?;
-      if (giftsData != null) {
-        for (var gift in giftsData.entries) {
-          await localDB.insertData('''
+      final giftsData = event.snapshot.value;
+      if (giftsData is List) {
+        // Handle as List
+        for (int index = 0; index < giftsData.length; index++) {
+          final gift = giftsData[index];
+          if (gift != null) {
+            await localDB.insertData('''
             INSERT OR REPLACE INTO Gifts 
             (ID, Name, Category, Status, Price, Description, Image, Publish, EventID, PledgedID) 
             VALUES (
-              ${int.parse(gift.key)},
-              '${gift.value['name']}',
-              '${gift.value['category']}',
-              '${gift.value['status']}',
-              ${gift.value['price'] ?? 0.0},
-              '${gift.value['description']}',
-              '${gift.value['image']}',
-              ${gift.value['publish'] ?? 0},
-              ${gift.value['eventID']},
-              ${gift.value['pledgedID']}
+              $index,
+              '${gift['name']}',
+              '${gift['category']}',
+              '${gift['status']}',
+              ${gift['price'] ?? 0.0},
+              '${gift['description']}',
+              '${gift['image']}',
+              ${gift['publish'] ?? 0},
+              ${gift['EventId']},
+              ${gift['PledgedId']}
             );
           ''');
+          }
         }
-        print("Gifts synced to local database");
       }
+      print("Gifts synced to local database");
     });
 
     // Sync Friends

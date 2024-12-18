@@ -10,6 +10,7 @@ class Gift {
   String description;
   String imageURL;
   double price;
+  int? publish;
 
 
   Gift({
@@ -19,7 +20,9 @@ class Gift {
     required this.status,
     this.description="",
     this.imageURL="",
-    required this.price});
+    required this.price,
+    this.publish
+  });
 
 
   final db = HedieatyDatabase();
@@ -33,15 +36,16 @@ class Gift {
     required double price,
     String description ="",
     String image ="",
+    int publish = 0,
   }) async {
     String sql = '''
-      INSERT INTO Gifts ('Name', 'Category', 'Status', 'Price', 'Description', 'Image' , 'EventID' , 'PledgedID')
-      VALUES ("$name", "$category", "$status", "$price", "$description", "$image" , "$EventId" , "$PledgedId")
+      INSERT INTO Gifts ('Name', 'Category', 'Status', 'Price', 'Description', 'Image' , 'Publish' , 'EventID' , 'PledgedID')
+      VALUES ("$name", "$category", "$status", "$price", "$description", "$image" , "$publish" , "$EventId" , "$PledgedId")
     ''';
     return await db.insertData(sql);
   }
 
-  Future<List<Gift>> getEventGifts(int eventId) async {
+  Future<List<Gift>> getUserEventGifts(int eventId) async {
     String sql = '''
     SELECT * FROM Gifts WHERE EventID = $eventId
     ''';
@@ -56,6 +60,28 @@ class Gift {
         price: data['Price'],
         imageURL: data['Image'],
         description: data['Description'],
+        publish: data['Publish'],
+      );
+    }).toList();
+  }
+
+  Future<List<Gift>> getFriendEventGifts(int eventId) async {
+    String sql = '''
+    SELECT * FROM Gifts 
+    WHERE EventID = $eventId AND Publish = 1
+    ''';
+    List<Map<String, dynamic>> result = await db.readData(sql);
+
+    return result.map((data) {
+      return Gift(
+        id: data['ID'],
+        name: data['Name'],
+        status: data['Status'],
+        category: data['Category'],
+        price: data['Price'],
+        imageURL: data['Image'],
+        description: data['Description'],
+        publish: data['Publish'],
       );
     }).toList();
   }
@@ -168,6 +194,17 @@ class Gift {
     }).toList();
   }
 
+  Future<List<Map>> getAllGifts() async {
+    return await db.readData("SELECT * FROM Gifts");
+  }
+
+  Future<void> makeGiftPublic(int id) async {
+    await db.updateData('''
+      UPDATE Gifts
+      SET Publish = 1
+      WHERE ID = '$id';
+    ''');
+  }
 
 }
 

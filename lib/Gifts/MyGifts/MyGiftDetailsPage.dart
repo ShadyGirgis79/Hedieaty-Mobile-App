@@ -23,13 +23,14 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
   final Internet internet = Internet();
   final ImagePicker picker = ImagePicker();
   bool isPledged = false;
+  String? ImageURL;
+  XFile? image;
 
   late String Name;
   late String Category;
   late String Status;
   late String Description;
-  String? ImageURL;
-  XFile? image;
+  late int Publish;
   late double Price;
   late int giftId;
   late String pledgedName;
@@ -52,6 +53,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
     Description = widget.gift.description;
     ImageURL = widget.gift.imageURL;
     Price = widget.gift.price;
+    Publish = widget.gift.publish!;
     giftId = widget.gift.id!;
     isPledged = Status != "Available";
 
@@ -97,8 +99,6 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
       widget.gift.price = Price;
       widget.gift.imageURL = ImageURL!;
     });
-
-    Navigator.pop(context, true);
   }
 
   Future<void> fetchPledgedUserName() async {
@@ -141,6 +141,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
                 // Image preview with border and upload button
                 Center(
                   child: Column(
@@ -498,47 +499,88 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                   ),
                 ),
 
-                const SizedBox(height: 10),
-
-                const SizedBox(height: 20),
-
                 // Save Gift Button
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:[
-                    ElevatedButton(
-                      onPressed: saveUpdate,
-                      child: const Text(
-                        'Save Changes',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.purpleAccent[700],
-                      ),
+                const SizedBox(height: 40),
+
+                Center(
+                  child: Publish == 0
+                    ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children:[
+                        ElevatedButton(
+                          onPressed: () async {
+                            await saveUpdate();
+                            Navigator.pop(context, true);
+                          },
+                          child: const Text(
+                            'Save Changes',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.purpleAccent[700],
+                          ),
+                        ),
+
+                        const SizedBox(width: 40),
+
+                        ElevatedButton(
+                          onPressed: () async {
+
+                            bool isConnected = await internet.checkInternetConnection();
+                            if (!isConnected) {
+                              internet.showLoadingIndicator(context); // Show loading until connected
+                              await internet.waitForInternetConnection(); // Wait for internet
+                              Navigator.pop(context); // Close the loading dialog
+                            }
+
+
+
+                          },
+                          child: const Text("Publish"),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.purpleAccent[700],
+                          ),
+                        ),
+                      ]
+                  )
+                    : Status == "Available"
+                        ? ElevatedButton(
+                    onPressed: () async{
+                      bool isConnected = await internet.checkInternetConnection();
+                      if (!isConnected) {
+                        internet.showLoadingIndicator(context); // Show loading until connected
+                        await internet.waitForInternetConnection(); // Wait for internet
+                        Navigator.pop(context); // Close the loading dialog
+                      }
+
+                      await saveUpdate();
+
+                      Navigator.pop(context, true);
+                    },
+                    child: const Text(
+                      'Save Changes',
+                      style: TextStyle(fontSize: 18),
                     ),
-
-                    const SizedBox(width: 40),
-
-                    ElevatedButton(
-                      onPressed: () async {
-
-                        bool isConnected = await internet.checkInternetConnection();
-                        if (!isConnected) {
-                          internet.showLoadingIndicator(context); // Show loading until connected
-                          await internet.waitForInternetConnection(); // Wait for internet
-                          Navigator.pop(context); // Close the loading dialog
-                        }
-
-                      },
-                      child: const Text("Publish"),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.purpleAccent[700],
-                      ),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.purpleAccent[700],
                     ),
-                  ]
+                  )
+                        : ElevatedButton(
+                    onPressed: (){
+                      Navigator.pop(context, true);
+                    },
+                    child: const Text(
+                      'Back',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.purpleAccent[700],
+                    ),
+                  ),
                 ),
               ],
             ),

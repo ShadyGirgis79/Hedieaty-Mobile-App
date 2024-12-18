@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hedieaty/Controller/AddGiftController.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
+import 'package:hedieaty/Controller/Internet.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddGiftPage extends StatefulWidget {
@@ -19,6 +20,7 @@ class _AddGiftPageState extends State<AddGiftPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController desController = TextEditingController();
+  final Internet internet = Internet();
   final AddGiftController addGiftController = AddGiftController();
   late int EventId;
   late String EventName;
@@ -169,7 +171,7 @@ class _AddGiftPageState extends State<AddGiftPage> {
                 children: [
                   // Save Button
                   ElevatedButton(
-                    onPressed: () async{
+                    onPressed: () async {
                       final String name = nameController.text.trim();
                       final String description = desController.text.trim();
                       final String priceText = priceController.text.trim();
@@ -206,6 +208,37 @@ class _AddGiftPageState extends State<AddGiftPage> {
 
                   ElevatedButton(
                     onPressed: () async {
+                      final String name = nameController.text.trim();
+                      final String description = desController.text.trim();
+                      final String priceText = priceController.text.trim();
+                      final double? price = double.tryParse(priceText);
+                      final String status = "Available";
+                      final int pledgedId = 0;
+
+                      bool isConnected = await internet.checkInternetConnection();
+                      if (!isConnected) {
+                        internet.showLoadingIndicator(context); // Show loading until connected
+                        await internet.waitForInternetConnection(); // Wait for internet
+                        Navigator.pop(context); // Close the loading dialog
+                      }
+
+                      final result = await addGiftController.addGiftPublic(
+                        name: name,
+                        category: selectedCategory,
+                        description: description,
+                        image: image?.path ?? "", // Save the image path or an empty string if no image
+                        price: price!,
+                        status: status,
+                        eventId: EventId,
+                        pledgedId: pledgedId,
+                      );
+
+                      if (result == null) {
+                        Navigator.pop(context , true); // Close the add event page
+                      }
+                      else {
+                        showMessage(context, result);
+                      }
 
                     },
                     child: const Text("Publish"),

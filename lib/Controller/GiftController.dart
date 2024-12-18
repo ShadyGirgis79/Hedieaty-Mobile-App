@@ -1,5 +1,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'package:hedieaty/Model/User_Model.dart' as LocalUser;
 
@@ -7,10 +8,21 @@ class GiftController{
   final Gift giftModel= Gift(name: "", category: "", price: 0, status: "");
   final LocalUser.User userModel = LocalUser.User(name: '', email: '', password: '', phoneNumber: '');
   final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
+  final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
 
   Future<List<Gift>?> giftsList(int eventId) async {
     try{
-      return await giftModel.getEventGifts(eventId);
+      return await giftModel.getUserEventGifts(eventId);
+    }
+    catch (e) {
+      print("Error fetching user from local DB: $e");
+      return null;
+    }
+  }
+
+  Future<List<Gift>?> friendGiftsList(int eventId) async {
+    try{
+      return await giftModel.getFriendEventGifts(eventId);
     }
     catch (e) {
       print("Error fetching user from local DB: $e");
@@ -19,16 +31,32 @@ class GiftController{
   }
 
   Future<String> DeleteGift(String name , int id) async{
+    // Delete from Local Database
     await giftModel.deleteGift(name, id);
+
+    // Delete from Firebase
+    await databaseRef.child('gifts').child(id.toString()).remove();
+
     return "$name gift has been deleted";
   }
 
   Future<String> UpdateGift(String name, String category , String description,
       String status , double price , String imageURL , int giftId) async{
     try {
+      // Update in Local Database
       await giftModel.updateGift(name, category, status, imageURL, description, price , giftId);
-      return "${name} event is updated successfully!";
 
+      // Update in Firebase
+      await databaseRef.child('gifts').child(giftId.toString()).update({
+        'name': name,
+        'category': category,
+        'description': description,
+        'status': status,
+        'price': price,
+        'image': imageURL,
+      });
+
+      return "${name} event is updated successfully!";
     }
     catch (e) {
       // Handle any errors
@@ -44,11 +72,26 @@ class GiftController{
     bool result = await giftModel.isPledgedCheck(giftId);
 
     if(result == true){
+      // Unpledge gift in Local Database
       await giftModel.unpledgeGift(giftId);
+
+      // Update Firebase to mark as Available
+      await databaseRef.child('gifts').child(giftId.toString()).update({
+        'PledgedId': 0,
+        'status': 'Available',
+      });
       return "${name} is Available";
     }
     else{
+      // Pledge gift in Local Database
       await giftModel.pledgeGift(giftId, userId);
+
+      // Update Firebase to mark as pledged
+      await databaseRef.child('gifts').child(giftId.toString()).update({
+        'PledgedId': userId,
+        'status': 'Pledged',
+      });
+
       return "${name} is Pledged";
     }
   }
@@ -84,5 +127,22 @@ class GiftController{
       return null;
     }
   }
+
+  Future<void> MakeGiftPublic(int id) async{
+    try {
+      //Update in Local Database
+      await giftModel.makeGiftPublic(id);
+
+      // Update event in Firebase
+      await databaseRef.child('gifts').child(id.toString()).update({
+        'publish': 1,
+      });
+    }
+    catch (e) {
+      // Handle any errors
+      print("Failed to update event: $e");
+    }
+  }
+
 
 }

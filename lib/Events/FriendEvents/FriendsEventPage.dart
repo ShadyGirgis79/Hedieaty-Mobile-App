@@ -45,7 +45,7 @@ class _FriendsEventPageState extends State<FriendsEventPage> {
 
   void fetchEventGifts(List<Event> events) async{
     for (var event in events) {
-      final gifts = await giftController.giftsList(event.id!);
+      final gifts = await giftController.friendGiftsList(event.id!);
 
       setState(() {
         event.gifts = gifts!;
