@@ -40,6 +40,8 @@ class _MyEventPageState extends State<MyEventPage> {
         // Parse the event's date
         DateTime eventDate = dateFormat.parse(event.date); // Assuming `event.date` is in "dd-MM-yyyy" format
         event.status = determineEventStatus(eventDate); // Update status dynamically
+
+        eventController.UpdateEventStatus(event.id!, event.status);
         return event;
       }).toList() ?? [];
       filteredEvents = events; // Initially, all events are displayed

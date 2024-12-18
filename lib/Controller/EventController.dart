@@ -84,12 +84,28 @@ class EventController{
 
   Future<void> MakeEventPublic(int id) async{
     try {
-      //Update in Local Database
+      // Make Event public in Local Database
       await eventModel.makeEventPublic(id);
 
-      // Update event in Firebase
+      // Make Event public in Firebase
       await databaseRef.child('events').child(id.toString()).update({
         'publish': 1,
+      });
+    }
+    catch (e) {
+      // Handle any errors
+      print("Failed to update event: $e");
+    }
+  }
+
+  Future<void> UpdateEventStatus(int id , String status) async{
+    try {
+      //Update Event Status in Local Database
+      await eventModel.changeEventStatus(id, status);
+
+      // Update Event Status in Firebase
+      await databaseRef.child('events').child(id.toString()).update({
+        'status': status,
       });
     }
     catch (e) {

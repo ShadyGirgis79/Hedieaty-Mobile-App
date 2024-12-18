@@ -149,4 +149,12 @@ class Event {
     return await db.readData("SELECT * FROM Events");
   }
 
+  Future<void> changeEventStatus(int id , String status) async {
+    await db.updateData('''
+      UPDATE Events
+      SET Status = '$status'
+      WHERE ID = '$id';
+    ''');
+  }
+
 }
