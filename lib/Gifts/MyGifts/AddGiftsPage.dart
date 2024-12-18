@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hedieaty/Controller/AddGiftController.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
-import 'package:hedieaty/Controller/Internet.dart';
+import 'package:hedieaty/Controller/Services/Internet.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddGiftPage extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Controller/GiftController.dart';
-import 'package:hedieaty/Controller/Internet.dart';
+import 'package:hedieaty/Controller/Services/Internet.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'dart:io';
 

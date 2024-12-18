@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Events/MyEvents/MyEventsPage.dart';
@@ -10,7 +8,7 @@ import 'package:hedieaty/Model/Database/SyncFirebaseAndLocalDB.dart';
 import 'package:image_picker/image_picker.dart';
 import '../Controller/ProfileController.dart';
 import '../Controller/Functions/Validation.dart';
-import '../Model/Database/Authentication.dart';
+import '../Controller/Services/Authentication.dart';
 import '../Model/User_Model.dart' as LocalUser; // Your custom User model
 
 class ProfilePage extends StatefulWidget {
@@ -67,7 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
         profileURL = imageFile!.path;
       });
     }
-    await profileController.storeProfileImage(profileURL!, currentUserID.hashCode);
+    await profileController.storeProfileImage(profileURL, currentUserID.hashCode);
   }
 
 
@@ -207,7 +205,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       child: ClipOval(
                         child: profileURL != ''
-                            ? Image.file(File(profileURL!), height: 200, width: 200, fit: BoxFit.cover,
+                            ? Image.file(File(profileURL), height: 200, width: 200, fit: BoxFit.cover,
                         )
                             : const Icon(Icons.image, size: 200, color: Colors.grey,),
                       ),

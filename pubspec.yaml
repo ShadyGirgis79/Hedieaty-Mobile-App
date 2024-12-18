@@ -39,6 +39,7 @@ dependencies:
   path_provider: ^2.0.11
   connectivity_plus: ^4.0.0
   intl: ^0.18.0
+  firebase_messaging: ^14.6.6
   image_picker: any
   sqflite: any
   path: any

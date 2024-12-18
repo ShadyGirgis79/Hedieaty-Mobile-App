@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hedieaty/Controller/Internet.dart';
+import 'package:hedieaty/Controller/Services/Internet.dart';
 import 'package:hedieaty/Home/HomePage.dart';
 import 'package:hedieaty/Model/Database/SyncFirebaseAndLocalDB.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import '../Controller/Functions/ShowMessage.dart';
 import '../Controller/SignUpController.dart';
 import '../Controller/Functions/Validation.dart';
-import '../Model/Database/Authentication.dart';
+import '../Controller/Services/Authentication.dart';
 
 
 class SignUpPage extends StatefulWidget {

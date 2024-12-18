@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
-import 'package:hedieaty/Controller/Internet.dart';
+import 'package:hedieaty/Controller/Services/Internet.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
 import 'package:intl/intl.dart';
 

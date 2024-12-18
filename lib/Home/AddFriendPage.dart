@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hedieaty/Controller/AddFriendController.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
-import 'package:hedieaty/Controller/Internet.dart';
+import 'package:hedieaty/Controller/Services/Internet.dart';
 import '../Controller/Functions/Validation.dart';
 import '../Model/User_Model.dart';
 
