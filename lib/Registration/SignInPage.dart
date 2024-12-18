@@ -22,6 +22,7 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController passwordController = TextEditingController();
   final Internet internet = Internet();
   final SignInController signInController = SignInController();
+  final User userModel = User(name: "", email: "", password: "", phoneNumber: "");
 
   void SignIn() async {
     final email = emailController.text.trim();
@@ -30,7 +31,7 @@ class _SignInPageState extends State<SignInPage> {
     // Call authentication service
     final user = await AuthService().signIn(email, password);
     if (user != null) {
-      final currentUser = await User.fetchUserByEmailAndPassword(email, password);
+      final currentUser = await userModel.fetchUserByEmailAndPassword(email, password);
 
       if(currentUser != null){
         await signInController.updateID(email, password, user.uid.hashCode);

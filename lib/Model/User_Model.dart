@@ -61,8 +61,7 @@ class User{
     return result.isNotEmpty ? result.first : null;
   }
 
-  static Future<User?> fetchUserByEmailAndPassword(String email , String password) async {
-    final db = HedieatyDatabase();
+  Future<User?> fetchUserByEmailAndPassword(String email , String password) async {
     final response = await db.readData(
       "SELECT * FROM Users WHERE Email = '$email' AND Password = '$password' ",
     );
@@ -82,8 +81,7 @@ class User{
     return null;
   }
 
-  static Future<User?> fetchUserByID(int id) async {
-    final db = HedieatyDatabase();
+  Future<User?> fetchUserByID(int id) async {
     final response = await db.readData(
       "SELECT * FROM Users WHERE ID = '$id' ",
     );
@@ -103,8 +101,7 @@ class User{
     return null;
   }
 
-  static Future<User?> fetchUserByNameAndPhone(String name , String phone) async {
-    final db = HedieatyDatabase();
+  Future<User?> fetchUserByNameAndPhone(String name , String phone) async {
     final response = await db.readData(
       "SELECT * FROM Users WHERE Name = '$name' AND PhoneNumber = '$phone' ",
     );

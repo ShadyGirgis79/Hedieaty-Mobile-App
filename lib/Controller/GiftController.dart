@@ -1,12 +1,14 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:hedieaty/Model/Event_Model.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 import 'package:hedieaty/Model/User_Model.dart' as LocalUser;
 
 class GiftController{
   final Gift giftModel= Gift(name: "", category: "", price: 0, status: "");
   final LocalUser.User userModel = LocalUser.User(name: '', email: '', password: '', phoneNumber: '');
+  final Event eventModel = Event(name: "", category: "", date: "");
   final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
   final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
 
@@ -114,8 +116,15 @@ class GiftController{
   Future<String?> getPledgedUserName(int giftId) async{
     final int userId = await giftModel.getPledgedUserID(giftId);
 
-    final LocalUser.User? user = await LocalUser.User.fetchUserByID(userId);
+    final LocalUser.User? user = await userModel.fetchUserByID(userId);
     return user!.name;
+  }
+
+  Future<String?> getGiftEventName(int giftId) async{
+    final int eventId = await giftModel.getGiftEventID(giftId);
+
+    final Event? event = await eventModel.fetchEventByID(eventId);
+    return event!.name;
   }
 
   Future<List<Gift>?> getUserPledgedGift(int userId) async {

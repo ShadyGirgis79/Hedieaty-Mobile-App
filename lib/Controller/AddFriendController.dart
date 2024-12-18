@@ -5,7 +5,7 @@ import 'package:hedieaty/Model/Friends_Model.dart';
 import 'package:hedieaty/Model/User_Model.dart' as LocalUser;
 
 class AddFriendController {
-  late final LocalUser.User userModel;
+  final LocalUser.User userModel = LocalUser.User(name: "", email: "", password: "", phoneNumber: "");
   final Friends friendTable = Friends(UserId: 0, FriendId: 0);
   final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
   final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
@@ -13,22 +13,22 @@ class AddFriendController {
   Future<String> addFriendLocalDB(String name, String phone) async {
     try {
       // Fetch friend by name and phone
-      LocalUser.User? friend = await LocalUser.User.fetchUserByNameAndPhone(name, phone);
-      LocalUser.User? userModel = await LocalUser.User.fetchUserByID(currentUserID.hashCode);
+      LocalUser.User? friend = await userModel.fetchUserByNameAndPhone(name, phone);
+      LocalUser.User? user = await userModel.fetchUserByID(currentUserID.hashCode);
 
       if (friend == null) {
         return "User with this phone number does not exist!";
       }
 
       // Check if already friends
-      bool alreadyFriends = await friendTable.checkIfFriends(userModel!.id!, friend.id!);
+      bool alreadyFriends = await friendTable.checkIfFriends(user!.id!, friend.id!);
       if (alreadyFriends) {
         return "You are already friends with this user!";
       }
 
       // Add friend relationship in both directions
-      await friendTable.addFriend(userModel.id!, friend.id!);
-      await friendTable.addFriend(friend.id!, userModel.id!);
+      await friendTable.addFriend(user.id!, friend.id!);
+      await friendTable.addFriend(friend.id!, user.id!);
 
       await addFriendsFirebase();
 

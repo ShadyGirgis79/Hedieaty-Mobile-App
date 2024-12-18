@@ -150,6 +150,17 @@ class Gift {
     return result.first['PledgedID'];
   }
 
+  Future<int> getGiftEventID(int giftId) async{
+    String sql = '''
+    SELECT EventID FROM Gifts WHERE ID = $giftId
+    ''';
+    List<Map<String, dynamic>> result = await db.readData(sql);
+
+    return result.first['EventID'];
+  }
+
+
+
   Future<void> pledgeGift(int giftId , int userId) async{
     String sql = '''
       UPDATE Gifts
@@ -172,7 +183,6 @@ class Gift {
     await db.updateData(sql);
 
   }
-
 
   Future<List<Gift>> getUserPledgedGifts(int userId) async {
     String sql = '''

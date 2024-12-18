@@ -85,6 +85,27 @@ class Event {
     }).toList();
   }
 
+  Future<Event?> fetchEventByID(int id) async {
+    final response = await db.readData(
+      "SELECT * FROM Events WHERE ID = '$id' ",
+    );
+
+    if (response.isNotEmpty) {
+      final data = response.first;
+      return Event(
+        id: data['ID'],
+        name: data['Name'],
+        status: data['Status'],
+        category: data['Category'],
+        date: data['Date'],
+        location: data['Location'],
+        description: data['Description'],
+        publish: data['Publish'],
+      );
+    }
+    return null;
+  }
+
   Future<void> deleteEvent(String name , int id) async{
     String sql = '''
     DELETE FROM Events

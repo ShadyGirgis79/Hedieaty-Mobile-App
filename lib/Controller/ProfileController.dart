@@ -10,7 +10,7 @@ class ProfileController {
   Future<LocalUser.User?> fetchUserFromLocalDB() async {
     try {
       final int hashedID = currentUserID.hashCode;
-      return await LocalUser.User.fetchUserByID(hashedID);
+      return await userModel.fetchUserByID(hashedID);
     }
     catch (e) {
       print("Error fetching user from local DB: $e");
@@ -56,7 +56,7 @@ class ProfileController {
       });
 
       // Update in SQLite
-      final LocalUser.User? user = await LocalUser.User.fetchUserByID(hashedID);
+      final LocalUser.User? user = await userModel.fetchUserByID(hashedID);
       if (user != null) {
         await user.updateUser(
           newName,

@@ -98,7 +98,7 @@ class SignUpController {
 
   Future<void> updateID(String email, String password, int newId) async {
     // Fetch the user by email and password
-    User? user = await User.fetchUserByEmailAndPassword(email, password);
+    User? user = await userModel.fetchUserByEmailAndPassword(email, password);
 
     if (user != null) {
       // Update the user's ID in the local database

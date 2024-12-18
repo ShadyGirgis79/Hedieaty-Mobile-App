@@ -34,6 +34,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
   late double Price;
   late int giftId;
   late String pledgedName;
+  late String eventName;
 
   final categoriesGift = [
     'Electronics',
