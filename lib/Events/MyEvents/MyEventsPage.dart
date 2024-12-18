@@ -254,7 +254,7 @@ class _MyEventPageState extends State<MyEventPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MyGiftsPage(eventId: event.id!,eventName: event.name,),
+                            builder: (context) => MyGiftsPage(eventId: event.id!,eventName: event.name, eventStatus: event.status,),
                           ),
                         );
                       },

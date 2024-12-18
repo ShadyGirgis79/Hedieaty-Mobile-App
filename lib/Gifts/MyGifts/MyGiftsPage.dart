@@ -10,7 +10,8 @@ import 'package:hedieaty/Model/Gift_Model.dart';
 class MyGiftsPage extends StatefulWidget {
   final int eventId; // Pass the Event ID to associate the gift
   final String eventName;
-  const MyGiftsPage({super.key, required this.eventId, required this.eventName});
+  final String eventStatus;
+  const MyGiftsPage({super.key, required this.eventId, required this.eventName, required this.eventStatus});
 
 
   @override
@@ -25,6 +26,7 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
   List<Gift> filteredGifts = [];
   late int EventId;
   late String EventName;
+  late String EventStatus;
   String sortBy = "name"; // Default sort by name
 
   @override
@@ -32,6 +34,7 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
     super.initState();
     EventId = widget.eventId;
     EventName = widget.eventName;
+    EventStatus = widget.eventStatus;
     searchController.addListener(searchGifts);
     loadGifts(); // Load gifts when the page is initialized
   }
@@ -259,7 +262,8 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: EventStatus != "Past"
+          ? FloatingActionButton(
         onPressed: () async {
           // Navigate to AddGiftPage and wait for a result
           final bool? isGiftAdded = await Navigator.push(
@@ -278,7 +282,8 @@ class _MyGiftsPageState extends State<MyGiftsPage> {
           }
         },
         child: const Icon(Icons.add),
-      ),
+      )
+          : null ,
     );
   }
 }
