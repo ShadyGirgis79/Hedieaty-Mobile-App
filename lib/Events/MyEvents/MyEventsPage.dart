@@ -60,14 +60,16 @@ class _MyEventPageState extends State<MyEventPage> {
 
   String determineEventStatus(DateTime eventDate) {
     final DateTime now = DateTime.now();
-    if (eventDate.isBefore(now)) {
-      return 'Past';
-    } else if (eventDate.year == now.year &&
+    if (eventDate.isAfter(now)) {
+      return 'Upcoming';
+    }
+    else if (eventDate.year == now.year &&
         eventDate.month == now.month &&
         eventDate.day == now.day) {
       return 'Current';
-    } else {
-      return 'Upcoming';
+    }
+    else {
+      return 'Past';
     }
   }
 

@@ -535,10 +535,15 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                               Navigator.pop(context); // Close the loading dialog
                             }
 
+                            await saveUpdate();
+                            await giftController.MakeGiftPublic(giftId);
 
+                            Navigator.pop(context , true);
 
                           },
-                          child: const Text("Publish"),
+                          child: const Text("Publish",
+                            style: TextStyle(fontSize: 18),
+                          ),
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
                             backgroundColor: Colors.purpleAccent[700],
