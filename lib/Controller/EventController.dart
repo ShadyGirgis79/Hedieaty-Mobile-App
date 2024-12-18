@@ -26,19 +26,17 @@ class EventController{
     await eventModel.deleteGiftsBelongToEvent(id);
 
     final giftsRef = databaseRef.child('gifts'); // Assuming gifts are stored here
-    final giftsSnapshot = await giftsRef.get(); // Fetch all gifts from Firebase
+    final giftsSnapshot = await giftsRef.get();
 
     if (giftsSnapshot.exists) {
-      final data = giftsSnapshot.value;
-      if (data is List) {
-        // Handle the case where gifts are stored as a List
-        for (int index = 0; index < data.length; index++) {
-          final giftData = data[index];
-          if (giftData != null) {
-            if (giftData["EventId"] == id) {
-              // Use the index as the key for deletion in a List structure
-              await giftsRef.child(index.toString()).remove();
-            }
+      final giftsData = giftsSnapshot.value;
+      if (giftsData is List) {
+        // Handle gifts stored as a List in Firebase
+        for (int index = 0; index < giftsData.length; index++) {
+          final gift = giftsData[index];
+          if (gift != null && gift['EventId'] == id) {
+            // Use the index as the key for deletion in Firebase
+            await giftsRef.child(index.toString()).remove();
           }
         }
       }
