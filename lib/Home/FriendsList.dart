@@ -37,7 +37,7 @@ class FriendsList extends StatelessWidget {
               child: ClipOval(
                 child: friend.profileURL != ''
                     ? Image.file(File(friend.profileURL), height: 50, width: 50, fit: BoxFit.cover,)
-                    : Image.network('https://via.placeholder.com/150'),
+                    : Image.asset('Assets/FriendImage.jpg'),
               ),
             ),
             title: Text(
