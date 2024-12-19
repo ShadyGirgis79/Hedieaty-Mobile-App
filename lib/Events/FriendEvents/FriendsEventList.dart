@@ -76,12 +76,14 @@ class FriendsEventList extends StatelessWidget {
               ],
             ),
             onTap: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FriendGiftsPage(eventId: event.id!,eventName: event.name,),
-                ),
-              );
+              if(event.status != "Past"){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FriendGiftsPage(eventId: event.id!,eventName: event.name,),
+                  ),
+                );
+              }
             },
           ),
         );
