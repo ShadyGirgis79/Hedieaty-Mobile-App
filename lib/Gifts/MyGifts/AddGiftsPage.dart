@@ -6,6 +6,7 @@ import 'package:hedieaty/Controller/AddGiftController.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Controller/Services/Internet.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
 
 class AddGiftPage extends StatefulWidget {
   final int eventId; // Pass the Event ID to associate the gift
@@ -68,7 +69,22 @@ class _AddGiftPageState extends State<AddGiftPage> {
         backgroundColor: Colors.purpleAccent[700],
         foregroundColor: Colors.white,
         actions: [
-          IconButton(onPressed: (){
+          IconButton(onPressed: () async {
+            try {
+              // Open the barcode scanner
+              var result = await BarcodeScanner.scan();
+
+              // Check if the result is not null or empty
+              if (result.rawContent.isNotEmpty) {
+                setState(() {
+                  nameController.text = result.rawContent; // Set barcode as gift name
+                });
+              }
+            }
+            catch (e) {
+              // Handle errors (like user canceling the scan)
+              showMessage(context, 'Error: ${e.toString()}');
+            }
 
           },
               icon: Icon(Icons.camera_alt)
