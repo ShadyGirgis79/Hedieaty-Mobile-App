@@ -26,6 +26,10 @@ class AddFriendController {
         return "You are already friends with this user!";
       }
 
+      if (user.id == friend.id){
+        return "You can't add yourself";
+      }
+
       // Add friend relationship in both directions
       await friendTable.addFriend(user.id!, friend.id!);
       await friendTable.addFriend(friend.id!, user.id!);

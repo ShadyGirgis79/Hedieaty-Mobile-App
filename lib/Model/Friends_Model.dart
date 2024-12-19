@@ -34,4 +34,8 @@ class Friends{
     return await db.readData("SELECT * FROM Friends");
   }
 
+  Future<void> deleteFriends(int userId , int friendId) async{
+    String sql = "DELETE FROM Friends WHERE UserID = '$userId' AND FriendID = '$friendId' ";
+    await db.deleteData(sql);
+  }
 }
