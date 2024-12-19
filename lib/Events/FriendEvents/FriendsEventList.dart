@@ -37,11 +37,13 @@ class FriendsEventList extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
-              ),),
+              ),
+            ),
             subtitle: Text('${event.category} • ${event.status}',
               style: TextStyle(
                 fontSize: 14,
-              ),),
+              ),
+            ),
             leading: IconButton(
               onPressed: () async {
                 final updatedEvent = await Navigator.push(
