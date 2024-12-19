@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Home Page",
+          "HEDIEATY",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
