@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/EventController.dart';
 import 'package:hedieaty/Controller/GiftController.dart';
 import 'package:hedieaty/Events/FriendEvents/FriendsEventDetailsPage.dart';
-import 'package:hedieaty/Events/FriendEvents/FriendsEventList.dart';
 import 'package:hedieaty/Gifts/FriendGift/FriendGiftsPage.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
 import 'package:intl/intl.dart';
