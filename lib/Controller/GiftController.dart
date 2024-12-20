@@ -1,14 +1,18 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:hedieaty/Controller/NotificationController.dart';
 import 'package:hedieaty/Model/Event_Model.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
+import 'package:hedieaty/Model/Notification_Model.dart';
 import 'package:hedieaty/Model/User_Model.dart' as LocalUser;
 
 class GiftController{
   final Gift giftModel= Gift(name: "", category: "", price: 0, status: "");
   final LocalUser.User userModel = LocalUser.User(name: '', email: '', password: '', phoneNumber: '');
   final Event eventModel = Event(name: "", category: "", date: "");
+  final Notifications notificationModel = Notifications(message: '');
+  final NotificationController notificationController = NotificationController();
   final String currentUserID = FirebaseAuth.instance.currentUser!.uid;
   final DatabaseReference databaseRef = FirebaseDatabase.instance.ref();
 
@@ -70,6 +74,41 @@ class GiftController{
     return await giftModel.isPledgedCheck(giftId);
   }
 
+  Future<String> toggleIsPledgedWithNotification(int giftId , int userId , String name , int giftBelongToUser , String eventName) async{
+    bool result = await giftModel.isPledgedCheck(giftId);
+
+    if(result == true){
+      // Unpledge gift in Local Database
+      await giftModel.unpledgeGift(giftId);
+
+      // Update Firebase to mark as Available
+      await databaseRef.child('gifts').child(giftId.toString()).update({
+        'PledgedId': 0,
+        'status': 'Available',
+      });
+
+      await notificationController.addMessage(
+          giftBelongToUser,"${name} has been pledged from ${eventName}");
+
+      return "${name} is Available";
+    }
+    else{
+      // Pledge gift in Local Database
+      await giftModel.pledgeGift(giftId, userId);
+
+      // Update Firebase to mark as pledged
+      await databaseRef.child('gifts').child(giftId.toString()).update({
+        'PledgedId': userId,
+        'status': 'Pledged',
+      });
+
+      await notificationController.addMessage(
+          giftBelongToUser, "${name} has been unpledged from ${eventName}");
+
+      return "${name} is Pledged";
+    }
+  }
+
   Future<String> toggleIsPledged(int giftId , int userId , String name) async{
     bool result = await giftModel.isPledgedCheck(giftId);
 
@@ -82,6 +121,7 @@ class GiftController{
         'PledgedId': 0,
         'status': 'Available',
       });
+
       return "${name} is Available";
     }
     else{

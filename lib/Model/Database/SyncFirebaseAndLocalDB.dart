@@ -15,7 +15,7 @@ class SyncFirebaseAndLocalDB {
         for (var user in usersData.entries) {
           await localDB.insertData('''
             INSERT OR REPLACE INTO Users 
-            (ID, Name, Email, Preferences, Password, ProfileURL, PhoneNumber, Notifications) 
+            (ID, Name, Email, Preferences, Password, ProfileURL, PhoneNumber) 
             VALUES (
               ${int.parse(user.key)},
               '${user.value['name']}',
@@ -23,8 +23,7 @@ class SyncFirebaseAndLocalDB {
               '${user.value['preference']}',
               '${user.value['password']}',
               '${user.value['profileURL']}',
-              '${user.value['phone']}',
-              0
+              '${user.value['phone']}'
             );
           ''');
         }
@@ -92,7 +91,6 @@ class SyncFirebaseAndLocalDB {
     });
 
     // Sync Friends
-    // Sync Friends
     FirebaseDatabase.instance.ref('friends').onValue.listen((event) async {
       final friendsData = event.snapshot.value;
       if (friendsData is List<dynamic>) {
@@ -118,5 +116,31 @@ class SyncFirebaseAndLocalDB {
 
       print("Friends synced to local database");
     });
+
+    FirebaseDatabase.instance.ref('notifications').onValue.listen((event) async {
+      final notificationsData = event.snapshot.value;
+      if (notificationsData is List<dynamic>) {
+        // Handle data as List
+        for (int i = 0; i < notificationsData.length; i++) {
+          var notification = notificationsData[i];
+          if (notification != null) {// Avoid null entries in the list
+            await localDB.insertData('''
+          INSERT OR REPLACE INTO Notifications 
+          (ID, UserID, Message) 
+          VALUES (
+            ${i},  
+            ${notification['UserId']},
+            ${notification['message']}
+          );
+        ''');
+          }
+        }
+      }
+
+      print("Notifications synced to local database");
+    });
+
+
+
   }
 }

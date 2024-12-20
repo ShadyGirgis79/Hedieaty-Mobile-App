@@ -36,11 +36,9 @@ class HedieatyDatabase{
             'Preferences' TEXT,
             'Password' TEXT NOT NULL,
             'ProfileURL' TEXT ,
-            'PhoneNumber' TEXT UNIQUE NOT NULL,
-            'Notifications' BOOLEAN DEFAULT 0
+            'PhoneNumber' TEXT UNIQUE NOT NULL
             );
           ''');
-          //'UpcomingEvents' INTEGER DEFAULT 0,
 
 
           //Create Events Table
@@ -78,15 +76,23 @@ class HedieatyDatabase{
           );
           ''');
 
-          //FOREIGN KEY (PledgedID) REFERENCE Users (ID) ON DELETE CASCADE,
 
           await db.execute('''
           CREATE TABLE IF NOT EXISTS 'Friends' (
             'ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             'UserID' INTEGER NOT NULL,
             'FriendID' INTEGER NOT NULL,
-            FOREIGN KEY(userID) REFERENCES Users (ID),
-            FOREIGN KEY(friendID) REFERENCES Users (ID)
+            FOREIGN KEY(UserID) REFERENCES Users (ID),
+            FOREIGN KEY(FriendID) REFERENCES Users (ID)
+          );
+          ''');
+
+          await db.execute('''
+          CREATE TABLE IF NOT EXISTS 'Notifications' (
+            'ID' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            'UserID' INTEGER NOT NULL,
+            'Message' TEXT,
+            FOREIGN KEY(UserID) REFERENCES Users (ID)
           );
           ''');
 

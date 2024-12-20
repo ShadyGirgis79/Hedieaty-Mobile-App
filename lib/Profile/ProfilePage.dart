@@ -5,6 +5,7 @@ import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Events/MyEvents/MyEventsPage.dart';
 import 'package:hedieaty/Gifts/PledgedGift/PledgedGiftsPage.dart';
 import 'package:hedieaty/Model/Database/SyncFirebaseAndLocalDB.dart';
+import 'package:hedieaty/Profile/NotificationsPage.dart';
 import 'package:image_picker/image_picker.dart';
 import '../Controller/ProfileController.dart';
 import '../Controller/Functions/Validation.dart';
@@ -258,10 +259,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     // Notification settings
                     ElevatedButton.icon(
                       onPressed: () {
-                        // Action to update notification settings
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NotificationPage(),
+                          ),
+                        );
                       },
                       icon: const Icon(Icons.notifications),
-                      label: const Text("Notification Settings"),
+                      label: const Text("Notifications"),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.purpleAccent[700],

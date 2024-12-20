@@ -9,7 +9,9 @@ import 'dart:io';
 
 class FriendsGiftDetails extends StatefulWidget {
   final Gift gift;
-  const FriendsGiftDetails({super.key, required this.gift});
+  final String eventName;
+  final int friendId;
+  const FriendsGiftDetails({super.key, required this.gift, required this.eventName, required this.friendId});
 
   @override
   State<FriendsGiftDetails> createState() => _FriendsGiftDetailsState();
@@ -29,6 +31,8 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
   late String ImageURL;
   late double Price;
   late int giftId;
+  late String EventName;
+  late int FriendID;
 
   @override
   void initState() {
@@ -39,6 +43,8 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
     Description = widget.gift.description;
     ImageURL = widget.gift.imageURL;
     Price = widget.gift.price;
+    EventName = widget.eventName;
+    FriendID = widget.friendId;
     giftId = widget.gift.id!;
     isPledged = Status == "Pledged";
 
@@ -224,7 +230,8 @@ class _FriendsGiftDetailsState extends State<FriendsGiftDetails> {
                           await internet.waitForInternetConnection(); // Wait for internet
                           Navigator.pop(context); // Close the loading dialog
                         }
-                        String response = await giftController.toggleIsPledged(giftId, currentUserID, Name);
+                        String response = await giftController.toggleIsPledgedWithNotification(
+                            giftId, currentUserID, Name , FriendID , EventName);
                         showMessage(context, response);
 
                         Navigator.pop(context, true);

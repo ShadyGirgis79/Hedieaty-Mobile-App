@@ -7,7 +7,8 @@ import 'package:hedieaty/Model/Gift_Model.dart';
 class FriendGiftsPage extends StatefulWidget {
   final int eventId; // Pass the Event ID to associate the gift
   final String eventName;
-  const FriendGiftsPage({super.key, required this.eventId, required this.eventName});
+  final int friendId;
+  const FriendGiftsPage({super.key, required this.eventId, required this.eventName, required this.friendId});
 
   @override
   State<FriendGiftsPage> createState() => _FriendGiftsPageState();
@@ -20,6 +21,7 @@ class _FriendGiftsPageState extends State<FriendGiftsPage> {
   List<Gift> filteredGifts = [];
   late int EventId;
   late String EventName;
+  late int FriendID;
   String sortBy = "name"; // Default sort by name
 
   @override
@@ -27,6 +29,7 @@ class _FriendGiftsPageState extends State<FriendGiftsPage> {
     super.initState();
     EventId = widget.eventId;
     EventName = widget.eventName;
+    FriendID = widget.friendId;
     searchController.addListener(searchGifts);
     loadGifts(); // Load events when the page is initialized
   }
@@ -160,7 +163,7 @@ class _FriendGiftsPageState extends State<FriendGiftsPage> {
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => FriendsGiftDetails(gift: gift,),
+                            builder: (context) => FriendsGiftDetails(gift: gift, eventName: EventName, friendId: FriendID,),
                           ),
                         );
                           loadGifts(); // Reload the events list
