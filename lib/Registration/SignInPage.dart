@@ -62,37 +62,14 @@ class _SignInPageState extends State<SignInPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 30),
-
-
-              // App Title
-              Center(
-                child: Text(
-                  "Hedieaty",
-                  style: TextStyle(
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.purpleAccent[700],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
               // Image
               Center(
                 child: Container(
-                  child: Image.asset("Assets/Gift.jpg"),
-                  height: 300,
-                  width: 300,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(200),
-                  ),
+                  child: Image.asset("Assets/2PURPLE.png"),
+                  height: 500,
+                  width: 500,
                 ),
               ),
-
-              const SizedBox(height: 20),
 
               TextField(
                 controller: emailController,
