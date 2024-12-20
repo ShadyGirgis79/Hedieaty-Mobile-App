@@ -6,7 +6,6 @@ import 'package:hedieaty/Model/Database/Database.dart';
 import 'package:hedieaty/Model/Database/SyncFirebaseAndLocalDB.dart';
 import 'package:hedieaty/Registration/SignInPage.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:hedieaty/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

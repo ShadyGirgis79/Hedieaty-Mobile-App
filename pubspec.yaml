@@ -50,14 +50,14 @@ dependencies:
   firebase_database: ^10.1.0
   firebase_storage: ^11.6.5
   firebase_messaging: ^14.6.6
-  flutter_launcher_icons: ^0.14.2
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
-
+  flutter_launcher_icons: ^0.14.2
 
 flutter_icons:
   android: "launcher_icon"

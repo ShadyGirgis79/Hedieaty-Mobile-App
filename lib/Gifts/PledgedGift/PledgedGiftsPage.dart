@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hedieaty/Controller/Functions/ShowMessage.dart';
 import 'package:hedieaty/Controller/GiftController.dart';
-import 'package:hedieaty/Gifts/FriendGift/FriendsGiftDetailsPage.dart';
 import 'package:hedieaty/Gifts/PledgedGift/PledgedGiftDetailsPage.dart';
 import 'package:hedieaty/Model/Gift_Model.dart';
 
