@@ -46,7 +46,7 @@ class FriendsEventList extends StatelessWidget {
             ),
             leading: IconButton(
               onPressed: () async {
-                final updatedEvent = await Navigator.push(
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => FriendsEventDetailsPage(event: event),
@@ -77,14 +77,30 @@ class FriendsEventList extends StatelessWidget {
                 ),
               ],
             ),
-            onTap: (){
+            onTap: () async {
               if(event.status != "Past"){
-                Navigator.push(
+                await Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => FriendGiftsPage(eventId: event.id!,eventName: event.name,),
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FriendGiftsPage(eventId: event.id!,eventName: event.name,),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      const begin = Offset(0.5, 0.0); // Slide in from the right
+                      const end = Offset.zero;
+                      const curve = Curves.easeInOut;
+
+                      var tween =
+                      Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                      var offsetAnimation = animation.drive(tween);
+
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: child,
+                      );
+                    },
                   ),
                 );
+
               }
             },
           ),

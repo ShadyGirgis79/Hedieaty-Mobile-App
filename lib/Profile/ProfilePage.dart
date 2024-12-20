@@ -331,11 +331,26 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: const Icon(Icons.card_giftcard),
                       title: const Text('My Pledged Gifts'),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        await Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => PledgedGiftsPage(),
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) =>
+                                PledgedGiftsPage(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              const begin = Offset(0.5, 0.0); // Slide in from the right
+                              const end = Offset.zero;
+                              const curve = Curves.easeInOut;
+
+                              var tween =
+                              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                              var offsetAnimation = animation.drive(tween);
+
+                              return SlideTransition(
+                                position: offsetAnimation,
+                                child: child,
+                              );
+                            },
                           ),
                         );
                       },

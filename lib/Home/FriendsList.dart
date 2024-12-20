@@ -52,11 +52,26 @@ class FriendsList extends StatelessWidget {
                   : 'No Upcoming Events',
               style: const TextStyle(fontSize: 14),
             ),
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              await Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => FriendsEventPage(friendId: friend.id! , friendName: friend.name),
+                PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      FriendsEventPage(friendId: friend.id! , friendName: friend.name),
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    const begin = Offset(0.5, 0.0); // Slide in from the right
+                    const end = Offset.zero;
+                    const curve = Curves.easeInOut;
+
+                    var tween =
+                    Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                    var offsetAnimation = animation.drive(tween);
+
+                    return SlideTransition(
+                      position: offsetAnimation,
+                      child: child,
+                    );
+                  },
                 ),
               );
             },
