@@ -56,15 +56,14 @@ class  NotificationController{
 
     if (notsSnapshot.exists) {
       final notsData = notsSnapshot.value;
-      if (notsData is List) {
-        // Handle gifts stored as a List in Firebase
-        for (int index = 0; index < notsData.length; index++) {
-          final notification = notsData[index];
-          if (notification != null && notification['UserId'] == userId) {
-            // Use the index as the key for deletion in Firebase
-            await notsRef.child(index.toString()).remove();
+      if (notsData is Map) {
+        // Handle notifications stored as a Map in Firebase
+        notsData.forEach((key, value) async {
+          if (value != null && value['UserId'] == userId) {
+            // Delete the notification with the matching userId
+            await notsRef.child(key.toString()).remove();
           }
-        }
+        });
       }
     }
 
