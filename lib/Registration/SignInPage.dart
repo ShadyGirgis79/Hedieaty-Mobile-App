@@ -72,6 +72,7 @@ class _SignInPageState extends State<SignInPage> {
               ),
 
               TextField(
+                key: Key('emailTextField'),
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
@@ -92,6 +93,7 @@ class _SignInPageState extends State<SignInPage> {
 
               // Password TextField
               TextField(
+                key: Key('passwordTextField'),
                 controller: passwordController, // Use controller
                 decoration: InputDecoration(
                   labelText: "Password",
@@ -116,6 +118,7 @@ class _SignInPageState extends State<SignInPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
+                      key: Key('signInButton'),
                       child: const Text("Sign In",
                         style: TextStyle(
                           fontSize: 18,

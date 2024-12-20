@@ -97,7 +97,7 @@ class _PledgedGiftDetailsState extends State<PledgedGiftDetails> {
                         ),
                         child: ImageURL != ""
                             ? Image.file(File(ImageURL), height: 200, width: 200, fit: BoxFit.cover)
-                            : const Icon(Icons.image, size: 200, color: Colors.grey),
+                            : Image.asset("Assets/Gift.jpg", height: 200, width: 200,),
                       ),
                       const SizedBox(height: 8),
                     ],
