@@ -30,7 +30,8 @@ class ProfileController {
         print("No user data found in Firebase for $currentUserID");
         return null;
       }
-    } catch (e) {
+    }
+    catch (e) {
       print("Error fetching user from Firebase: $e");
       return null;
     }
