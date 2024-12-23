@@ -34,12 +34,36 @@ class SyncFirebaseAndLocalDB {
     // Sync Events
     FirebaseDatabase.instance.ref('events').onValue.listen((event) async {
       final eventsData = event.snapshot.value;
-      if (eventsData is List) {
-        // Handle as List
-        for (int index = 0; index < eventsData.length; index++) {
-          final event = eventsData[index];
+
+      if (eventsData is Map) {
+        // Iterate over the map
+        eventsData.forEach((key, event) async {
           if (event != null) {
             await localDB.insertData('''
+          INSERT OR REPLACE INTO Events 
+          (ID, Name, Category, Date, Location, Description, Status, Publish, UserID) 
+          VALUES (
+            '${key}', 
+            '${event['name'] ?? ''}', 
+            '${event['category'] ?? ''}', 
+            '${event['date'] ?? ''}', 
+            '${event['location'] ?? ''}', 
+            '${event['description'] ?? ''}', 
+            '${event['status'] ?? ''}', 
+            ${event['publish'] ?? 0}, 
+            ${event['UserId'] ?? 0}
+          );
+        ''');
+          }
+        });
+      }
+      else{
+        if (eventsData is List) {
+          // Handle as List
+          for (int index = 0; index < eventsData.length; index++) {
+            var event = eventsData[index];
+            if (event != null) {
+              await localDB.insertData('''
             INSERT OR REPLACE INTO Events 
             (ID, Name, Category, Date, Location, Description, Status, Publish, UserID) 
             VALUES (
@@ -54,9 +78,11 @@ class SyncFirebaseAndLocalDB {
               ${event['UserId']}
             );
           ''');
+            }
           }
         }
       }
+
       print("Events synced to local database");
     });
 
@@ -117,14 +143,33 @@ class SyncFirebaseAndLocalDB {
       print("Friends synced to local database");
     });
 
+    // Sync Notifications
     FirebaseDatabase.instance.ref('notifications').onValue.listen((event) async {
       final notificationsData = event.snapshot.value;
-      if (notificationsData is List<dynamic>) {
-        // Handle data as List
-        for (int i = 0; i < notificationsData.length; i++) {
-          var notification = notificationsData[i];
-          if (notification != null) {// Avoid null entries in the list
+      //If the data is in form of Map
+      if (notificationsData is Map) {
+        notificationsData.forEach((key, notification) async {
+          if (notification != null) { // Avoid null entries
             await localDB.insertData('''
+          INSERT OR REPLACE INTO Notifications 
+          (ID, UserID, Message) 
+          VALUES (
+            '${key}',  
+            ${notification['UserId'] ?? 0}, 
+            '${notification['message'] ?? ''}'
+          );
+        ''');
+          }
+        });
+      }
+      else{
+        //If the data is in form of List
+        if (notificationsData is List) {
+          // Handle data as List
+          for (int i = 0; i < notificationsData.length; i++) {
+            var notification = notificationsData[i];
+            if (notification != null) {// Avoid null entries in the list
+              await localDB.insertData('''
           INSERT OR REPLACE INTO Notifications 
           (ID, UserID, Message) 
           VALUES (
@@ -133,6 +178,7 @@ class SyncFirebaseAndLocalDB {
             ${notification['message']}
           );
         ''');
+            }
           }
         }
       }

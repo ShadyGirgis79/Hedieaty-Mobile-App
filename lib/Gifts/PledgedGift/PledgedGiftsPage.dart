@@ -158,49 +158,7 @@ class _PledgedGiftsPageState extends State<PledgedGiftsPage> {
                           ),
                         ],
                       ),
-                      trailing: isPledged
-                          ? IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Are you sure you want to delete ${gift.name} permanently ?"),
-                                actions: [
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      final String result =
-                                      await giftController.DeleteGift(
-                                          gift.name, gift.id!);
-                                      if (result ==
-                                          "${gift.name} event has been deleted") {
-                                        // Remove the gift from the list and update the UI
-                                        setState(() {
-                                          pledgedGifts.removeAt(index);
-                                          filteredPledgedGifts.removeWhere((g) => g.name == gift.name && g.id == gift.id);
-                                        });
-                                      }
-                                      showMessage(context, result);
-                                      Navigator.pop(context, true);
-                                    },
-                                    child: const Text("Delete"),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text("Cancel")),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      )
-                          : null, // No delete icon for unpledged gifts
+
                         onTap: () async{
                           await Navigator.push(
                             context,
