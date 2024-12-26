@@ -89,41 +89,70 @@ class SyncFirebaseAndLocalDB {
     // Sync Gifts
     FirebaseDatabase.instance.ref('gifts').onValue.listen((event) async {
       final giftsData = event.snapshot.value;
+
       if (giftsData is List) {
-        // Handle as List
+        // Handle data as List
         for (int index = 0; index < giftsData.length; index++) {
           final gift = giftsData[index];
           if (gift != null) {
             await localDB.insertData('''
-            INSERT OR REPLACE INTO Gifts 
-            (ID, Name, Category, Status, Price, Description, Image, Publish, EventID, PledgedID) 
-            VALUES (
-              $index,
-              '${gift['name']}',
-              '${gift['category']}',
-              '${gift['status']}',
-              ${gift['price'] ?? 0.0},
-              '${gift['description']}',
-              '${gift['image']}',
-              ${gift['publish'] ?? 0},
-              ${gift['EventId']},
-              ${gift['PledgedId']}
-            );
-          ''');
+          INSERT OR REPLACE INTO Gifts 
+          (ID, Name, Category, Status, Price, Description, Image, Publish, EventID, PledgedID) 
+          VALUES (
+            $index,
+            '${gift['name']}',
+            '${gift['category']}',
+            '${gift['status']}',
+            ${gift['price'] ?? 0.0},
+            '${gift['description']}',
+            '${gift['image']}',
+            ${gift['publish'] ?? 0},
+            ${gift['EventId'] ?? 'NULL'},
+            ${gift['PledgedId'] ?? 'NULL'}
+          );
+        ''');
           }
         }
       }
+      else if (giftsData is Map) {
+        // Handle data as Map
+        giftsData.forEach((key, gift) async {
+          if (gift != null) {
+            await localDB.insertData('''
+          INSERT OR REPLACE INTO Gifts 
+          (ID, Name, Category, Status, Price, Description, Image, Publish, EventID, PledgedID) 
+          VALUES (
+            $key,
+            '${gift['name']}',
+            '${gift['category']}',
+            '${gift['status']}',
+            ${gift['price'] ?? 0.0},
+            '${gift['description']}',
+            '${gift['image']}',
+            ${gift['publish'] ?? 0},
+            ${gift['EventId'] ?? 'NULL'},
+            ${gift['PledgedId'] ?? 'NULL'}
+          );
+        ''');
+          }
+        });
+      }
+      else {
+        print("Gifts data is in an unsupported format: ${giftsData.runtimeType}");
+      }
+
       print("Gifts synced to local database");
     });
 
     // Sync Friends
     FirebaseDatabase.instance.ref('friends').onValue.listen((event) async {
       final friendsData = event.snapshot.value;
-      if (friendsData is List<dynamic>) {
+
+      if (friendsData is List) {
         // Handle data as List
         for (int i = 0; i < friendsData.length; i++) {
           var friend = friendsData[i];
-          if (friend != null) {// Avoid null entries in the list
+          if (friend != null) { // Avoid null entries in the list
             await localDB.insertData('''
           INSERT OR REPLACE INTO Friends 
           (ID, UserID, FriendID) 
@@ -136,11 +165,25 @@ class SyncFirebaseAndLocalDB {
           }
         }
       }
+      else if (friendsData is Map) {
+        // Handle data as Map
+        friendsData.forEach((key, friend) async {
+          if (friend != null) { // Avoid null entries in the map
+            await localDB.insertData('''
+          INSERT OR REPLACE INTO Friends 
+          (ID, UserID, FriendID) 
+          VALUES (
+            ${key},  
+            ${friend['UserId']},
+            ${friend['FriendId']}
+          );
+        ''');
+          }
+        });
+      }
       else {
         print("Friends data is in an unsupported format: ${friendsData.runtimeType}");
       }
-
-      print("Friends synced to local database");
     });
 
     // Sync Notifications
