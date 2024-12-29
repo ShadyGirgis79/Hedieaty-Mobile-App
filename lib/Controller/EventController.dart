@@ -115,6 +115,18 @@ class EventController{
       //Update Event Status in Local Database
       await eventModel.changeEventStatus(id, status);
 
+    }
+    catch (e) {
+      // Handle any errors
+      print("Failed to update event: $e");
+    }
+  }
+
+  Future<void> UpdateEventStatusPublic(int id , String status) async{
+    try {
+      //Update Event Status in Local Database
+      await eventModel.changeEventStatus(id, status);
+
       // Update Event Status in Firebase
       await databaseRef.child('events').child(id.toString()).update({
         'status': status,

@@ -132,7 +132,7 @@ class _AddEventPageState extends State<AddEventPage> {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,
                           initialDate: selectedDate,
-                          firstDate: DateTime(2000),
+                          firstDate: DateTime.now(),
                           lastDate: DateTime(2100),
                         );
                         if (pickedDate != null) {

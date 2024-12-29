@@ -444,7 +444,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                           DateTime? pickedDate = await showDatePicker(
                             context: context,
                             initialDate: dateFormat.parse(Date), // Use the current date
-                            firstDate: DateTime(2000), // Earliest date available
+                            firstDate: DateTime.now(), // Earliest date available
                             lastDate: DateTime(2100), // Latest date available
                           );
 
