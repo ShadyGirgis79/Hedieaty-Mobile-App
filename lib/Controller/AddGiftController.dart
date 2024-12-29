@@ -46,8 +46,6 @@ class AddGiftController {
         publish: 0,
       );
 
-      await addGiftsFirebase();
-
       if (response > 0) {
         return null;
       }

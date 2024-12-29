@@ -102,6 +102,29 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
     });
   }
 
+  Future<void> saveUpdatePublic() async {
+    final response = await giftController.UpdateGiftPublic(
+      Name,
+      Category,
+      Description,
+      Status,
+      Price,
+      ImageURL ?? "",
+      giftId,
+    );
+
+    showMessage(context, response);
+
+    setState(() {
+      widget.gift.name = Name;
+      widget.gift.category = Category;
+      widget.gift.description = Description;
+      widget.gift.status = Status;
+      widget.gift.price = Price;
+      widget.gift.imageURL = ImageURL!;
+    });
+  }
+
   Future<void> fetchPledgedUserName() async {
     try {
       String? name = await getPledgedUserName(giftId);
@@ -535,7 +558,7 @@ class _MyGiftDetailsState extends State<MyGiftDetails> {
                               Navigator.pop(context); // Close the loading dialog
                             }
 
-                            await saveUpdate();
+                            await saveUpdatePublic();
                             await giftController.MakeGiftPublic(giftId);
 
                             Navigator.pop(context , true);

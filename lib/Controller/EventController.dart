@@ -63,6 +63,20 @@ class EventController{
       //Update in Local Database
       await eventModel.updateEvent(name, category, description, location, date, status, id);
 
+      return "${name} event draft is updated successfully!";
+    }
+    catch (e) {
+      // Handle any errors
+      return "Failed to update event: $e";
+    }
+  }
+
+  Future<String> UpdateEventPublic(String name, String category , String description,
+      String location ,String date, String status , int id) async{
+    try {
+      //Update in Local Database
+      await eventModel.updateEvent(name, category, description, location, date, status, id);
+
       // Update event in Firebase
       await databaseRef.child('events').child(id.toString()).update({
         'name': name,

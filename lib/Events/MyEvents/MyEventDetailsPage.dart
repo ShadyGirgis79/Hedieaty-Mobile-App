@@ -68,6 +68,30 @@ class _MyEventDetailsState extends State<MyEventDetails> {
     });
   }
 
+  Future<void> saveUpdatesPublic() async {
+    final response = await eventController.UpdateEventPublic(
+        Name,
+        Category,
+        Description,
+        Location,
+        Date,
+        Status,
+        eventId
+    );
+    showMessage(context, response);
+
+    // Update the UI and navigate back
+    setState(() {
+      widget.event.name = Name;
+      widget.event.category = Category;
+      widget.event.description = Description;
+      widget.event.location = Location;
+      widget.event.publish = Publish;
+      widget.event.status = Status;
+      widget.event.date = Date;
+    });
+  }
+
   final List<String> categoriesEvent = [
     "Birthday",
     "Wedding",
@@ -494,7 +518,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                             saveUpdates();
                             Navigator.pop(context , true); // Close the Details event page
                           },
-                          child: Text("Save"),
+                          child: Text("Save Changes"),
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
                             backgroundColor: Colors.purpleAccent[700],
@@ -513,7 +537,7 @@ class _MyEventDetailsState extends State<MyEventDetails> {
                               Navigator.pop(context); // Close the loading dialog
                             }
 
-                            saveUpdates();
+                            saveUpdatesPublic();
                             await eventController.MakeEventPublic(eventId);
 
                             Navigator.pop(context , true);

@@ -44,8 +44,6 @@ class AddEventController{
         publish: 0,
       );
 
-      await addEventsFirebase();
-
       if (response > 0) {
         return null; // Successfully added
       }
